@@ -37,21 +37,22 @@ export default function ToolsCatalogPage() {
   };
 
   return (
-    <div className="py-8 sm:py-12 space-y-6 min-h-screen">
+    <div className="py-8 sm:py-12 space-y-6 min-h-screen bg-[#FAF8F5]">
       <Container>
         <div className="space-y-2 mb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-xs font-semibold text-orange-600">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Master Catalog</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 tracking-tight">
             All Developer Utilities
           </h1>
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-zinc-600 max-w-xl leading-relaxed">
             Every client-side tool in ToolVerse. Instant execution, zero ad scripts, 100% free.
           </p>
         </div>
       </Container>
+
 
       <SearchBar
         searchQuery={searchQuery}

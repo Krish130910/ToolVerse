@@ -2,17 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { HeroSection } from "@/components/home/hero-section";
-import { SearchBar } from "@/components/home/search-bar";
-import { CategoryCards } from "@/components/home/category-cards";
 import { FeaturedTools } from "@/components/home/featured-tools";
-import { WhyToolVerse } from "@/components/home/why-toolverse";
-import { FEATURED_TOOLS, ROADMAP_CATEGORIES } from "@/lib/data";
+import { FEATURED_TOOLS } from "@/lib/data";
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
@@ -37,45 +32,39 @@ export default function HomePage() {
     } catch {}
   };
 
-  return (
-    <div className="space-y-4">
-      {/* Hero Section */}
-      <HeroSection
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-      />
+  const filteredTools = FEATURED_TOOLS.filter((t) => {
+    if (selectedCategory !== "all" && t.categorySlug !== selectedCategory) {
+      return false;
+    }
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      t.name.toLowerCase().includes(q) ||
+      t.tagline.toLowerCase().includes(q) ||
+      t.categoryName.toLowerCase().includes(q) ||
+      (t.tags && t.tags.some((tag) => tag.toLowerCase().includes(q)))
+    );
+  });
 
-      {/* Quick Search & Category Bar */}
-      <SearchBar
+  return (
+    <div className="space-y-0 pb-4">
+
+      {/* Integrated Hero Section with Embedded Search & Category Pills */}
+      <HeroSection
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        showOnlyFavorites={showOnlyFavorites}
-        onToggleFavorites={() => setShowOnlyFavorites(!showOnlyFavorites)}
-        favoritesCount={favorites.length}
       />
 
-      {/* Categories Preview Grid */}
-      <CategoryCards categories={ROADMAP_CATEGORIES} />
-
-      {/* Featured Tools Grid */}
+      {/* Compact Clean Tools Grid */}
       <FeaturedTools
-        tools={FEATURED_TOOLS}
+        tools={filteredTools}
         searchQuery={searchQuery}
-        viewMode={viewMode}
+        viewMode="grid"
         favorites={favorites}
         onToggleFavorite={toggleFavorite}
-        onOpenTool={(tool) => {
-          window.location.href = `/tools/${tool.slug}`;
-        }}
-        showOnlyFavorites={showOnlyFavorites}
       />
-
-      {/* Why Choose ToolVerse */}
-      <WhyToolVerse />
     </div>
   );
 }

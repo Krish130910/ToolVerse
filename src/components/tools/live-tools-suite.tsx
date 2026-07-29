@@ -37,79 +37,79 @@ export const LiveToolsSuite: React.FC<LiveToolsSuiteProps> = ({
   }, [initialTool]);
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 sm:p-6 shadow-2xl space-y-6">
+    <div className="bg-white border border-zinc-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-6">
       {/* Tool Navigation Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-zinc-800 no-scrollbar">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-zinc-100 no-scrollbar">
         <button
           onClick={() => setActiveTab("json-formatter")}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === "json-formatter"
-              ? "bg-white text-black font-semibold shadow-sm"
-              : "bg-zinc-950 text-zinc-400 hover:text-zinc-200 border border-zinc-800"
+              ? "bg-orange-500 text-white font-bold shadow-xs"
+              : "bg-zinc-50 text-zinc-700 hover:text-zinc-900 border border-zinc-200/90 hover:border-orange-300"
           }`}
         >
-          <Braces className="w-4 h-4 text-sky-400" />
+          <Braces className="w-4 h-4 text-orange-500" />
           JSON Formatter
         </button>
 
         <button
           onClick={() => setActiveTab("password-generator")}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === "password-generator"
-              ? "bg-white text-black font-semibold shadow-sm"
-              : "bg-zinc-950 text-zinc-400 hover:text-zinc-200 border border-zinc-800"
+              ? "bg-orange-500 text-white font-bold shadow-xs"
+              : "bg-zinc-50 text-zinc-700 hover:text-zinc-900 border border-zinc-200/90 hover:border-orange-300"
           }`}
         >
-          <KeyRound className="w-4 h-4 text-emerald-400" />
+          <KeyRound className="w-4 h-4 text-orange-500" />
           Password Generator
         </button>
 
         <button
           onClick={() => setActiveTab("qr-generator")}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === "qr-generator"
-              ? "bg-white text-black font-semibold shadow-sm"
-              : "bg-zinc-950 text-zinc-400 hover:text-zinc-200 border border-zinc-800"
+              ? "bg-orange-500 text-white font-bold shadow-xs"
+              : "bg-zinc-50 text-zinc-700 hover:text-zinc-900 border border-zinc-200/90 hover:border-orange-300"
           }`}
         >
-          <QrCode className="w-4 h-4 text-amber-400" />
+          <QrCode className="w-4 h-4 text-orange-500" />
           QR Generator
         </button>
 
         <button
           onClick={() => setActiveTab("jwt-decoder")}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === "jwt-decoder"
-              ? "bg-white text-black font-semibold shadow-sm"
-              : "bg-zinc-950 text-zinc-400 hover:text-zinc-200 border border-zinc-800"
+              ? "bg-orange-500 text-white font-bold shadow-xs"
+              : "bg-zinc-50 text-zinc-700 hover:text-zinc-900 border border-zinc-200/90 hover:border-orange-300"
           }`}
         >
-          <Lock className="w-4 h-4 text-purple-400" />
+          <Lock className="w-4 h-4 text-orange-500" />
           JWT Decoder
         </button>
 
         <button
-          onClick={() => setActiveTab("base64-tool")}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap cursor-pointer ${
-            activeTab === "base64-tool"
-              ? "bg-white text-black font-semibold shadow-sm"
-              : "bg-zinc-950 text-zinc-400 hover:text-zinc-200 border border-zinc-800"
+          onClick={() => setActiveTab("uuid-generator")}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
+            activeTab === "uuid-generator"
+              ? "bg-orange-500 text-white font-bold shadow-xs"
+              : "bg-zinc-50 text-zinc-700 hover:text-zinc-900 border border-zinc-200/90 hover:border-orange-300"
           }`}
         >
-          <Binary className="w-4 h-4 text-violet-400" />
-          Base64 Tool
+          <Binary className="w-4 h-4 text-orange-500" />
+          UUID Generator
         </button>
 
         <button
-          onClick={() => setActiveTab("text-converter")}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap cursor-pointer ${
-            activeTab === "text-converter"
-              ? "bg-white text-black font-semibold shadow-sm"
-              : "bg-zinc-950 text-zinc-400 hover:text-zinc-200 border border-zinc-800"
+          onClick={() => setActiveTab("base64-encoder")}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
+            activeTab === "base64-encoder"
+              ? "bg-orange-500 text-white font-bold shadow-xs"
+              : "bg-zinc-50 text-zinc-700 hover:text-zinc-900 border border-zinc-200/90 hover:border-orange-300"
           }`}
         >
-          <Code2 className="w-4 h-4 text-teal-400" />
-          Text Metrics
+          <Code2 className="w-4 h-4 text-orange-500" />
+          Base64 Encoder
         </button>
       </div>
 

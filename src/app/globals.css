@@ -2,32 +2,33 @@
 
 @layer base {
   :root,
+  .light,
   .dark {
-    --background: #09090B;
-    --surface: #121215;
-    --card: #18181B;
-    --border: #27272A;
-    --foreground: #FAFAFA;
-    --muted-foreground: #A1A1AA;
-    --primary: #10B981;
-    --primary-foreground: #09090B;
-    --radius: 0.75rem;
+    --background: #FAF8F5;
+    --surface: #FFFFFF;
+    --card: #FFFFFF;
+    --border: #E5E7EB;
+    --foreground: #18181B;
+    --muted-foreground: #71717A;
+    --primary: #F97316;
+    --primary-foreground: #FFFFFF;
+    --radius: 0.875rem;
   }
 }
 
 body {
-  background-color: #09090B;
-  color: #FAFAFA;
+  background-color: #FAF8F5;
+  color: #18181B;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
 }
 
 /* Neutral Panel utility */
 .glass-panel {
-  background: #121215;
+  background: #FFFFFF;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid #27272A;
+  border: 1px solid #F3F4F6;
 }
 
 .glass-panel-hover {
@@ -35,11 +36,11 @@ body {
 }
 
 .glass-panel-hover:hover {
-  border-color: #10B981;
+  border-color: #F97316;
 }
 
-.gradient-text {
-  background: linear-gradient(180deg, #FAFAFA 0%, #A1A1AA 100%);
+.gradient-text-orange {
+  background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -51,16 +52,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #09090B;
+  background: #FAF8F5;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #27272A;
+  background: #E4E4E7;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3F3F46;
+  background: #CBD5E1;
 }
-
-

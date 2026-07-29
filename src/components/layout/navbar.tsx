@@ -2,9 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
-import { Wrench, Search, Menu, X, PlusCircle, Compass, Grid, Info, Sparkles } from "lucide-react";
+import { CategoriesDropdown } from "@/components/layout/categories-dropdown";
+import { BrandIcon } from "@/components/ui/brand-icon";
+import { Search, Menu, X, PlusCircle, Compass, Sparkles, Info } from "lucide-react";
+
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
@@ -16,99 +20,100 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSearchClick,
   onRequestToolClick,
 }) => {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 15);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const navLinks = [
+    { href: "/explore", label: "Explore" },
+    { href: "/tools", label: "All Tools" },
+    { href: "/about", label: "About" },
+  ];
+
   return (
     <div className="sticky top-0 z-50 flex flex-col">
-      {/* Integrated Header */}
+      {/* Integrated Compact Header (Height 56px) */}
       <header
-        className={`transition-all duration-200 ${
+        className={`h-14 flex items-center transition-all duration-200 ${
           isScrolled
-            ? "bg-[#09090B]/85 backdrop-blur-md border-b border-zinc-800/80 shadow-xs py-3"
-            : "bg-transparent py-4 backdrop-blur-xs"
+            ? "bg-[#FAF8F5]/95 backdrop-blur-md border-b border-orange-100/90 shadow-xs"
+            : "bg-transparent border-b border-orange-100/30 backdrop-blur-xs"
         }`}
       >
-        <Container>
+        <Container className="w-full">
           <div className="flex items-center justify-between">
-            {/* Logo Mark */}
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="h-8 w-8 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-xs">
-                <Wrench className="w-4 h-4 text-emerald-400 group-hover:rotate-12 transition-transform" />
+            {/* Left: Logo Only */}
+            <Link href="/" className="flex items-center gap-2 group shrink-0">
+              <div className="h-7.5 w-7.5 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shadow-2xs group-hover:border-orange-400/40 group-hover:bg-orange-500/20 transition-all">
+                <BrandIcon className="w-4 h-4 text-orange-600 group-hover:scale-110 transition-transform" />
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-base tracking-tight text-zinc-100">
-                  ToolVerse
-                </span>
-                <span className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded-md font-mono font-normal">
-                  v1.0
-                </span>
-              </div>
+              <span className="font-extrabold text-sm sm:text-base tracking-tight text-zinc-900 group-hover:text-orange-600 transition-colors">
+                ToolVerse
+              </span>
             </Link>
 
-            {/* Desktop Nav Links */}
-            <nav className="hidden md:flex items-center gap-7 text-xs font-semibold text-zinc-400">
-              <Link
-                href="/explore"
-                className="hover:text-zinc-100 transition-colors flex items-center gap-1.5"
-              >
-                <Compass className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Explore Tools</span>
-              </Link>
-              <Link
-                href="/categories"
-                className="hover:text-zinc-100 transition-colors flex items-center gap-1.5"
-              >
-                <Grid className="w-3.5 h-3.5 text-zinc-400" />
-                <span>Categories</span>
-              </Link>
-              <Link
-                href="/tools"
-                className="hover:text-zinc-100 transition-colors flex items-center gap-1.5"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                <span>All Utilities</span>
-              </Link>
-              <Link
-                href="/about"
-                className="hover:text-zinc-100 transition-colors flex items-center gap-1.5"
-              >
-                <Info className="w-3.5 h-3.5 text-zinc-400" />
-                <span>About</span>
-              </Link>
+            {/* Center: Navigation Text Links */}
+            <nav className="hidden md:flex items-center gap-7 lg:gap-9 text-xs font-semibold text-zinc-600">
+              {/* Categories Dropdown Text Link */}
+              <CategoriesDropdown />
+
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`relative py-1 transition-colors ${
+                      isActive ? "text-zinc-900 font-bold" : "hover:text-zinc-900"
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeNavIndicator"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500 rounded-full"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </Link>
+                );
+              })}
             </nav>
 
-            {/* Actions & Search */}
-            <div className="hidden md:flex items-center gap-2.5">
+            {/* Right: Search & Primary CTA */}
+            <div className="hidden md:flex items-center gap-2.5 shrink-0">
+              {/* Clean search trigger */}
               <button
                 onClick={onSearchClick}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/80 border border-zinc-800 text-xs text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer group"
+                className="flex items-center gap-2 w-40 lg:w-48 h-8.5 px-3 rounded-lg bg-white/90 border border-zinc-200/90 text-xs text-zinc-500 hover:text-zinc-800 hover:border-orange-300 transition-all cursor-pointer group shadow-2xs"
               >
-                <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:scale-110 transition-transform" />
-                <span>Search...</span>
-                <kbd className="hidden lg:inline-block font-mono bg-zinc-950 text-zinc-400 px-1.5 py-0.5 rounded border border-zinc-800 text-[10px]">
-                  ⌘K
-                </kbd>
+                <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-orange-500 transition-colors" />
+                <span className="text-zinc-500 group-hover:text-zinc-800 transition-colors text-[11px]">
+                  Search tools...
+                </span>
               </button>
 
+              {/* Primary CTA */}
               <Button
                 size="sm"
                 variant="default"
                 onClick={onRequestToolClick}
-                className="flex items-center gap-1.5 text-xs"
+                className="flex items-center gap-1.5 text-xs font-bold rounded-lg px-3.5 h-8.5 shadow-2xs"
               >
                 <PlusCircle className="w-3.5 h-3.5" />
                 <span>Request Tool</span>
               </Button>
             </div>
+
+
 
             {/* Mobile Actions */}
             <div className="flex md:hidden items-center gap-2">
@@ -136,7 +141,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="md:hidden mt-3 pt-3 border-t border-zinc-800 pb-3 space-y-2 text-xs"
+                className="md:hidden mt-3 pt-3 border-t border-zinc-800 pb-3 space-y-2 text-xs bg-[#09090B]"
               >
                 <Link
                   href="/explore"
@@ -150,7 +155,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => setMobileMenuOpen(false)}
                   className="block px-3 py-2 rounded-lg text-zinc-300 hover:bg-zinc-900"
                 >
-                  Categories
+                  Categories Index
                 </Link>
                 <Link
                   href="/tools"
@@ -186,7 +191,3 @@ export const Navbar: React.FC<NavbarProps> = ({
     </div>
   );
 };
-
-
-
-

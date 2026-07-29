@@ -16,10 +16,10 @@ export default function DedicatedToolPage() {
 
   if (!tool) {
     return (
-      <div className="py-20 text-center space-y-4">
-        <h2 className="text-2xl font-bold text-zinc-100">Tool Not Found</h2>
-        <p className="text-xs text-zinc-400">
-          The requested tool route <code className="text-emerald-400">/tools/{slug}</code> does not exist.
+      <div className="py-20 text-center space-y-4 bg-[#FAF8F5] min-h-screen">
+        <h2 className="text-2xl font-bold text-zinc-900">Tool Not Found</h2>
+        <p className="text-xs text-zinc-600">
+          The requested tool route <code className="text-orange-600 font-mono">/tools/{slug}</code> does not exist.
         </p>
         <a href="/tools">
           <Button variant="default" size="sm">
@@ -35,14 +35,14 @@ export default function DedicatedToolPage() {
       {tool.isLive ? (
         <LiveToolsSuite initialTool={slug} />
       ) : (
-        <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-10 text-center space-y-4 shadow-xl">
-          <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-zinc-950 border border-zinc-800 text-emerald-400">
+        <div className="bg-white border border-zinc-200/90 rounded-2xl p-10 text-center space-y-4 shadow-xs">
+          <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-orange-50 border border-orange-200 text-orange-500">
             <Clock className="w-6 h-6" />
           </div>
-          <h3 className="text-xl font-bold text-zinc-100">
+          <h3 className="text-xl font-bold text-zinc-900">
             {tool.name} is in Development
           </h3>
-          <p className="text-xs text-zinc-400 max-w-md mx-auto leading-relaxed">
+          <p className="text-xs text-zinc-600 max-w-md mx-auto leading-relaxed">
             This utility is currently scheduled on our Phase 2 release roadmap. Vote or request high-priority release below.
           </p>
           <div className="pt-2">

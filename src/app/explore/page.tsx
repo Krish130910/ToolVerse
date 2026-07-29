@@ -37,22 +37,23 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="py-8 sm:py-12 space-y-6">
+    <div className="py-8 sm:py-12 space-y-6 bg-[#FAF8F5]">
       <Container>
         {/* Page Header */}
         <div className="space-y-2 mb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-xs font-semibold text-orange-600">
             <Compass className="w-3.5 h-3.5" />
             <span>Platform App Directory</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 tracking-tight">
             Explore All Developer Utilities
           </h1>
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-zinc-600 max-w-xl leading-relaxed">
             Search, filter, bookmark, and run 20+ privacy-first web utilities directly inside your browser.
           </p>
         </div>
       </Container>
+
 
       {/* Search & Filter Bar */}
       <SearchBar
