@@ -79,6 +79,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
   {
     id: "tool-1",
     name: "JSON Formatter & Validator",
+    slug: "json-formatter",
     tagline: "Format, validate, beautify, and minify complex JSON payloads with instant error highlighting.",
     categorySlug: "developer-tools",
     categoryName: "Developer Tools",
@@ -94,6 +95,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
   {
     id: "tool-2",
     name: "Cryptographic Password Generator",
+    slug: "password-generator",
     tagline: "Generate cryptographically secure passwords and passphrases with real-time strength meter.",
     categorySlug: "security",
     categoryName: "Security & Crypto",
@@ -109,6 +111,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
   {
     id: "tool-3",
     name: "QR Code Generator",
+    slug: "qr-generator",
     tagline: "Create high-resolution vector SVG/PNG QR codes instantly from text, URLs, or Wi-Fi credentials.",
     categorySlug: "css-ui",
     categoryName: "CSS & UI",
@@ -124,6 +127,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
   {
     id: "tool-4",
     name: "JWT Inspector & Decoder",
+    slug: "jwt-decoder",
     tagline: "Decode Header, Payload, and verify expiration dates for JSON Web Tokens client-side.",
     categorySlug: "developer-tools",
     categoryName: "Developer Tools",
@@ -139,6 +143,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
   {
     id: "tool-5",
     name: "Base64 Encoder & Decoder",
+    slug: "base64-encoder",
     tagline: "Convert plain text to Base64 and decode Base64 strings with UTF-8 support instantly.",
     categorySlug: "text-utilities",
     categoryName: "Text & Markdown",
@@ -153,22 +158,24 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
   },
   {
     id: "tool-6",
-    name: "Text Converter & Word Counter",
-    tagline: "Convert case (UPPERCASE, lowercase, Title Case, camelCase) and analyze word/character metrics.",
-    categorySlug: "text-utilities",
-    categoryName: "Text & Markdown",
+    name: "UUID v4 & ULID Generator",
+    slug: "uuid-generator",
+    tagline: "Generate v4 UUIDs and lexicographically sortable ULIDs in bulk with custom casing.",
+    categorySlug: "developer-tools",
+    categoryName: "Developer Tools",
     badgeText: "Live Tool",
     isComingSoon: false,
     isLive: true,
-    actionKey: "text-converter",
+    actionKey: "uuid-generator",
     popular: false,
     iconName: "Binary",
     gradient: "from-teal-500 to-cyan-600",
-    tags: ["Case", "Converter", "Word Count", "Text"],
+    tags: ["UUID", "ULID", "Generator", "Dev"],
   },
   {
     id: "tool-7",
     name: "Client Image Compressor",
+    slug: "image-compressor",
     tagline: "Compress WebP, PNG, and JPG images up to 80% without losing visual fidelity.",
     categorySlug: "image-tools",
     categoryName: "Image & Asset Tools",
@@ -182,6 +189,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
   {
     id: "tool-8",
     name: "CSS Glassmorphism & Shadow Generator",
+    slug: "css-generator",
     tagline: "Design modern box-shadows and glass visual effects with 1-click CSS code export.",
     categorySlug: "css-ui",
     categoryName: "CSS & UI",
@@ -193,6 +201,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
     tags: ["CSS", "Shadow", "UI", "Design"],
   },
 ];
+
 
 export const WHY_TOOLVERSE: ValueProp[] = [
   {
