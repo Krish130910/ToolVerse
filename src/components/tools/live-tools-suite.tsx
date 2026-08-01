@@ -31,6 +31,7 @@ import { VideoGifConverterTool } from "@/components/tools/impl/video-gif-convert
 import { UuidGeneratorTool } from "@/components/tools/impl/uuid-generator";
 import { Base64EncoderTool } from "@/components/tools/impl/base64-encoder";
 import { JwtDecoderTool } from "@/components/tools/impl/jwt-decoder";
+import { UrlShortenerTool } from "@/components/tools/impl/url-shortener";
 
 interface LiveToolsSuiteProps {
   initialTool?: string;
@@ -104,6 +105,8 @@ export const LiveToolsSuite: React.FC<LiveToolsSuiteProps> = ({
         return <Base64EncoderTool />;
       case "jwt-decoder":
         return <JwtDecoderTool />;
+      case "url-shortener":
+        return <UrlShortenerTool />;
       default:
         return <JsonFormatterTool />;
     }

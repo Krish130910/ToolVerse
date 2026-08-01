@@ -1,0 +1,21 @@
+// This is your Prisma schema file for ToolVerse (Neon PostgreSQL)
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ToolRequest {
+  id        String   @id @default(cuid())
+  toolName  String
+  name      String?
+  email     String
+  message   String   @db.Text
+  status    String   @default("Pending")
+  createdAt DateTime @default(now())
+
+  @@map("tool_requests")
+}

@@ -91,22 +91,15 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
               return (
                 <motion.div
                   key={tool.id}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.25, delay: idx * 0.04 }}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, delay: Math.min(idx * 0.02, 0.2) }}
+                  className="h-full"
                 >
-                  <BorderGlow
-                    borderRadius={22}
-                    glowRadius={25}
-                    glowIntensity={0.85}
-                    colors={["#F97316", "#FBBF24", "#EA580C"]}
-                    className="h-full"
+                  <Link
+                    href={`/tools/${tool.slug}`}
+                    className="flex flex-col justify-between h-full group transition-all duration-200 rounded-[22px] border border-zinc-200/90 hover:border-orange-400 bg-white shadow-xs hover:shadow-xl hover:-translate-y-1 overflow-hidden"
                   >
-                    <Link
-                      href={`/tools/${tool.slug}`}
-                      className="flex flex-col justify-between h-full group transition-all rounded-[22px] border border-zinc-200/90 bg-white shadow-xs hover:shadow-xl hover:-translate-y-1 overflow-hidden"
-                    >
                       {/* Top App Preview Mockup Window */}
                       <div className="relative aspect-[16/10] bg-[#121215] border-b border-zinc-200/80 rounded-t-[20px] overflow-hidden p-4 flex items-center justify-center group-hover:bg-[#18181B] transition-colors">
                         {/* App UI Header Bar */}
@@ -172,7 +165,6 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
                         </div>
                       </div>
                     </Link>
-                  </BorderGlow>
                 </motion.div>
               );
             })}
@@ -191,21 +183,21 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
                   viewport={{ once: true }}
                   transition={{ duration: 0.2, delay: idx * 0.03 }}
                 >
-                  <div className="bg-zinc-900/90 border border-zinc-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-emerald-500/40 transition-colors group shadow-xs">
+                  <div className="bg-white border border-zinc-200/90 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-orange-400 hover:shadow-md transition-all group shadow-2xs">
                     <Link href={`/tools/${tool.slug}`} className="flex items-center gap-3.5">
-                      <div className="p-2.5 rounded-xl bg-zinc-950 border border-zinc-800 shrink-0">
-                        {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-5 h-5 text-emerald-400" />}
+                      <div className="p-2.5 rounded-xl bg-orange-50 border border-orange-200/80 shrink-0">
+                        {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-5 h-5 text-orange-500" />}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-bold text-zinc-100 group-hover:text-emerald-400">
+                          <h3 className="text-sm font-bold text-zinc-900 group-hover:text-orange-600 transition-colors">
                             {tool.name}
                           </h3>
                           <span className="text-[10px] text-zinc-400 font-mono">
                             • {tool.categoryName}
                           </span>
                         </div>
-                        <p className="text-xs text-zinc-400 line-clamp-1 mt-0.5">
+                        <p className="text-xs text-zinc-500 line-clamp-1 mt-0.5">
                           {tool.tagline}
                         </p>
                       </div>
@@ -214,10 +206,10 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
                     <div className="flex items-center gap-3 shrink-0 self-end sm:self-auto">
                       <button
                         onClick={() => onToggleFavorite(tool.id)}
-                        className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
+                        className={`p-2 rounded-xl border transition-colors cursor-pointer ${
                           isFav
-                            ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
-                            : "bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200"
+                            ? "bg-amber-50 border-amber-300 text-amber-500"
+                            : "bg-zinc-50 border-zinc-200 text-zinc-400 hover:text-orange-500"
                         }`}
                         title={isFav ? "Remove from Favorites" : "Add to Favorites"}
                       >

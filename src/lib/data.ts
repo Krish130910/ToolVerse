@@ -64,6 +64,15 @@ export const ROADMAP_CATEGORIES: Category[] = [
     color: "from-zinc-800 to-zinc-900 text-teal-400 border-zinc-700/60",
     toolCount: 3,
   },
+  {
+    id: "cat-8",
+    name: "Web Utilities",
+    slug: "web-utilities",
+    description: "URL shorteners, link management, custom aliases, and Web QR generator tools.",
+    iconName: "Link",
+    color: "from-zinc-800 to-zinc-900 text-orange-400 border-zinc-700/60",
+    toolCount: 1,
+  },
 ];
 
 export const FEATURED_TOOLS: FeaturedTool[] = [
@@ -450,6 +459,22 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
     iconName: "Layers",
     gradient: "from-fuchsia-500 to-pink-600",
     tags: ["Video", "GIF", "MP4", "Trim", "Animation"],
+  },
+  {
+    id: "tool-25",
+    name: "URL Shortener",
+    slug: "url-shortener",
+    tagline: "Shorten long URLs instantly with custom aliases, password protection, QR code generation, and click statistics.",
+    categorySlug: "web-utilities",
+    categoryName: "Web Utilities",
+    badgeText: "Live Tool",
+    isComingSoon: false,
+    isLive: true,
+    actionKey: "url-shortener",
+    popular: true,
+    iconName: "Link",
+    gradient: "from-orange-500 to-amber-600",
+    tags: ["URL", "Short URL", "URL Shortener", "Link Shortener", "Tiny URL", "Link", "Short Link"],
   },
 ];
 

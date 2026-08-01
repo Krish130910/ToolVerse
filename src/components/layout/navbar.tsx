@@ -33,7 +33,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   const navLinks = [
-    { href: "/explore", label: "Explore" },
     { href: "/tools", label: "All Tools" },
     { href: "/about", label: "About" },
   ];
@@ -119,14 +118,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex md:hidden items-center gap-2">
               <button
                 onClick={onSearchClick}
-                className="p-2 rounded-xl bg-zinc-900/80 border border-zinc-800 text-zinc-300"
+                className="p-2 rounded-xl bg-white border border-zinc-200/90 text-zinc-700 hover:text-orange-600 shadow-2xs"
                 aria-label="Search"
               >
                 <Search className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-xl bg-zinc-900/80 border border-zinc-800 text-zinc-300"
+                className="p-2 rounded-xl bg-white border border-zinc-200/90 text-zinc-700 hover:text-orange-600 shadow-2xs"
                 aria-label="Toggle Menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -141,33 +140,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="md:hidden mt-3 pt-3 border-t border-zinc-800 pb-3 space-y-2 text-xs bg-[#09090B]"
+                className="md:hidden mt-3 pt-3 border-t border-zinc-200 pb-3 space-y-1.5 text-xs bg-white rounded-2xl p-3 border shadow-lg"
               >
-                <Link
-                  href="/explore"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-zinc-300 hover:bg-zinc-900"
-                >
-                  Explore Tools
-                </Link>
                 <Link
                   href="/categories"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-zinc-300 hover:bg-zinc-900"
+                  className="block px-3 py-2 rounded-xl text-zinc-700 font-semibold hover:bg-orange-50 hover:text-orange-600 transition-colors"
                 >
                   Categories Index
                 </Link>
                 <Link
                   href="/tools"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-zinc-300 hover:bg-zinc-900"
+                  className="block px-3 py-2 rounded-xl text-zinc-700 font-semibold hover:bg-orange-50 hover:text-orange-600 transition-colors"
                 >
                   All Utilities
                 </Link>
                 <Link
                   href="/about"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-zinc-300 hover:bg-zinc-900"
+                  className="block px-3 py-2 rounded-xl text-zinc-700 font-semibold hover:bg-orange-50 hover:text-orange-600 transition-colors"
                 >
                   About ToolVerse
                 </Link>

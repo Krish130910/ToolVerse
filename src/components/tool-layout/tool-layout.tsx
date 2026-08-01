@@ -19,6 +19,8 @@ import {
   Layers,
   Palette,
   ArrowRight,
+  Link as LinkIcon,
+  Wrench,
 } from "lucide-react";
 
 interface ToolLayoutProps {
@@ -34,6 +36,8 @@ const TOOL_ICON_MAP: Record<string, React.ReactNode> = {
   Binary: <Binary className="w-6 h-6 text-orange-500" />,
   Layers: <Layers className="w-6 h-6 text-orange-500" />,
   Palette: <Palette className="w-6 h-6 text-orange-500" />,
+  Link: <LinkIcon className="w-6 h-6 text-orange-500" />,
+  Wrench: <Wrench className="w-6 h-6 text-orange-500" />,
 };
 
 export const ToolLayout: React.FC<ToolLayoutProps> = ({ tool, children }) => {
@@ -75,8 +79,27 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({ tool, children }) => {
     (t) => t.categorySlug === tool.categorySlug && t.id !== tool.id
   ).slice(0, 3);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": `${tool.name} – ToolVerse`,
+    "description": tool.tagline,
+    "url": `https://toolverse.app/tools/${tool.slug}`,
+    "applicationCategory": tool.categoryName,
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  };
+
   return (
     <div className="py-8 sm:py-12 relative min-h-screen bg-[#FAF8F5]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Container>
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-2 text-xs text-zinc-600 mb-6 font-medium">

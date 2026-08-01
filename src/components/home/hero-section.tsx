@@ -72,7 +72,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="pt-4 border-t border-orange-200/60 w-full max-w-xl flex items-center justify-between text-xs text-zinc-600">
               <div className="flex items-center gap-1.5 font-medium">
                 <Cpu className="w-3.5 h-3.5 text-orange-500" />
-                <span>24 Utilities</span>
+                <span>25 Utilities</span>
               </div>
               <div className="flex items-center gap-1.5 font-medium">
                 <ShieldCheck className="w-3.5 h-3.5 text-orange-500" />

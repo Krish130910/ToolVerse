@@ -49,7 +49,7 @@ export default function ExplorePage() {
             Explore All Developer Utilities
           </h1>
           <p className="text-xs sm:text-sm text-zinc-600 max-w-xl leading-relaxed">
-            Search, filter, bookmark, and run 24 privacy-first web utilities directly inside your browser.
+            Search, filter, bookmark, and run 25 privacy-first web utilities directly inside your browser.
           </p>
         </div>
       </Container>

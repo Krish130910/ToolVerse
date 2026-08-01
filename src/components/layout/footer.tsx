@@ -50,7 +50,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link href="/tools" className="hover:text-orange-600 transition-colors">
-                  All 24 Utilities
+                  All 25 Utilities
                 </Link>
               </li>
               <li>

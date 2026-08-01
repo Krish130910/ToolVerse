@@ -14,6 +14,7 @@ const CATEGORY_DOT_COLORS: Record<string, string> = {
   "security": "bg-blue-500",
   "text-utilities": "bg-cyan-500",
   "ai-tools": "bg-teal-500",
+  "web-utilities": "bg-orange-500",
   "productivity": "bg-fuchsia-500",
 };
 

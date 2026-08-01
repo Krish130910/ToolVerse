@@ -34,6 +34,7 @@ const TOOL_ICON_MAP: Record<string, React.ReactNode> = {
   Layers: <Layers className="w-4 h-4 text-orange-500" />,
   Palette: <Palette className="w-4 h-4 text-orange-500" />,
   Sparkles: <Sparkles className="w-4 h-4 text-orange-500" />,
+  Link: <Braces className="w-4 h-4 text-orange-500" />,
 };
 
 
