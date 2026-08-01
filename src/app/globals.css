@@ -41,6 +41,7 @@ body {
 
 .gradient-text-orange {
   background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -62,4 +63,44 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #CBD5E1;
+}
+
+/* Smooth 3D Floating Bubble Animations */
+@keyframes floatBubbleSlow {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0) scale(1.04);
+  }
+}
+
+@keyframes floatBubbleMedium {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(12px, -24px, 0) scale(0.96);
+  }
+}
+
+@keyframes floatBubbleFast {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-10px, -14px, 0) scale(1.05);
+  }
+}
+
+.animate-float-slow {
+  animation: floatBubbleSlow 8s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: floatBubbleMedium 6s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: floatBubbleFast 4.5s ease-in-out infinite;
 }

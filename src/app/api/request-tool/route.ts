@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { validateAndGetEnv } from "@/lib/env";
 
 // Basic sliding window rate limiting (5 requests per 10 minutes per IP)
@@ -28,7 +28,7 @@ function checkRateLimit(ip: string): boolean {
 export async function POST(request: Request) {
   try {
     // 1. Environment Check & Rate Limiting
-    const { resendApiKey, adminEmail } = validateAndGetEnv();
+    const { emailUser, emailPass, adminEmail, isSmtpConfigured } = validateAndGetEnv();
 
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
     if (!checkRateLimit(ip)) {
@@ -37,6 +37,11 @@ export async function POST(request: Request) {
         { status: 429 }
       );
     }
+
+    // Direct process.env Runtime Audit Logging
+    console.log(`[SMTP Runtime Audit]: process.env.EMAIL_USER = ${process.env.EMAIL_USER || "NOT_SET"}`);
+    console.log(`[SMTP Runtime Audit]: process.env.EMAIL_PASS Length = ${process.env.EMAIL_PASS?.length || 0}`);
+    console.log(`[SMTP Runtime Audit]: process.env.ADMIN_EMAIL = ${adminEmail}`);
 
     // 2. Parse Payload
     const body = await request.json();
@@ -91,8 +96,7 @@ export async function POST(request: Request) {
       });
     } catch (dbError) {
       console.error("[Prisma DB Error]: Failed to save tool request to Neon DB:", dbError);
-      
-      // Fallback for dev mode when DATABASE_URL placeholder is in use
+
       if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes("npg_placeholder")) {
         createdRecord = {
           id: "tr_" + Math.random().toString(36).substring(2, 9),
@@ -104,7 +108,6 @@ export async function POST(request: Request) {
           createdAt: new Date(),
         };
       } else {
-        // If DB is configured but fails, throw error to prevent sending orphan email
         return NextResponse.json(
           { success: false, error: "Failed to save request to database." },
           { status: 500 }
@@ -112,11 +115,20 @@ export async function POST(request: Request) {
       }
     }
 
-    // 5. STEP B: Send Email Notification via Resend ONLY AFTER Database Save Succeeds
+    // 5. STEP B: Send Email Notification via Nodemailer Gmail SMTP ONLY AFTER Database Save Succeeds
     if (createdRecord) {
-      if (resendApiKey && adminEmail) {
+      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
         try {
-          const resend = new Resend(resendApiKey);
+          const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
+            },
+          });
+
           const formattedDate = new Date(createdRecord.createdAt).toLocaleString();
 
           const emailText = `A new tool has been requested.
@@ -136,23 +148,19 @@ ${createdRecord.message}
 Submitted At:
 ${formattedDate}`;
 
-          await resend.emails.send({
-            from: "ToolVerse <onboarding@resend.dev>",
+          await transporter.sendMail({
+            from: `"ToolVerse" <${process.env.EMAIL_USER}>`,
             to: adminEmail,
             subject: "🔔 New Tool Request - ToolVerse",
             text: emailText,
           });
+
+          console.log(`[Nodemailer Success]: Notification email dispatched to ${adminEmail}`);
         } catch (emailError) {
-          console.error("[Resend Email Error]: Email delivery failed, but database record is safely stored:", emailError);
-          // DB record is saved successfully; do not roll back or fail user response
+          console.error("[Nodemailer Gmail Error]: Failed to send notification via Gmail SMTP:", emailError);
         }
       } else {
-        if (!resendApiKey) {
-          console.warn("[Resend Notice]: RESEND_API_KEY is not set. Email notification skipped.");
-        }
-        if (!adminEmail) {
-          console.warn("[Resend Notice]: ADMIN_EMAIL is not set. Email notification skipped.");
-        }
+        console.warn("[Nodemailer Notice]: Gmail SMTP unconfigured. Set EMAIL_USER & EMAIL_PASS in .env.local.");
       }
     }
 

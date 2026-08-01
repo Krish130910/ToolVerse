@@ -3,9 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { Card, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { FeaturedTool } from "@/types";
 import {
   Braces,
@@ -13,17 +10,12 @@ import {
   QrCode,
   Lock,
   Layers,
-  Sparkles,
-  Clock,
-  Star,
-  Play,
   Binary,
   Palette,
   ArrowRight,
+  Star,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { BorderGlow } from "@/components/ui/border-glow";
-
 
 interface FeaturedToolsProps {
   tools: FeaturedTool[];
@@ -34,7 +26,6 @@ interface FeaturedToolsProps {
   onOpenTool?: (tool: FeaturedTool) => void;
   showOnlyFavorites?: boolean;
 }
-
 
 const TOOL_ICON_MAP: Record<string, React.ReactNode> = {
   Braces: <Braces className="w-5 h-5 text-orange-500" />,
@@ -71,8 +62,6 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
   return (
     <section id="featured-tools" className="pb-12 pt-2 bg-[#FAF8F5]">
       <Container>
-
-
         {/* Tools Display */}
         {filteredTools.length === 0 ? (
           <div className="bg-white border border-zinc-200 p-10 rounded-2xl text-center space-y-3 shadow-xs">
@@ -100,76 +89,75 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
                     href={`/tools/${tool.slug}`}
                     className="flex flex-col justify-between h-full group transition-all duration-200 rounded-[22px] border border-zinc-200/90 hover:border-orange-400 bg-white shadow-xs hover:shadow-xl hover:-translate-y-1 overflow-hidden"
                   >
-                      {/* Top App Preview Mockup Window */}
-                      <div className="relative aspect-[16/10] bg-[#121215] border-b border-zinc-200/80 rounded-t-[20px] overflow-hidden p-4 flex items-center justify-center group-hover:bg-[#18181B] transition-colors">
-                        {/* App UI Header Bar */}
-                        <div className="absolute top-2.5 left-3 right-3 h-5.5 rounded-md bg-zinc-800/90 flex items-center px-2.5 justify-between">
-                          <div className="flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-rose-500/80" />
-                            <span className="w-2 h-2 rounded-full bg-amber-500/80" />
-                            <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
-                          </div>
-                          <span className="text-[9px] font-mono text-zinc-400 truncate">
-                            {tool.slug}.toolverse
-                          </span>
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              onToggleFavorite(tool.id);
-                            }}
-                            className="text-zinc-400 hover:text-amber-400 transition-colors"
-                            title={isFav ? "Remove Star" : "Star Tool"}
-                          >
-                            <Star className={`w-3 h-3 ${isFav ? "fill-amber-400 text-amber-400" : ""}`} />
-                          </button>
+                    {/* Top App Preview Mockup Window */}
+                    <div className="relative aspect-[16/10] bg-[#121215] border-b border-zinc-200/80 rounded-t-[20px] overflow-hidden p-4 flex items-center justify-center group-hover:bg-[#18181B] transition-colors">
+                      {/* App UI Header Bar */}
+                      <div className="absolute top-2.5 left-3 right-3 h-5.5 rounded-md bg-zinc-800/90 flex items-center px-2.5 justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-rose-500/80" />
+                          <span className="w-2 h-2 rounded-full bg-amber-500/80" />
+                          <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
                         </div>
+                        <span className="text-[9px] font-mono text-zinc-400 truncate">
+                          {tool.slug}.toolverse
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onToggleFavorite(tool.id);
+                          }}
+                          className="text-zinc-400 hover:text-amber-400 transition-colors"
+                          title={isFav ? "Remove Star" : "Star Tool"}
+                        >
+                          <Star className={`w-3 h-3 ${isFav ? "fill-amber-400 text-amber-400" : ""}`} />
+                        </button>
+                      </div>
 
-                        {/* Central Tool Icon / Preview Illustration */}
-                        <div className="pt-4 flex flex-col items-center justify-center space-y-1.5 text-center">
-                          <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700/80 shadow-md group-hover:scale-110 group-hover:border-orange-500/60 transition-all">
-                            {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-6 h-6 text-orange-500" />}
-                          </div>
-                          <span className="text-[10px] font-mono text-zinc-400 group-hover:text-orange-400 transition-colors">
+                      {/* Central Tool Icon / Preview Illustration */}
+                      <div className="pt-4 flex flex-col items-center justify-center space-y-1.5 text-center">
+                        <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700/80 shadow-md group-hover:scale-110 group-hover:border-orange-500/60 transition-all">
+                          {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-6 h-6 text-orange-500" />}
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-400 group-hover:text-orange-400 transition-colors">
+                          {tool.name}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="p-5 flex flex-col justify-between flex-1 space-y-4">
+                      <div>
+                        {/* Title */}
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className="text-base font-extrabold text-zinc-900 group-hover:text-orange-600 transition-colors tracking-tight font-serif italic">
                             {tool.name}
-                          </span>
+                          </h3>
                         </div>
+
+                        {/* Description */}
+                        <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed">
+                          {tool.tagline}
+                        </p>
                       </div>
 
-                      {/* Card Body */}
-                      <div className="p-5 flex flex-col justify-between flex-1 space-y-4">
-                        <div>
-                          {/* Title */}
-                          <div className="flex items-center justify-between mb-1">
-                            <h3 className="text-base font-extrabold text-zinc-900 group-hover:text-orange-600 transition-colors tracking-tight font-serif italic">
-                              {tool.name}
-                            </h3>
-                          </div>
-
-                          {/* Description */}
-                          <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed">
-                            {tool.tagline}
-                          </p>
+                      {/* Bottom Footer Bar */}
+                      <div className="pt-3 border-t border-zinc-100 flex items-center justify-between">
+                        <div className="flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 group-hover:text-zinc-600 transition-colors">
+                          <span>↘</span>
+                          <span>{tool.categoryName}</span>
                         </div>
 
-                        {/* Bottom Footer Bar */}
-                        <div className="pt-3 border-t border-zinc-100 flex items-center justify-between">
-                          <div className="flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 group-hover:text-zinc-600 transition-colors">
-                            <span>↘</span>
-                            <span>{tool.categoryName}</span>
-                          </div>
-
-                          <div className="w-8 h-8 rounded-full bg-zinc-100 group-hover:bg-orange-500 text-zinc-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-2xs group-hover:scale-105">
-                            <ArrowRight className="w-4 h-4" />
-                          </div>
+                        <div className="w-8 h-8 rounded-full bg-zinc-100 group-hover:bg-orange-500 text-zinc-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-2xs group-hover:scale-105">
+                          <ArrowRight className="w-4 h-4" />
                         </div>
                       </div>
-                    </Link>
+                    </div>
+                  </Link>
                 </motion.div>
               );
             })}
           </div>
-
         ) : (
           /* Compact List View */
           <div className="space-y-3">
@@ -178,56 +166,42 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
               return (
                 <motion.div
                   key={tool.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.2, delay: idx * 0.03 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.15, delay: Math.min(idx * 0.02, 0.15) }}
                 >
-                  <div className="bg-white border border-zinc-200/90 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-orange-400 hover:shadow-md transition-all group shadow-2xs">
-                    <Link href={`/tools/${tool.slug}`} className="flex items-center gap-3.5">
-                      <div className="p-2.5 rounded-xl bg-orange-50 border border-orange-200/80 shrink-0">
+                  <Link
+                    href={`/tools/${tool.slug}`}
+                    className="flex items-center justify-between p-4 rounded-xl border border-zinc-200/90 bg-white hover:border-orange-400 hover:shadow-md transition-all group"
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <div className="p-2.5 rounded-xl bg-zinc-900 text-orange-500 border border-zinc-700/80">
                         {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-5 h-5 text-orange-500" />}
                       </div>
                       <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-bold text-zinc-900 group-hover:text-orange-600 transition-colors">
-                            {tool.name}
-                          </h3>
-                          <span className="text-[10px] text-zinc-400 font-mono">
-                            • {tool.categoryName}
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-500 line-clamp-1 mt-0.5">
-                          {tool.tagline}
-                        </p>
+                        <h4 className="text-sm font-extrabold text-zinc-900 group-hover:text-orange-600 transition-colors">
+                          {tool.name}
+                        </h4>
+                        <p className="text-xs text-zinc-500 line-clamp-1">{tool.tagline}</p>
                       </div>
-                    </Link>
+                    </div>
 
-                    <div className="flex items-center gap-3 shrink-0 self-end sm:self-auto">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[10px] font-extrabold uppercase text-zinc-400 bg-zinc-100 px-2.5 py-1 rounded-md">
+                        {tool.categoryName}
+                      </span>
                       <button
-                        onClick={() => onToggleFavorite(tool.id)}
-                        className={`p-2 rounded-xl border transition-colors cursor-pointer ${
-                          isFav
-                            ? "bg-amber-50 border-amber-300 text-amber-500"
-                            : "bg-zinc-50 border-zinc-200 text-zinc-400 hover:text-orange-500"
-                        }`}
-                        title={isFav ? "Remove from Favorites" : "Add to Favorites"}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          onToggleFavorite(tool.id);
+                        }}
+                        className="text-zinc-400 hover:text-amber-400 transition-colors p-1"
                       >
                         <Star className={`w-4 h-4 ${isFav ? "fill-amber-400 text-amber-400" : ""}`} />
                       </button>
-
-                      <Link href={`/tools/${tool.slug}`}>
-                        <Button
-                          size="sm"
-                          variant="default"
-                          className="flex items-center gap-1.5 text-xs"
-                        >
-                          <Play className="w-3 h-3 fill-black" />
-                          <span>Run Tool</span>
-                        </Button>
-                      </Link>
                     </div>
-                  </div>
+                  </Link>
                 </motion.div>
               );
             })}
@@ -237,7 +211,3 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
     </section>
   );
 };
-
-
-
-

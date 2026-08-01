@@ -17,11 +17,17 @@ export const BruhGrowBackground: React.FC<{ children?: React.ReactNode }> = ({
         }}
       />
 
-      {/* GPU Accelerated Soft Radial Glow Orbs (Pure CSS) */}
+      {/* Floating 3D Ambient Glass Bubbles (Hardware-Accelerated CSS) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute -top-10 -right-16 w-96 h-96 rounded-full bg-gradient-to-br from-orange-200/40 via-amber-100/20 to-transparent blur-2xl opacity-60" />
-        <div className="absolute top-12 -left-12 w-80 h-80 rounded-full bg-gradient-to-br from-orange-200/30 via-orange-100/10 to-transparent blur-2xl opacity-50" />
-        <div className="absolute top-1/2 right-1/4 w-48 h-48 rounded-full bg-gradient-to-br from-orange-200/30 to-transparent blur-xl opacity-40" />
+        {/* Soft Ambient Glow Orbs */}
+        <div className="absolute -top-10 -right-16 w-96 h-96 rounded-full bg-gradient-to-br from-orange-300/40 via-amber-200/20 to-transparent blur-2xl opacity-60" />
+        <div className="absolute top-12 -left-12 w-80 h-80 rounded-full bg-gradient-to-br from-orange-300/30 via-orange-200/10 to-transparent blur-2xl opacity-50" />
+
+        {/* 3D Floating Glass Bubbles */}
+        <div className="absolute top-10 left-[12%] w-24 h-24 rounded-full bg-gradient-to-br from-white/70 via-orange-200/30 to-orange-400/20 backdrop-blur-md border border-white/60 shadow-xl shadow-orange-500/10 animate-float-slow" />
+        <div className="absolute top-28 right-[15%] w-32 h-32 rounded-full bg-gradient-to-tr from-white/80 via-amber-200/40 to-orange-300/30 backdrop-blur-lg border border-white/80 shadow-2xl shadow-orange-500/15 animate-float-medium" />
+        <div className="absolute bottom-16 left-[20%] w-16 h-16 rounded-full bg-gradient-to-bl from-white/60 via-orange-100/40 to-orange-300/20 backdrop-blur-sm border border-white/50 shadow-lg shadow-orange-500/10 animate-float-fast" />
+        <div className="absolute top-1/2 right-[8%] w-20 h-20 rounded-full bg-gradient-to-br from-white/70 via-orange-200/20 to-amber-300/20 backdrop-blur-md border border-white/60 shadow-xl shadow-orange-500/10 animate-float-slow" />
       </div>
 
       {/* Hero Content Slot */}
