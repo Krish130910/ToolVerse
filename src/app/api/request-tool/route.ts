@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Resend } from "resend";
+import { validateAndGetEnv } from "@/lib/env";
 
 // Basic sliding window rate limiting (5 requests per 10 minutes per IP)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -26,7 +27,9 @@ function checkRateLimit(ip: string): boolean {
 
 export async function POST(request: Request) {
   try {
-    // 1. Basic Rate Limiting Check
+    // 1. Environment Check & Rate Limiting
+    const { resendApiKey, adminEmail } = validateAndGetEnv();
+
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
     if (!checkRateLimit(ip)) {
       return NextResponse.json(
@@ -74,7 +77,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 4. Save to Database using Prisma (Neon PostgreSQL)
+    // 4. STEP A: Save to Neon PostgreSQL Database using Prisma FIRST
     let createdRecord;
     try {
       createdRecord = await prisma.toolRequest.create({
@@ -87,29 +90,36 @@ export async function POST(request: Request) {
         },
       });
     } catch (dbError) {
-      console.error("[Prisma DB Error]: Failed to save tool request:", dbError);
-      // Create fallback object in memory if DB connection is unavailable in dev/testing
-      createdRecord = {
-        id: "tr_" + Math.random().toString(36).substring(2, 9),
-        toolName: trimmedToolName,
-        name: trimmedName || null,
-        email: trimmedEmail,
-        message: trimmedMessage,
-        status: "Pending",
-        createdAt: new Date(),
-      };
+      console.error("[Prisma DB Error]: Failed to save tool request to Neon DB:", dbError);
+      
+      // Fallback for dev mode when DATABASE_URL placeholder is in use
+      if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes("npg_placeholder")) {
+        createdRecord = {
+          id: "tr_" + Math.random().toString(36).substring(2, 9),
+          toolName: trimmedToolName,
+          name: trimmedName || null,
+          email: trimmedEmail,
+          message: trimmedMessage,
+          status: "Pending",
+          createdAt: new Date(),
+        };
+      } else {
+        // If DB is configured but fails, throw error to prevent sending orphan email
+        return NextResponse.json(
+          { success: false, error: "Failed to save request to database." },
+          { status: 500 }
+        );
+      }
     }
 
-    // 5. Send Email Notification via Resend
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const adminEmail = process.env.ADMIN_EMAIL;
+    // 5. STEP B: Send Email Notification via Resend ONLY AFTER Database Save Succeeds
+    if (createdRecord) {
+      if (resendApiKey && adminEmail) {
+        try {
+          const resend = new Resend(resendApiKey);
+          const formattedDate = new Date(createdRecord.createdAt).toLocaleString();
 
-    if (resendApiKey && adminEmail) {
-      try {
-        const resend = new Resend(resendApiKey);
-        const formattedDate = new Date(createdRecord.createdAt).toLocaleString();
-
-        const emailText = `A new tool has been requested.
+          const emailText = `A new tool has been requested.
 
 Tool:
 ${createdRecord.toolName}
@@ -126,26 +136,27 @@ ${createdRecord.message}
 Submitted At:
 ${formattedDate}`;
 
-        await resend.emails.send({
-          from: "ToolVerse <onboarding@resend.dev>",
-          to: adminEmail,
-          subject: "🔔 New Tool Request - ToolVerse",
-          text: emailText,
-        });
-      } catch (emailError) {
-        console.error("[Resend Email Error]: Email notification failed to send, but database record is safely preserved:", emailError);
-        // DB record is saved successfully; do not throw error to user
-      }
-    } else {
-      if (!resendApiKey) {
-        console.warn("[Resend Notice]: RESEND_API_KEY is not set in environment variables.");
-      }
-      if (!adminEmail) {
-        console.warn("[Resend Notice]: ADMIN_EMAIL is not set in environment variables.");
+          await resend.emails.send({
+            from: "ToolVerse <onboarding@resend.dev>",
+            to: adminEmail,
+            subject: "🔔 New Tool Request - ToolVerse",
+            text: emailText,
+          });
+        } catch (emailError) {
+          console.error("[Resend Email Error]: Email delivery failed, but database record is safely stored:", emailError);
+          // DB record is saved successfully; do not roll back or fail user response
+        }
+      } else {
+        if (!resendApiKey) {
+          console.warn("[Resend Notice]: RESEND_API_KEY is not set. Email notification skipped.");
+        }
+        if (!adminEmail) {
+          console.warn("[Resend Notice]: ADMIN_EMAIL is not set. Email notification skipped.");
+        }
       }
     }
 
-    // 6. Return Success Response
+    // 6. STEP C: Return Success Response
     return NextResponse.json(
       {
         success: true,
