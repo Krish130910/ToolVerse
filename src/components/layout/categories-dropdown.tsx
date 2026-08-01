@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ROADMAP_CATEGORIES } from "@/lib/data";
+import { ROADMAP_CATEGORIES, FEATURED_TOOLS } from "@/lib/data";
 
 const CATEGORY_DOT_COLORS: Record<string, string> = {
   "pdf-tools": "bg-rose-500",
@@ -64,6 +64,9 @@ export const CategoriesDropdown: React.FC = () => {
               {ROADMAP_CATEGORIES.map((cat) => {
                 const dotColor =
                   CATEGORY_DOT_COLORS[cat.slug] || "bg-orange-500";
+                const count = FEATURED_TOOLS.filter(
+                  (t) => t.categorySlug === cat.slug
+                ).length;
 
                 return (
                   <Link
@@ -81,7 +84,7 @@ export const CategoriesDropdown: React.FC = () => {
                       </span>
                     </div>
                     <span className="text-[11px] font-mono text-zinc-400 group-hover:text-zinc-600 transition-colors">
-                      {cat.toolCount}
+                      {count}
                     </span>
                   </Link>
                 );

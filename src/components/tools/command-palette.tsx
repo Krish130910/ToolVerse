@@ -26,14 +26,16 @@ interface CommandPaletteProps {
 }
 
 const TOOL_ICON_MAP: Record<string, React.ReactNode> = {
-  Braces: <Braces className="w-4 h-4 text-emerald-400" />,
-  KeyRound: <KeyRound className="w-4 h-4 text-emerald-400" />,
-  QrCode: <QrCode className="w-4 h-4 text-emerald-400" />,
-  Lock: <Lock className="w-4 h-4 text-emerald-400" />,
-  Binary: <Binary className="w-4 h-4 text-emerald-400" />,
-  Layers: <Layers className="w-4 h-4 text-emerald-400" />,
-  Palette: <Palette className="w-4 h-4 text-emerald-400" />,
+  Braces: <Braces className="w-4 h-4 text-orange-500" />,
+  KeyRound: <KeyRound className="w-4 h-4 text-orange-500" />,
+  QrCode: <QrCode className="w-4 h-4 text-orange-500" />,
+  Lock: <Lock className="w-4 h-4 text-orange-500" />,
+  Binary: <Binary className="w-4 h-4 text-orange-500" />,
+  Layers: <Layers className="w-4 h-4 text-orange-500" />,
+  Palette: <Palette className="w-4 h-4 text-orange-500" />,
+  Sparkles: <Sparkles className="w-4 h-4 text-orange-500" />,
 };
+
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isOpen,

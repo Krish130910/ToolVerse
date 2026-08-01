@@ -146,20 +146,11 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
                       {/* Card Body */}
                       <div className="p-5 flex flex-col justify-between flex-1 space-y-4">
                         <div>
-                          {/* Title & Badge Row */}
+                          {/* Title */}
                           <div className="flex items-center justify-between mb-1">
                             <h3 className="text-base font-extrabold text-zinc-900 group-hover:text-orange-600 transition-colors tracking-tight font-serif italic">
                               {tool.name}
                             </h3>
-                            {tool.isLive ? (
-                              <span className="px-2 py-0.5 rounded-full bg-orange-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-2xs">
-                                PRO
-                              </span>
-                            ) : (
-                              <span className="px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-500 text-[10px] font-bold uppercase tracking-wider border border-zinc-200">
-                                SOON
-                              </span>
-                            )}
                           </div>
 
                           {/* Description */}
