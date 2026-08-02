@@ -8,7 +8,7 @@ export const ROADMAP_CATEGORIES: Category[] = [
     description: "Production-ready AI utilities: English to Regex, Conventional Commit messages, and Code Explainer.",
     iconName: "Sparkles",
     color: "from-zinc-800 to-zinc-900 text-orange-400 border-zinc-700/60",
-    toolCount: 1,
+    toolCount: 2,
   },
   {
     id: "cat-1",
@@ -101,6 +101,22 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
     iconName: "Braces",
     gradient: "from-orange-500 to-amber-600",
     tags: ["AI", "Regex", "Pattern", "Validation", "Dev"],
+  },
+  {
+    id: "tool-27",
+    name: "AI Commit Message Generator",
+    slug: "ai-commit-message-generator",
+    tagline: "Generate clean, conventional Git commit messages (feat, fix, docs, refactor) from code descriptions.",
+    categorySlug: "ai-developer-tools",
+    categoryName: "AI Developer Tools",
+    badgeText: "AI Tool",
+    isComingSoon: false,
+    isLive: true,
+    actionKey: "ai-commit-message-generator",
+    popular: true,
+    iconName: "Binary",
+    gradient: "from-orange-500 to-amber-600",
+    tags: ["AI", "Git", "Commits", "Conventional Commits", "DevOps"],
   },
 
   // --- Existing Utilities ---
@@ -509,7 +525,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
 export const VALUE_PROPS: ValueProp[] = [
   {
     id: "vp-1",
-    title: "26 In-Browser Utilities",
+    title: "27 In-Browser Utilities",
     description: "PDF tools, AI developer utilities, image processors, QR generators, and formatters in one clean SaaS suite.",
     iconName: "Zap",
     badge: "Expanded Suite",

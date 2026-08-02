@@ -38,6 +38,10 @@ const AIRegexGenerator = dynamic(
   () => import("@/components/tools/impl/ai/ai-regex-generator").then((mod) => mod.AIRegexGenerator),
   { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI Regex Generator...</div> }
 );
+const AICommitMessageGenerator = dynamic(
+  () => import("@/components/tools/impl/ai/ai-commit-message-generator").then((mod) => mod.AICommitMessageGenerator),
+  { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI Commit Generator...</div> }
+);
 
 interface LiveToolsSuiteProps {
   initialTool?: string;
@@ -60,6 +64,8 @@ export const LiveToolsSuite: React.FC<LiveToolsSuiteProps> = ({
       // AI Tools
       case "ai-regex-generator":
         return <AIRegexGenerator />;
+      case "ai-commit-message-generator":
+        return <AICommitMessageGenerator />;
 
       // Existing Utilities
       case "svg-icons-library":
