@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FEATURED_TOOLS } from "@/lib/data";
+import dynamic from "next/dynamic";
 
-// Import All 24 Modular Production Tool Implementations
+// Standard Utility Implementations
 import { SvgIconsLibraryTool } from "@/components/tools/impl/svg-icons-library";
 import { ColorPaletteGeneratorTool } from "@/components/tools/impl/color-palette-generator";
 import { PdfPageNumbererTool } from "@/components/tools/impl/pdf-page-numberer";
@@ -33,6 +33,20 @@ import { Base64EncoderTool } from "@/components/tools/impl/base64-encoder";
 import { JwtDecoderTool } from "@/components/tools/impl/jwt-decoder";
 import { UrlShortenerTool } from "@/components/tools/impl/url-shortener";
 
+// Phase 1 AI Tools (Dynamic Suspense Loading)
+const AIRegexGenerator = dynamic(
+  () => import("@/components/tools/impl/ai/ai-regex-generator").then((mod) => mod.AIRegexGenerator),
+  { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI Regex Engine...</div> }
+);
+const AICommitMessageGenerator = dynamic(
+  () => import("@/components/tools/impl/ai/ai-commit-message-generator").then((mod) => mod.AICommitMessageGenerator),
+  { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI Commit Generator...</div> }
+);
+const AICodeExplainer = dynamic(
+  () => import("@/components/tools/impl/ai/ai-code-explainer").then((mod) => mod.AICodeExplainer),
+  { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI Code Explainer...</div> }
+);
+
 interface LiveToolsSuiteProps {
   initialTool?: string;
   onClose?: () => void;
@@ -51,6 +65,15 @@ export const LiveToolsSuite: React.FC<LiveToolsSuiteProps> = ({
 
   const renderToolComponent = () => {
     switch (activeTab) {
+      // Phase 1 AI Tools
+      case "ai-regex-generator":
+        return <AIRegexGenerator />;
+      case "ai-commit-message-generator":
+        return <AICommitMessageGenerator />;
+      case "ai-code-explainer":
+        return <AICodeExplainer />;
+
+      // Existing Utilities
       case "svg-icons-library":
         return <SvgIconsLibraryTool />;
       case "color-palette-generator":
@@ -112,30 +135,5 @@ export const LiveToolsSuite: React.FC<LiveToolsSuiteProps> = ({
     }
   };
 
-  return (
-    <div className="bg-white border border-zinc-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-6">
-      {/* Scrollable Tool Navigation Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-zinc-100 no-scrollbar">
-        {FEATURED_TOOLS.map((t) => {
-          const isActive = activeTab === t.slug;
-          return (
-            <button
-              key={t.id}
-              onClick={() => setActiveTab(t.slug)}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
-                isActive
-                  ? "bg-orange-500 text-white font-bold shadow-2xs"
-                  : "bg-zinc-50 text-zinc-700 hover:text-zinc-900 border border-zinc-200/90 hover:border-orange-300"
-              }`}
-            >
-              <span>{t.name}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Render Active Tool Implementation */}
-      <div className="pt-2">{renderToolComponent()}</div>
-    </div>
-  );
+  return <div className="w-full">{renderToolComponent()}</div>;
 };

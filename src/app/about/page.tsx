@@ -51,6 +51,28 @@ interface ToolCategoryGroup {
 
 const TOOL_CATEGORIES: ToolCategoryGroup[] = [
   {
+    name: "AI Developer Tools",
+    emoji: "🤖",
+    icon: <Sparkles className="w-4 h-4 text-orange-500" />,
+    tools: [
+      { name: "AI Regex Generator", slug: "ai-regex-generator", icon: <Sparkles className="w-3.5 h-3.5 text-orange-500" /> },
+      { name: "AI Commit Message Generator", slug: "ai-commit-message-generator", icon: <Sparkles className="w-3.5 h-3.5 text-amber-500" /> },
+      { name: "AI Code Explainer", slug: "ai-code-explainer", icon: <Sparkles className="w-3.5 h-3.5 text-purple-500" /> },
+      { name: "AI Bug Finder", slug: "ai-bug-finder", icon: <Sparkles className="w-3.5 h-3.5 text-rose-500" /> },
+      { name: "AI Code Converter", slug: "ai-code-converter", icon: <Sparkles className="w-3.5 h-3.5 text-blue-500" /> },
+      { name: "AI README Generator", slug: "ai-readme-generator", icon: <Sparkles className="w-3.5 h-3.5 text-emerald-500" /> },
+      { name: "AI API Docs Generator", slug: "ai-api-docs-generator", icon: <Sparkles className="w-3.5 h-3.5 text-orange-500" /> },
+      { name: "AI Email Generator", slug: "ai-email-generator", icon: <Sparkles className="w-3.5 h-3.5 text-indigo-500" /> },
+      { name: "AI Test Case Generator", slug: "ai-test-case-generator", icon: <Sparkles className="w-3.5 h-3.5 text-teal-500" /> },
+      { name: "AI SQL Query Generator", slug: "ai-sql-query-generator", icon: <Sparkles className="w-3.5 h-3.5 text-cyan-500" /> },
+      { name: "AI JSON Analyzer", slug: "ai-json-analyzer", icon: <Sparkles className="w-3.5 h-3.5 text-amber-500" /> },
+      { name: "AI CSS Generator", slug: "ai-css-generator", icon: <Sparkles className="w-3.5 h-3.5 text-pink-500" /> },
+      { name: "AI Database Schema Designer", slug: "ai-database-schema-designer", icon: <Sparkles className="w-3.5 h-3.5 text-orange-500" /> },
+      { name: "AI Code Reviewer", slug: "ai-code-reviewer", icon: <Sparkles className="w-3.5 h-3.5 text-violet-500" /> },
+      { name: "AI Dockerfile Generator", slug: "ai-dockerfile-generator", icon: <Sparkles className="w-3.5 h-3.5 text-blue-600" /> },
+    ],
+  },
+  {
     name: "Design & Creative",
     emoji: "🎨",
     icon: <Palette className="w-4 h-4 text-orange-500" />,
@@ -208,14 +230,14 @@ export default function AboutPage() {
               <div>
                 <h2 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
                   <Wrench className="w-5 h-5 text-orange-500" />
-                  <span>Complete 25 Tools Suite</span>
+                  <span>Complete 40 Tools Suite</span>
                 </h2>
                 <p className="text-xs text-zinc-500 mt-0.5">
-                  Browse and launch any of our 25 utilities organized by domain category.
+                  Browse and launch any of our 40 utilities organized by domain category.
                 </p>
               </div>
               <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 border border-orange-200 px-3 py-1 rounded-full">
-                25 Tools Live
+                40 Tools Live
               </span>
             </div>
 
