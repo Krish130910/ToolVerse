@@ -74,6 +74,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       result: response.result,
+      metadata: response.metadata,
     });
   } catch (err: any) {
     console.error("[API Error /api/ai]:", err);
