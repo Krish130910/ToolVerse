@@ -8,7 +8,7 @@ export const ROADMAP_CATEGORIES: Category[] = [
     description: "Production-ready AI utilities: English to Regex, Conventional Commit messages, and Code Explainer.",
     iconName: "Sparkles",
     color: "from-zinc-800 to-zinc-900 text-orange-400 border-zinc-700/60",
-    toolCount: 3,
+    toolCount: 1,
   },
   {
     id: "cat-1",
@@ -85,7 +85,7 @@ export const ROADMAP_CATEGORIES: Category[] = [
 ];
 
 export const FEATURED_TOOLS: FeaturedTool[] = [
-  // --- Phase 1 AI Developer Tools ---
+  // --- AI Developer Tools ---
   {
     id: "tool-26",
     name: "AI Regex Generator",
@@ -101,38 +101,6 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
     iconName: "Braces",
     gradient: "from-orange-500 to-amber-600",
     tags: ["AI", "Regex", "Pattern", "Validation", "Dev"],
-  },
-  {
-    id: "tool-27",
-    name: "AI Commit Message Generator",
-    slug: "ai-commit-message-generator",
-    tagline: "Generate clean, conventional Git commit messages (feat, fix, docs, refactor) from code descriptions.",
-    categorySlug: "ai-developer-tools",
-    categoryName: "AI Developer Tools",
-    badgeText: "AI Tool",
-    isComingSoon: false,
-    isLive: true,
-    actionKey: "ai-commit-message-generator",
-    popular: true,
-    iconName: "Binary",
-    gradient: "from-orange-500 to-amber-600",
-    tags: ["AI", "Git", "Commits", "Conventional Commits", "DevOps"],
-  },
-  {
-    id: "tool-28",
-    name: "AI Code Explainer",
-    slug: "ai-code-explainer",
-    tagline: "Paste any complex code snippet and get line-by-line breakdowns in Beginner or Advanced mode.",
-    categorySlug: "ai-developer-tools",
-    categoryName: "AI Developer Tools",
-    badgeText: "AI Tool",
-    isComingSoon: false,
-    isLive: true,
-    actionKey: "ai-code-explainer",
-    popular: true,
-    iconName: "Braces",
-    gradient: "from-orange-500 to-amber-600",
-    tags: ["AI", "Code Analysis", "Learning", "Syntax", "Explanation"],
   },
 
   // --- Existing Utilities ---
@@ -541,7 +509,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
 export const VALUE_PROPS: ValueProp[] = [
   {
     id: "vp-1",
-    title: "28 In-Browser Utilities",
+    title: "26 In-Browser Utilities",
     description: "PDF tools, AI developer utilities, image processors, QR generators, and formatters in one clean SaaS suite.",
     iconName: "Zap",
     badge: "Expanded Suite",
