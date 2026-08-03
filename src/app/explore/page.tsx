@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import { Container } from "@/components/ui/container";
 import { SearchBar } from "@/components/home/search-bar";
 import { FeaturedTools } from "@/components/home/featured-tools";
-import { FEATURED_TOOLS, ROADMAP_CATEGORIES } from "@/lib/data";
-import { Sparkles, Compass } from "lucide-react";
+import { FEATURED_TOOLS } from "@/lib/data";
+import { Compass } from "lucide-react";
 
 export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,11 +49,10 @@ export default function ExplorePage() {
             Explore All Developer Utilities
           </h1>
           <p className="text-xs sm:text-sm text-zinc-600 max-w-xl leading-relaxed">
-            Search, filter, bookmark, and run 40 privacy-first web &amp; AI developer utilities directly inside your browser.
+            Search, filter, bookmark, and run {FEATURED_TOOLS.length} privacy-first web &amp; AI developer utilities directly inside your browser.
           </p>
         </div>
       </Container>
-
 
       {/* Search & Filter Bar */}
       <SearchBar

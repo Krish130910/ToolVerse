@@ -3,7 +3,7 @@
  * Features:
  * - Dedicated per-tool model mapping & prompt specialization
  * - Native Local Inference Server Support (Ollama / vLLM)
- * - Fine-Tuned Model Versioning (e.g. regex-v1.2, commit-v2.0)
+ * - Fine-Tuned Model Versioning (e.g. commit-v2.0, converter-v1.0)
  * - Evaluation Pipeline & Model Metadata Telemetry
  */
 
@@ -42,25 +42,9 @@ export interface SpecializedModelConfig {
 }
 
 /**
- * Specialized Per-Tool Model & Version Registry
+ * Specialized Active Per-Tool Model & Version Registry
  */
 export const SPECIALIZED_MODELS: Record<string, SpecializedModelConfig> = {
-  regex: {
-    toolId: "regex",
-    modelId: "toolverse-regex-qwen7b",
-    modelVersion: "regex-v1.2-ft",
-    localOllamaModel: "qwen2.5-coder:7b",
-    vllmModelId: "toolverse/regex-qwen2.5-7b-v1.2",
-    geminiModel: "gemini-1.5-flash",
-    openaiModel: "gpt-4o-mini",
-    groqModel: "llama-3.3-70b-versatile",
-    systemPrompt: `You are the ToolVerse Specialized Regex Model (regex-v1.2-ft).
-Generate regular expressions from English descriptions and explain every part line-by-line.
-Output format:
-1. Regex Pattern in \`\`\`regex codeblock
-2. Detailed Explanation
-3. Test Case Examples`,
-  },
   "commit-message": {
     toolId: "commit-message",
     modelId: "toolverse-commit-llama8b",
@@ -73,29 +57,53 @@ Output format:
     systemPrompt: `You are the ToolVerse Specialized Git Commit Model (commit-v2.0-ft).
 Format clean Conventional Commit messages (feat, fix, docs, refactor, perf, style, test, chore) from change descriptions or git diffs.`,
   },
-  "code-explainer": {
-    toolId: "code-explainer",
-    modelId: "toolverse-explainer-deepseek",
-    modelVersion: "explainer-v1.0-ft",
-    localOllamaModel: "deepseek-coder:6.7b",
-    vllmModelId: "toolverse/explainer-deepseek-6.7b-v1.0",
+  "code-converter": {
+    toolId: "code-converter",
+    modelId: "toolverse-converter-qwen7b",
+    modelVersion: "converter-v1.0-ft",
+    localOllamaModel: "qwen2.5-coder:7b",
+    vllmModelId: "toolverse/converter-qwen2.5-7b-v1.0",
     geminiModel: "gemini-1.5-flash",
     openaiModel: "gpt-4o-mini",
     groqModel: "llama-3.3-70b-versatile",
-    systemPrompt: `You are the ToolVerse Specialized Code Explainer Model (explainer-v1.0-ft).
-Explain code snippets with high-level summaries, key concepts, and line-by-line execution breakdowns.`,
+    systemPrompt: `You are the ToolVerse Specialized Code Converter Model.
+Translate source code between languages (Python, JavaScript, TypeScript, Go, Rust, C++, Java) preserving exact logic and idiomatic syntax.`,
   },
-  sql: {
-    toolId: "sql",
-    modelId: "toolverse-sql-codellama",
-    modelVersion: "sql-v1.1-ft",
-    localOllamaModel: "codellama:7b",
-    vllmModelId: "toolverse/sql-codellama-7b-v1.1",
+  "readme-generator": {
+    toolId: "readme-generator",
+    modelId: "toolverse-readme-coder",
+    modelVersion: "readme-v1.0-ft",
+    localOllamaModel: "qwen2.5-coder:7b",
+    vllmModelId: "toolverse/readme-coder-v1.0",
     geminiModel: "gemini-1.5-flash",
     openaiModel: "gpt-4o-mini",
     groqModel: "llama-3.3-70b-versatile",
-    systemPrompt: `You are the ToolVerse Specialized SQL Query Model (sql-v1.1-ft).
-Compile natural language data requests into optimized SQL queries with schema breakdown.`,
+    systemPrompt: `You are the ToolVerse Specialized README Model.
+Generate comprehensive, professional GitHub README.md files with installation guides, badges, usage examples, and features.`,
+  },
+  "api-docs-generator": {
+    toolId: "api-docs-generator",
+    modelId: "toolverse-apidocs-coder",
+    modelVersion: "apidocs-v1.0-ft",
+    localOllamaModel: "qwen2.5-coder:7b",
+    vllmModelId: "toolverse/apidocs-coder-v1.0",
+    geminiModel: "gemini-1.5-flash",
+    openaiModel: "gpt-4o-mini",
+    groqModel: "llama-3.3-70b-versatile",
+    systemPrompt: `You are the ToolVerse Specialized API Documentation Model.
+Generate OpenAPI specs and Markdown API documentation from endpoint code snippets.`,
+  },
+  "email-generator": {
+    toolId: "email-generator",
+    modelId: "toolverse-email-writer",
+    modelVersion: "email-v1.0-ft",
+    localOllamaModel: "llama3.1:8b",
+    vllmModelId: "toolverse/email-writer-v1.0",
+    geminiModel: "gemini-1.5-flash",
+    openaiModel: "gpt-4o-mini",
+    groqModel: "llama-3.3-70b-versatile",
+    systemPrompt: `You are the ToolVerse Specialized Email Model.
+Draft professional technical emails, release announcements, and client project status updates.`,
   },
   default: {
     toolId: "default",
@@ -116,9 +124,6 @@ export interface AIProvider {
   generateContent(payload: AIRequestPayload, modelConfig: SpecializedModelConfig): Promise<AIResponsePayload>;
 }
 
-/**
- * Local Inference Server Provider (Ollama / vLLM)
- */
 class LocalInferenceProvider implements AIProvider {
   name = "ToolVerse Local Inference (Ollama/vLLM)";
   inferenceType = "local_fine_tuned" as const;
@@ -130,7 +135,6 @@ class LocalInferenceProvider implements AIProvider {
 
     try {
       if (isVllm) {
-        // vLLM OpenAI-compatible Chat Endpoint
         const res = await fetch(`${localUrl}/v1/chat/completions`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -158,7 +162,6 @@ class LocalInferenceProvider implements AIProvider {
           },
         };
       } else {
-        // Ollama Native Endpoint
         const res = await fetch(`${localUrl}/api/generate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -194,9 +197,6 @@ class LocalInferenceProvider implements AIProvider {
   }
 }
 
-/**
- * Google Gemini Cloud Provider Fallback
- */
 class GeminiSpecializedProvider implements AIProvider {
   name = "Google Gemini";
   inferenceType = "external_cloud" as const;
@@ -268,9 +268,6 @@ class GeminiSpecializedProvider implements AIProvider {
   }
 }
 
-/**
- * OpenAI Cloud Provider Fallback
- */
 class OpenAISpecializedProvider implements AIProvider {
   name = "OpenAI";
   inferenceType = "external_cloud" as const;
@@ -336,11 +333,7 @@ class OpenAISpecializedProvider implements AIProvider {
   }
 }
 
-/**
- * Provider Selection Factory
- */
 export function getAIProvider(): AIProvider {
-  // If USE_LOCAL_INFERENCE is set to true, route to Ollama / vLLM Model Server
   if (process.env.USE_LOCAL_INFERENCE === "true") {
     return new LocalInferenceProvider();
   }

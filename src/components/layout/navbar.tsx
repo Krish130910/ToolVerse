@@ -6,8 +6,7 @@ import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { CategoriesDropdown } from "@/components/layout/categories-dropdown";
-import { BrandIcon } from "@/components/ui/brand-icon";
-import { Search, Menu, X, PlusCircle, Compass, Sparkles, Info } from "lucide-react";
+import { Wrench, Search, Menu, X, PlusCircle } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,7 +32,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   const navLinks = [
-    { href: "/tools", label: "All Tools" },
     { href: "/about", label: "About" },
   ];
 
@@ -47,12 +45,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             : "bg-transparent border-b border-orange-100/30 backdrop-blur-xs"
         }`}
       >
-        <Container className="w-full">
+        <Container size="large" className="w-full">
           <div className="flex items-center justify-between">
             {/* Left: Logo Only */}
             <Link href="/" className="flex items-center gap-2 group shrink-0">
               <div className="h-7.5 w-7.5 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shadow-2xs group-hover:border-orange-400/40 group-hover:bg-orange-500/20 transition-all">
-                <BrandIcon className="w-4 h-4 text-orange-600 group-hover:scale-110 transition-transform" />
+                <Wrench className="w-4 h-4 text-orange-600 group-hover:scale-110 transition-transform" />
               </div>
               <span className="font-extrabold text-sm sm:text-base tracking-tight text-zinc-900 group-hover:text-orange-600 transition-colors">
                 ToolVerse
@@ -112,8 +110,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               </Button>
             </div>
 
-
-
             {/* Mobile Actions */}
             <div className="flex md:hidden items-center gap-2">
               <button
@@ -143,18 +139,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="md:hidden mt-3 pt-3 border-t border-zinc-200 pb-3 space-y-1.5 text-xs bg-white rounded-2xl p-3 border shadow-lg"
               >
                 <Link
+                  href="/explore"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-3 py-2 rounded-xl text-zinc-700 font-semibold hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                >
+                  Explore Directory
+                </Link>
+                <Link
                   href="/categories"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block px-3 py-2 rounded-xl text-zinc-700 font-semibold hover:bg-orange-50 hover:text-orange-600 transition-colors"
                 >
                   Categories Index
-                </Link>
-                <Link
-                  href="/tools"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-xl text-zinc-700 font-semibold hover:bg-orange-50 hover:text-orange-600 transition-colors"
-                >
-                  All Utilities
                 </Link>
                 <Link
                   href="/about"

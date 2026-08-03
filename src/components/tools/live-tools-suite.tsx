@@ -33,14 +33,26 @@ import { Base64EncoderTool } from "@/components/tools/impl/base64-encoder";
 import { JwtDecoderTool } from "@/components/tools/impl/jwt-decoder";
 import { UrlShortenerTool } from "@/components/tools/impl/url-shortener";
 
-// AI Tools Dynamic Imports
-const AIRegexGenerator = dynamic(
-  () => import("@/components/tools/impl/ai/ai-regex-generator").then((mod) => mod.AIRegexGenerator),
-  { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI Regex Generator...</div> }
-);
+// Active AI Developer Tools Dynamic Imports
 const AICommitMessageGenerator = dynamic(
   () => import("@/components/tools/impl/ai/ai-commit-message-generator").then((mod) => mod.AICommitMessageGenerator),
   { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI Commit Generator...</div> }
+);
+const AICodeConverter = dynamic(
+  () => import("@/components/tools/impl/ai/ai-code-converter").then((mod) => mod.AICodeConverter),
+  { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI Code Converter...</div> }
+);
+const AIReadmeGenerator = dynamic(
+  () => import("@/components/tools/impl/ai/ai-readme-generator").then((mod) => mod.AIReadmeGenerator),
+  { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI README Generator...</div> }
+);
+const AIApiDocsGenerator = dynamic(
+  () => import("@/components/tools/impl/ai/ai-api-docs-generator").then((mod) => mod.AIApiDocsGenerator),
+  { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI API Docs Generator...</div> }
+);
+const AIEmailGenerator = dynamic(
+  () => import("@/components/tools/impl/ai/ai-email-generator").then((mod) => mod.AIEmailGenerator),
+  { loading: () => <div className="p-8 text-center text-xs font-mono text-zinc-400 animate-pulse">Loading AI Email Generator...</div> }
 );
 
 interface LiveToolsSuiteProps {
@@ -61,13 +73,19 @@ export const LiveToolsSuite: React.FC<LiveToolsSuiteProps> = ({
 
   const renderToolComponent = () => {
     switch (activeTab) {
-      // AI Tools
-      case "ai-regex-generator":
-        return <AIRegexGenerator />;
+      // Active AI Developer Tools
       case "ai-commit-message-generator":
         return <AICommitMessageGenerator />;
+      case "ai-code-converter":
+        return <AICodeConverter />;
+      case "ai-readme-generator":
+        return <AIReadmeGenerator />;
+      case "ai-api-docs-generator":
+        return <AIApiDocsGenerator />;
+      case "ai-email-generator":
+        return <AIEmailGenerator />;
 
-      // Existing Utilities
+      // Standard In-Browser Utilities
       case "svg-icons-library":
         return <SvgIconsLibraryTool />;
       case "color-palette-generator":

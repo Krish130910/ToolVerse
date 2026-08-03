@@ -2,11 +2,12 @@
 
 import React from "react";
 
-export const BruhGrowBackground: React.FC<{ children?: React.ReactNode }> = ({
+export const BruhGrowBackground: React.FC<{ children?: React.ReactNode; className?: string }> = ({
   children,
+  className = "",
 }) => {
   return (
-    <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#FFF2E6] via-[#FFFAF4] to-[#FAF8F5]">
+    <div className={`relative w-full overflow-hidden bg-gradient-to-b from-[#FFF2E6] via-[#FFFAF4] to-[#FAF8F5] ${className}`}>
       {/* Geometric Dot Grid Overlay */}
       <div
         className="absolute inset-0 pointer-events-none opacity-30 z-0"

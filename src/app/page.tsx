@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { HeroSection } from "@/components/home/hero-section";
 import { FeaturedTools } from "@/components/home/featured-tools";
+import { ToolsLogoLoopSection } from "@/components/home/tools-logo-loop";
+import { RequestToolBanner } from "@/components/home/request-tool-banner";
 import { FEATURED_TOOLS } from "@/lib/data";
 
 export default function HomePage() {
@@ -48,7 +50,6 @@ export default function HomePage() {
 
   return (
     <div className="space-y-0 pb-4">
-
       {/* Integrated Hero Section with Embedded Search & Category Pills */}
       <HeroSection
         searchQuery={searchQuery}
@@ -57,7 +58,7 @@ export default function HomePage() {
         onCategorySelect={setSelectedCategory}
       />
 
-      {/* Compact Clean Tools Grid */}
+      {/* Featured Tools Grid */}
       <FeaturedTools
         tools={filteredTools}
         searchQuery={searchQuery}
@@ -65,6 +66,12 @@ export default function HomePage() {
         favorites={favorites}
         onToggleFavorite={toggleFavorite}
       />
+
+      {/* Infinite Logo Loop Ticker at Bottom of Home Screen */}
+      <ToolsLogoLoopSection />
+
+      {/* Interactive Request Tool Pixel Transition Banner */}
+      <RequestToolBanner />
     </div>
   );
 }

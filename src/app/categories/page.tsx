@@ -64,7 +64,7 @@ export default function CategoriesPage() {
                         {ICON_MAP[category.iconName] || <Code2 className="w-6 h-6 text-orange-500" />}
                       </div>
                       <Badge variant="muted" className="font-mono text-xs">
-                        {category.toolCount} Utilities
+                        {categoryTools.length} Utilities
                       </Badge>
                     </div>
 
