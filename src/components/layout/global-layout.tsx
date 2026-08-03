@@ -8,11 +8,16 @@ import { CommandPalette } from "@/components/tools/command-palette";
 import { RequestToolModal } from "@/components/tools/request-tool-modal";
 import { ClickSpark } from "@/components/ui/click-spark";
 
+import { usePathname } from "next/navigation";
+
 export const GlobalLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
   const [requestToolOpen, setRequestToolOpen] = useState(false);
+
+  const isToolPage = pathname.startsWith("/tools/");
 
   return (
     <ThemeProvider>
@@ -29,7 +34,7 @@ export const GlobalLayout: React.FC<{ children: React.ReactNode }> = ({
             onRequestToolClick={() => setRequestToolOpen(true)}
           />
           <main className="flex-1">{children}</main>
-          <Footer />
+          {!isToolPage && <Footer />}
 
           {/* Global Command Palette / Search Modal */}
           <CommandPalette

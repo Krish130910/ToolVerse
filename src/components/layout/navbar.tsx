@@ -39,11 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     <div className="sticky top-0 z-50 flex flex-col">
       {/* Integrated Compact Header (Height 56px) */}
       <header
-        className={`h-14 flex items-center transition-all duration-200 ${
-          isScrolled
-            ? "bg-[#FAF8F5]/95 backdrop-blur-md border-b border-orange-100/90 shadow-xs"
-            : "bg-transparent border-b border-orange-100/30 backdrop-blur-xs"
-        }`}
+        className="h-14 flex items-center bg-[#FAF8F5]/95 backdrop-blur-md border-b border-black/[0.06] transition-shadow duration-200"
       >
         <Container size="large" className="w-full">
           <div className="flex items-center justify-between">

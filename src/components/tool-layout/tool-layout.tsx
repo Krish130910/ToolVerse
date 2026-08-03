@@ -95,7 +95,7 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({ tool, children }) => {
   };
 
   return (
-    <div className="py-8 sm:py-12 relative min-h-screen bg-[#FAF8F5]">
+    <div className="pt-4 sm:pt-6 pb-12 relative min-h-screen bg-[#FAF8F5]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -124,31 +124,36 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({ tool, children }) => {
         {/* Tool Header Card */}
         <div className="bg-white border border-zinc-200/90 rounded-2xl p-6 mb-8 shadow-xs">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="flex items-start gap-4">
-              <div className="p-3.5 rounded-2xl bg-orange-50 border border-orange-200/80 shrink-0 shadow-xs">
-                {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-6 h-6 text-orange-500" />}
+            <div className="space-y-2.5">
+              {/* Badges Row */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge variant="emerald">{tool.categoryName}</Badge>
+                {tool.isLive ? (
+                  <Badge variant="emerald" className="gap-1 font-mono text-[10px]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                    Live Utility
+                  </Badge>
+                ) : (
+                  <Badge variant="muted" className="text-[10px] font-mono">
+                    Phase 2 Roadmap
+                  </Badge>
+                )}
               </div>
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant="emerald">{tool.categoryName}</Badge>
-                  {tool.isLive ? (
-                    <Badge variant="emerald" className="gap-1 font-mono text-[10px]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-                      Live Utility
-                    </Badge>
-                  ) : (
-                    <Badge variant="muted" className="text-[10px] font-mono">
-                      Phase 2 Roadmap
-                    </Badge>
-                  )}
+
+              {/* Icon + Title Row */}
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-orange-50 border border-orange-200/80 shrink-0 shadow-2xs">
+                  {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-5.5 h-5.5 text-orange-500" />}
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight">
                   {tool.name}
                 </h1>
-                <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed max-w-2xl">
-                  {tool.description || tool.tagline}
-                </p>
               </div>
+
+              {/* Description */}
+              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed max-w-2xl">
+                {tool.description || tool.tagline}
+              </p>
             </div>
 
             {/* Action Bar */}

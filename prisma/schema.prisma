@@ -19,3 +19,35 @@ model ToolRequest {
 
   @@map("tool_requests")
 }
+
+model ShortUrl {
+  id            String     @id @default(cuid())
+  originalUrl   String     @db.Text
+  shortCode     String     @unique
+  customAlias   String?    @unique
+  passwordHash  String?
+  expiresAt     DateTime?
+  clicks        Int        @default(0)
+  createdAt     DateTime   @default(now())
+  lastVisitedAt DateTime?
+  visits        UrlVisit[]
+
+  @@index([shortCode])
+  @@index([customAlias])
+  @@map("short_urls")
+}
+
+model UrlVisit {
+  id         String   @id @default(cuid())
+  shortUrlId String
+  shortUrl   ShortUrl @relation(fields: [shortUrlId], references: [id], onDelete: Cascade)
+  country    String?
+  browser    String?
+  device     String?
+  os         String?
+  referrer   String?
+  visitedAt  DateTime @default(now())
+
+  @@index([shortUrlId])
+  @@map("url_visits")
+}
