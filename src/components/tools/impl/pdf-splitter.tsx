@@ -9,7 +9,6 @@ import {
   Download,
   Scissors,
   Check,
-  Sparkles,
 } from "lucide-react";
 
 export const PdfSplitterTool: React.FC = () => {

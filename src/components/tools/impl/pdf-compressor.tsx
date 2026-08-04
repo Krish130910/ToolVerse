@@ -8,7 +8,7 @@ import {
   Download,
   Settings,
   Check,
-  Sparkles,
+  Zap,
   ArrowRight,
   ShieldCheck,
 } from "lucide-react";
@@ -112,7 +112,7 @@ export const PdfCompressorTool: React.FC = () => {
               variant="default"
               className="w-full h-11 text-xs font-bold gap-2 shadow-xs"
             >
-              <Sparkles className="w-4 h-4" />
+              <Zap className="w-4 h-4" />
               <span>{isCompressing ? "Compressing PDF..." : "Compress PDF File"}</span>
             </Button>
           </div>

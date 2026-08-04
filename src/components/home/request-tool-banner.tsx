@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Container } from "@/components/ui/container";
 import PixelTransition from "@/components/ui/pixel-transition";
 import { RequestToolModal } from "@/components/tools/request-tool-modal";
-import { Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
+import { Zap, ArrowRight, ShieldCheck } from "lucide-react";
 
 interface RequestToolBannerProps {
   onRequestToolClick?: () => void;
@@ -36,7 +36,7 @@ export const RequestToolBanner: React.FC<RequestToolBannerProps> = ({
             >
               <div className="space-y-2 max-w-2xl">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 border border-orange-200/90 text-orange-700 text-[11px] font-extrabold tracking-wide uppercase shadow-2xs">
-                  <Sparkles className="w-3.5 h-3.5 text-orange-500" />
+                  <Zap className="w-3.5 h-3.5 text-orange-500" />
                   <span>Missing Something?</span>
                 </div>
                 <h3 className="text-xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight leading-snug">
@@ -79,7 +79,7 @@ export const RequestToolBanner: React.FC<RequestToolBannerProps> = ({
                   <span className="italic">We’ll build &amp; launch it.</span>
                 </h3>
                 <p className="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">
-                  Your request goes straight to our dev queue and notifies krishsavaliya018@gmail.com instantly!
+                  Your request goes straight to our dev queue and notifies our team instantly!
                 </p>
               </div>
 

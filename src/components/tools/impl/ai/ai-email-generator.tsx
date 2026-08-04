@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Copy, Check, Trash2, Mail, Zap } from "lucide-react";
+import { Copy, Check, Trash2, Mail, Zap } from "lucide-react";
 
 const EMAIL_TEMPLATES = [
   "Recruiter",

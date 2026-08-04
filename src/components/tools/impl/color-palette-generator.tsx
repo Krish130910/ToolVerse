@@ -11,7 +11,6 @@ import {
   Heart,
   Download,
   Sliders,
-  Sparkles,
   ShieldCheck,
   Eye,
   FileCode,

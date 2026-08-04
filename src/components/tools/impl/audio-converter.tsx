@@ -12,7 +12,6 @@ import {
   Check,
   Music,
   Clock,
-  Sparkles,
 } from "lucide-react";
 
 export const AudioConverterTool: React.FC = () => {

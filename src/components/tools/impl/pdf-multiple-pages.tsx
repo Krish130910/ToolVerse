@@ -10,7 +10,6 @@ import {
   Settings,
   Eye,
   Check,
-  Sparkles,
 } from "lucide-react";
 
 export const PdfMultiplePagesTool: React.FC = () => {

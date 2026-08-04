@@ -9,7 +9,6 @@ import {
   RefreshCw,
   ShieldCheck,
   Lock,
-  Sparkles,
 } from "lucide-react";
 
 export const PasswordGeneratorTool: React.FC = () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Copy, Check, Trash2, ArrowRightLeft, Zap } from "lucide-react";
+import { Copy, Check, Trash2, ArrowRightLeft, Zap } from "lucide-react";
 
 const LANGUAGE_PAIRS = [
   { from: "JavaScript", to: "TypeScript" },

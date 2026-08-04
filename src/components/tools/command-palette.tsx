@@ -14,7 +14,7 @@ import {
   Binary,
   Layers,
   Palette,
-  Sparkles,
+  Zap,
 } from "lucide-react";
 import { FEATURED_TOOLS } from "@/lib/data";
 import { FeaturedTool } from "@/types";
@@ -33,7 +33,7 @@ const TOOL_ICON_MAP: Record<string, React.ReactNode> = {
   Binary: <Binary className="w-4 h-4 text-orange-500" />,
   Layers: <Layers className="w-4 h-4 text-orange-500" />,
   Palette: <Palette className="w-4 h-4 text-orange-500" />,
-  Sparkles: <Sparkles className="w-4 h-4 text-orange-500" />,
+  Zap: <Zap className="w-4 h-4 text-orange-500" />,
   Link: <Braces className="w-4 h-4 text-orange-500" />,
 };
 
@@ -171,7 +171,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div className="flex items-center gap-3">
                       <div className="p-2.5 rounded-xl bg-orange-50/80 border border-orange-200/60 shrink-0 group-hover:border-orange-400 transition-colors">
                         {TOOL_ICON_MAP[tool.iconName] || (
-                          <Sparkles className="w-4 h-4 text-orange-500" />
+                          <Zap className="w-4 h-4 text-orange-500" />
                         )}
                       </div>
                       <div>

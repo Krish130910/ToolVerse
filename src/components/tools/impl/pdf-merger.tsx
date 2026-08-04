@@ -11,7 +11,6 @@ import {
   Trash2,
   Plus,
   Check,
-  Sparkles,
 } from "lucide-react";
 
 interface PdfItem {

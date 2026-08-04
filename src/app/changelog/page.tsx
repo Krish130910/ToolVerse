@@ -3,7 +3,7 @@
 import React from "react";
 import { Container } from "@/components/ui/container";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, CheckCircle2, Clock } from "lucide-react";
+import { Zap, CheckCircle2, Clock } from "lucide-react";
 
 export default function ChangelogPage() {
   return (
@@ -12,7 +12,7 @@ export default function ChangelogPage() {
         <div className="max-w-3xl mx-auto space-y-8">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-xs font-semibold text-orange-600">
-              <Sparkles className="w-3.5 h-3.5" />
+              <Zap className="w-3.5 h-3.5" />
               <span>Changelog & Roadmap</span>
             </div>
             <h1 className="text-3xl sm:text-5xl font-extrabold text-zinc-900 tracking-tight">

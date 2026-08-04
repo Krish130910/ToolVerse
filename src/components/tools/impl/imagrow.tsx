@@ -9,7 +9,6 @@ import {
   RotateCcw,
   Sliders,
   Eye,
-  Sparkles,
   Sun,
   Contrast,
   Palette,

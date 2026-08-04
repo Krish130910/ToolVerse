@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Copy, Check, Trash2, FileText, Zap } from "lucide-react";
+import { Copy, Check, Trash2, FileText, Zap } from "lucide-react";
 
 export const AIReadmeGenerator: React.FC = () => {
   const [prompt, setPrompt] = useState("ToolVerse - Modern, privacy-first developer utility suite built with Next.js 15, React, TypeScript, and Neon DB.");
@@ -84,7 +84,7 @@ export const AIReadmeGenerator: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" /> Generate README.md
+                  <Zap className="w-4 h-4" /> Generate README.md
                 </>
               )}
             </button>

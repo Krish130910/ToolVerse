@@ -10,7 +10,6 @@ import {
   ArrowRight,
   Code,
   FileText,
-  Sparkles,
   ArrowUpDown,
   Scissors,
 } from "lucide-react";

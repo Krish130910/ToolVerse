@@ -10,7 +10,6 @@ import {
   Pause,
   Sliders,
   Eye,
-  Sparkles,
 } from "lucide-react";
 
 export const VideoGifConverterTool: React.FC = () => {

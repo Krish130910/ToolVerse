@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { KeyRound, Sparkles, Terminal, ExternalLink, ShieldCheck } from "lucide-react";
+import { KeyRound, Zap, Terminal, ExternalLink, ShieldCheck } from "lucide-react";
 
 interface AISetupScreenProps {
   message?: string;
@@ -39,7 +39,7 @@ export const AISetupScreen: React.FC<AISetupScreenProps> = ({
             <ShieldCheck className="w-3.5 h-3.5" /> 100% Secure &amp; Private
           </span>
           <span className="flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5" /> Free Gemini 1.5 Flash Tier Available
+            <Zap className="w-3.5 h-3.5" /> Free Gemini 1.5 Flash Tier Available
           </span>
         </div>
       </div>

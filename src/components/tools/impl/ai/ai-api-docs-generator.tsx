@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Copy, Check, Trash2, Code2, Zap } from "lucide-react";
+import { Copy, Check, Trash2, Code2, Zap } from "lucide-react";
 
 export const AIApiDocsGenerator: React.FC = () => {
   const [prompt, setPrompt] = useState(`app.post("/api/request-tool", async (req, res) => {
@@ -87,7 +87,7 @@ export const AIApiDocsGenerator: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" /> Generate API Documentation
+                  <Zap className="w-4 h-4" /> Generate API Documentation
                 </>
               )}
             </button>

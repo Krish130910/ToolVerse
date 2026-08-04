@@ -15,7 +15,6 @@ import {
   Heading,
   Link as LinkIcon,
   FileCode,
-  Sparkles,
 } from "lucide-react";
 
 export const MarkdownEditorTool: React.FC = () => {

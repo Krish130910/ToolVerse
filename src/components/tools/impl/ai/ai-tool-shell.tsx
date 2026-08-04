@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Sparkles, Copy, Check, Trash2, Square, RotateCcw, Clock, Zap } from "lucide-react";
+import { Copy, Check, Trash2, Square, RotateCcw, Clock, Zap } from "lucide-react";
 import { AI_TOOLS_REGISTRY } from "@/lib/ai-config";
 import { AISetupScreen } from "./ai-setup-screen";
 
@@ -179,7 +179,7 @@ export const AIToolShell: React.FC<AIToolShellProps> = ({ toolSlug, renderInputC
       <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-zinc-200/80">
         <div className="flex items-center gap-2">
           <span className="px-3 py-1 rounded-full bg-orange-500/10 text-orange-600 text-xs font-bold flex items-center gap-1.5 border border-orange-500/20">
-            <Sparkles className="w-3.5 h-3.5" /> {config.name}
+            <Zap className="w-3.5 h-3.5" /> {config.name}
           </span>
           {providerName && (
             <span className="text-[11px] font-mono text-zinc-400">
@@ -283,7 +283,7 @@ export const AIToolShell: React.FC<AIToolShellProps> = ({ toolSlug, renderInputC
                 disabled={!prompt.trim()}
                 className="flex-1 h-11 rounded-xl bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white text-sm font-bold flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 transition-all active:scale-[0.98]"
               >
-                <Sparkles className="w-4 h-4" /> Run {config.name}
+                <Zap className="w-4 h-4" /> Run {config.name}
               </button>
             )}
 
@@ -327,7 +327,7 @@ export const AIToolShell: React.FC<AIToolShellProps> = ({ toolSlug, renderInputC
               <pre className="whitespace-pre-wrap leading-relaxed">{output}</pre>
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-zinc-500 space-y-2 text-center">
-                <Sparkles className="w-8 h-8 text-zinc-600" />
+                <Zap className="w-8 h-8 text-zinc-600" />
                 <p>Click &quot;Run {config.name}&quot; to stream results in real time.</p>
               </div>
             )}

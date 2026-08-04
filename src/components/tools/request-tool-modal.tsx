@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Sparkles, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
+import { X, Send, Zap, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -95,7 +95,7 @@ export const RequestToolModal: React.FC<RequestToolModalProps> = ({
         >
           <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
             <div className="flex items-center gap-2 text-sm font-extrabold text-zinc-900">
-              <Sparkles className="w-4 h-4 text-orange-500" />
+              <Zap className="w-4 h-4 text-orange-500" />
               <span>Request a Utility Tool</span>
             </div>
             <button
@@ -142,7 +142,7 @@ export const RequestToolModal: React.FC<RequestToolModalProps> = ({
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Alex Morgan"
+                    placeholder="e.g. Krish Savaliya"
                     className="bg-zinc-50 border-zinc-200 focus:bg-white text-xs"
                     disabled={isSubmitting}
                   />
@@ -155,7 +155,7 @@ export const RequestToolModal: React.FC<RequestToolModalProps> = ({
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="alex@example.com"
+                  placeholder="krish@example.com"
                   className="bg-zinc-50 border-zinc-200 focus:bg-white text-xs"
                   disabled={isSubmitting}
                   required

@@ -5,7 +5,6 @@ import { Container } from "@/components/ui/container";
 import LogoLoop, { LogoItem } from "@/components/ui/logo-loop";
 import { FEATURED_TOOLS } from "@/lib/data";
 import {
-  Sparkles,
   Palette,
   FileText,
   Code2,
@@ -17,7 +16,6 @@ import {
 } from "lucide-react";
 
 const ICON_MAP: Record<string, React.ReactNode> = {
-  Sparkles: <Sparkles className="w-4 h-4 text-orange-500" />,
   Palette: <Palette className="w-4 h-4 text-amber-500" />,
   FileText: <FileText className="w-4 h-4 text-emerald-500" />,
   Code2: <Code2 className="w-4 h-4 text-blue-500" />,

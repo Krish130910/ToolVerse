@@ -32,6 +32,7 @@ import { UuidGeneratorTool } from "@/components/tools/impl/uuid-generator";
 import { Base64EncoderTool } from "@/components/tools/impl/base64-encoder";
 import { JwtDecoderTool } from "@/components/tools/impl/jwt-decoder";
 import { UrlShortenerTool } from "@/components/tools/impl/url-shortener";
+import { OgImageGeneratorTool } from "@/components/tools/impl/og-image-generator";
 
 // Active AI Developer Tools Dynamic Imports
 const AICommitMessageGenerator = dynamic(
@@ -142,6 +143,8 @@ export const LiveToolsSuite: React.FC<LiveToolsSuiteProps> = ({
         return <JwtDecoderTool />;
       case "url-shortener":
         return <UrlShortenerTool />;
+      case "og-image-generator":
+        return <OgImageGeneratorTool />;
       default:
         return <JsonFormatterTool />;
     }

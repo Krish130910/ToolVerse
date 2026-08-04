@@ -8,7 +8,6 @@ import {
   Download,
   Eye,
   Check,
-  Sparkles,
   Settings,
   Grid,
 } from "lucide-react";

@@ -10,7 +10,6 @@ import {
   Settings,
   Eye,
   Check,
-  Sparkles,
   Layout,
   Type,
 } from "lucide-react";

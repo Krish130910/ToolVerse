@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Sparkles,
+  Zap,
   Download,
   Copy,
   Check,
@@ -124,7 +124,7 @@ export const AiFlowchartGeneratorTool: React.FC = () => {
       <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-xs space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-orange-500" />
+            <Zap className="w-5 h-5 text-orange-500" />
             <h3 className="text-sm font-bold text-zinc-900">AI Natural Language Prompt</h3>
           </div>
           <div className="flex items-center gap-2">
@@ -152,7 +152,7 @@ export const AiFlowchartGeneratorTool: React.FC = () => {
             className="flex-1 p-3 rounded-xl border border-zinc-200 bg-zinc-50 text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-orange-500/40"
           />
           <Button onClick={generateFlowchart} disabled={isGenerating} variant="default" className="h-auto font-bold text-xs gap-1.5 px-5">
-            <Sparkles className="w-4 h-4" />
+            <Zap className="w-4 h-4" />
             <span>{isGenerating ? "Generating..." : "Generate Flowchart"}</span>
           </Button>
         </div>

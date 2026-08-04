@@ -6,7 +6,7 @@ import { BARCODE_FORMATS, getFormatConfig } from "@/lib/barcode/validator";
 import { Input } from "@/components/ui/input";
 import {
   Barcode,
-  Sparkles,
+  Zap,
   CheckCircle2,
   AlertCircle,
   X,
@@ -70,7 +70,7 @@ export const InputCard: React.FC<InputCardProps> = ({
           title={`Load sample valid ${formatConfig.name}`}
           aria-label={`Load sample data for ${formatConfig.name}`}
         >
-          <Sparkles className="w-3.5 h-3.5" />
+          <Zap className="w-3.5 h-3.5" />
           <span>Try Sample Data</span>
         </button>
       </div>

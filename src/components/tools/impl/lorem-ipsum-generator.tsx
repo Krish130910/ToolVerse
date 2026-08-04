@@ -10,7 +10,6 @@ import {
   Download,
   RefreshCw,
   FileText,
-  Sparkles,
 } from "lucide-react";
 
 const LOREM_WORDS = [

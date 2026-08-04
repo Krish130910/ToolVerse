@@ -12,7 +12,6 @@ import {
   Grid,
   List,
   Sliders,
-  Sparkles,
   Code,
   FileCode,
   RefreshCw,
@@ -351,7 +350,7 @@ export const SvgIconsLibraryTool: React.FC = () => {
         <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-xs space-y-5 h-fit sticky top-20">
           <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
             <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-orange-500" />
+              <Zap className="w-4 h-4 text-orange-500" />
               <span>{selectedIcon.name}</span>
             </h3>
             <span className="text-[10px] font-mono bg-orange-50 text-orange-600 border border-orange-200 px-2 py-0.5 rounded-md font-bold">

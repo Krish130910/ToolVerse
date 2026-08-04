@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { ROADMAP_CATEGORIES, FEATURED_TOOLS } from "@/lib/data";
 import {
   Code2,
-  Sparkles,
   Image as ImageIcon,
   FileText,
   Palette,
@@ -26,7 +25,6 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Palette: <Palette className="w-5 h-5 text-emerald-400" />,
   Image: <ImageIcon className="w-5 h-5 text-emerald-400" />,
   FileText: <FileText className="w-5 h-5 text-emerald-400" />,
-  Sparkles: <Sparkles className="w-5 h-5 text-emerald-400" />,
   Zap: <Zap className="w-5 h-5 text-emerald-400" />,
 };
 

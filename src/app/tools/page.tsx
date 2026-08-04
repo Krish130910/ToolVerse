@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/container";
 import { SearchBar } from "@/components/home/search-bar";
 import { FeaturedTools } from "@/components/home/featured-tools";
 import { FEATURED_TOOLS } from "@/lib/data";
-import { Sparkles } from "lucide-react";
+import { Zap } from "lucide-react";
 
 export default function ToolsCatalogPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,7 +41,7 @@ export default function ToolsCatalogPage() {
       <Container>
         <div className="space-y-2 mb-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-xs font-semibold text-orange-600">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Zap className="w-3.5 h-3.5" />
             <span>Master Catalog</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 tracking-tight">

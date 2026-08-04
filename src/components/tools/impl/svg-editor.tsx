@@ -11,7 +11,7 @@ import {
   Code,
   Eye,
   Sliders,
-  Sparkles,
+  Zap,
 } from "lucide-react";
 
 export const SvgEditorTool: React.FC = () => {
@@ -68,7 +68,7 @@ export const SvgEditorTool: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <Button onClick={optimizeSvg} variant="outline" size="sm" className="text-xs font-bold gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-orange-500" />
+            <Zap className="w-3.5 h-3.5 text-orange-500" />
             <span>Optimize SVG Code</span>
           </Button>
 

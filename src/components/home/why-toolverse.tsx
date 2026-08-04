@@ -5,13 +5,13 @@ import { Container } from "@/components/ui/container";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { WHY_TOOLVERSE } from "@/lib/data";
-import { Shield, Cpu, Sparkles, Terminal } from "lucide-react";
+import { Shield, Cpu, Zap, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
 
 const PROP_ICON_MAP: Record<string, React.ReactNode> = {
   Shield: <Shield className="w-5 h-5 text-emerald-400" />,
   Cpu: <Cpu className="w-5 h-5 text-emerald-400" />,
-  Sparkle: <Sparkles className="w-5 h-5 text-emerald-400" />,
+  Zap: <Zap className="w-5 h-5 text-emerald-400" />,
   Terminal: <Terminal className="w-5 h-5 text-emerald-400" />,
 };
 

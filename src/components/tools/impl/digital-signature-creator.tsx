@@ -13,12 +13,11 @@ import {
   Settings,
   Eye,
   Check,
-  Sparkles,
 } from "lucide-react";
 
 export const DigitalSignatureCreatorTool: React.FC = () => {
   const [tab, setTab] = useState<"draw" | "type" | "upload">("draw");
-  const [typedName, setTypedName] = useState("Alex Harrison");
+  const [typedName, setTypedName] = useState("Krish Savaliya");
   const [typedFont, setTypedFont] = useState("font-serif italic");
   const [penColor, setPenColor] = useState("#18181B");
   const [penWidth, setPenWidth] = useState(3);

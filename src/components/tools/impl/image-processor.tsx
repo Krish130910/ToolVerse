@@ -13,7 +13,6 @@ import {
   Sliders,
   Eye,
   Check,
-  Sparkles,
 } from "lucide-react";
 
 export const ImageProcessorTool: React.FC = () => {

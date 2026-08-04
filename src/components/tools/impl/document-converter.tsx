@@ -10,7 +10,6 @@ import {
   ArrowRight,
   Code,
   FileText,
-  Sparkles,
 } from "lucide-react";
 
 export const DocumentConverterTool: React.FC = () => {
