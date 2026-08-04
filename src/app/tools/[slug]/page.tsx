@@ -31,7 +31,7 @@ export default function DedicatedToolPage() {
   }
 
   return (
-    <ToolLayout tool={tool}>
+    <ToolLayout tool={tool} hideRelatedTools={true}>
       {tool.isLive ? (
         <LiveToolsSuite initialTool={slug} />
       ) : (

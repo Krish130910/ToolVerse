@@ -26,6 +26,7 @@ import {
 interface ToolLayoutProps {
   tool: FeaturedTool;
   children?: React.ReactNode;
+  hideRelatedTools?: boolean;
 }
 
 const TOOL_ICON_MAP: Record<string, React.ReactNode> = {
@@ -40,7 +41,11 @@ const TOOL_ICON_MAP: Record<string, React.ReactNode> = {
   Wrench: <Wrench className="w-6 h-6 text-orange-500" />,
 };
 
-export const ToolLayout: React.FC<ToolLayoutProps> = ({ tool, children }) => {
+export const ToolLayout: React.FC<ToolLayoutProps> = ({
+  tool,
+  children,
+  hideRelatedTools = false,
+}) => {
   const [isStarred, setIsStarred] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -95,14 +100,14 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({ tool, children }) => {
   };
 
   return (
-    <div className="pt-4 sm:pt-6 pb-12 relative min-h-screen bg-[#FAF8F5]">
+    <div className="pt-2 sm:pt-4 pb-8 relative min-h-screen bg-[#FAF8F5]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Container>
         {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-2 text-xs text-zinc-600 mb-6 font-medium">
+        <nav className="flex items-center gap-2 text-xs text-zinc-600 mb-3 font-medium">
           <Link href="/" className="hover:text-orange-600 transition-colors">
             Home
           </Link>
@@ -122,9 +127,9 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({ tool, children }) => {
         </nav>
 
         {/* Tool Header Card */}
-        <div className="bg-white border border-zinc-200/90 rounded-2xl p-6 mb-8 shadow-xs">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-2.5">
+        <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 mb-4 shadow-xs">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-2">
               {/* Badges Row */}
               <div className="flex items-center gap-2 flex-wrap">
                 <Badge variant="emerald">{tool.categoryName}</Badge>
@@ -160,14 +165,14 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({ tool, children }) => {
             <div className="flex items-center gap-2.5 shrink-0 self-start md:self-auto">
               <button
                 onClick={toggleStar}
-                className={`flex items-center gap-1.5 h-10 px-3.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 h-9 px-3.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                   isStarred
                     ? "bg-amber-50 border-amber-300 text-amber-600 shadow-xs"
                     : "bg-white border-zinc-200 text-zinc-700 hover:border-orange-300"
                 }`}
               >
                 <Star
-                  className={`w-4 h-4 ${
+                  className={`w-3.5 h-3.5 ${
                     isStarred ? "fill-amber-500 text-amber-500" : "text-zinc-400"
                   }`}
                 />
@@ -176,16 +181,16 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({ tool, children }) => {
 
               <button
                 onClick={handleShare}
-                className="flex items-center gap-1.5 h-10 px-3.5 rounded-xl border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 hover:border-orange-300 transition-all cursor-pointer shadow-xs"
+                className="flex items-center gap-1.5 h-9 px-3.5 rounded-xl border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 hover:border-orange-300 transition-all cursor-pointer shadow-xs"
               >
                 {copiedLink ? (
                   <>
-                    <Check className="w-4 h-4 text-orange-500" />
+                    <Check className="w-3.5 h-3.5 text-orange-500" />
                     <span>Copied!</span>
                   </>
                 ) : (
                   <>
-                    <Share2 className="w-4 h-4 text-zinc-400" />
+                    <Share2 className="w-3.5 h-3.5 text-zinc-400" />
                     <span>Share</span>
                   </>
                 )}
@@ -195,19 +200,19 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({ tool, children }) => {
         </div>
 
         {/* Main Workspace Area */}
-        <div className="mb-12">{children}</div>
+        <div className="mb-4">{children}</div>
 
-        {/* Related Tools Section */}
-        {relatedTools.length > 0 && (
-          <div className="pt-8 border-t border-zinc-200/80 space-y-4">
-            <h3 className="text-lg font-bold text-zinc-900 tracking-tight">
+        {/* Related Tools Section - Only rendered if not hidden */}
+        {!hideRelatedTools && relatedTools.length > 0 && (
+          <div className="pt-6 border-t border-zinc-200/80 space-y-3">
+            <h3 className="text-base font-bold text-zinc-900 tracking-tight">
               Related {tool.categoryName} Utilities
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {relatedTools.map((rel) => (
                 <Link key={rel.id} href={`/tools/${rel.slug}`}>
-                  <div className="p-4 rounded-2xl bg-white border border-zinc-200/90 shadow-xs hover:shadow-md hover:border-orange-300 transition-all group">
-                    <div className="flex items-center justify-between mb-2">
+                  <div className="p-3.5 rounded-2xl bg-white border border-zinc-200/90 shadow-xs hover:shadow-md hover:border-orange-300 transition-all group">
+                    <div className="flex items-center justify-between mb-1.5">
                       <span className="text-xs font-bold text-zinc-900 group-hover:text-orange-600 transition-colors">
                         {rel.name}
                       </span>
