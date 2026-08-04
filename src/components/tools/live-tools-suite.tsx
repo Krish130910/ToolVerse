@@ -28,7 +28,6 @@ import { QrGeneratorTool } from "@/components/tools/impl/qr-generator";
 import { SvgEditorTool } from "@/components/tools/impl/svg-editor";
 import { TextFormatterTool } from "@/components/tools/impl/text-formatter";
 import { VideoGifConverterTool } from "@/components/tools/impl/video-gif-converter";
-import { UuidGeneratorTool } from "@/components/tools/impl/uuid-generator";
 import { Base64EncoderTool } from "@/components/tools/impl/base64-encoder";
 import { JwtDecoderTool } from "@/components/tools/impl/jwt-decoder";
 import { UrlShortenerTool } from "@/components/tools/impl/url-shortener";
@@ -135,8 +134,6 @@ export const LiveToolsSuite: React.FC<LiveToolsSuiteProps> = ({
         return <TextFormatterTool />;
       case "video-gif-converter":
         return <VideoGifConverterTool />;
-      case "uuid-generator":
-        return <UuidGeneratorTool />;
       case "base64-encoder":
         return <Base64EncoderTool />;
       case "jwt-decoder":

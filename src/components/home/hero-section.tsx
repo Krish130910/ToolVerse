@@ -56,7 +56,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       initial={{ opacity: 0, y: 28, filter: "blur(8px)" }}
                       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                       transition={{ delay: (i + 2) * 0.1, duration: 0.55, type: "tween", ease: "easeOut" }}
-                      className={`inline-block italic ${word === "smarter." ? "text-orange-500" : "text-zinc-900"}`}
+                      className="inline-block italic text-orange-500"
                     >
                       {word}
                     </motion.span>
