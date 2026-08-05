@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { CategoriesDropdown } from "@/components/layout/categories-dropdown";
+import { StarredDropdown } from "@/components/layout/starred-dropdown";
 import { Wrench, Search, Menu, X, PlusCircle } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -81,8 +82,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               })}
             </nav>
 
-            {/* Right: Search & Primary CTA */}
+            {/* Right: Starred, Search & Primary CTA */}
             <div className="hidden md:flex items-center gap-2.5 shrink-0">
+              {/* Starred Tools Dropdown */}
+              <StarredDropdown />
+
               {/* Clean search trigger */}
               <button
                 onClick={onSearchClick}
@@ -108,6 +112,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Mobile Actions */}
             <div className="flex md:hidden items-center gap-2">
+              <StarredDropdown />
               <button
                 onClick={onSearchClick}
                 className="p-2 rounded-xl bg-white border border-zinc-200/90 text-zinc-700 hover:text-orange-600 shadow-2xs"

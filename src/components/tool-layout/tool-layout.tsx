@@ -22,6 +22,7 @@ import {
   Link as LinkIcon,
   Wrench,
 } from "lucide-react";
+import { getFavorites, toggleFavoriteTool, FAVORITES_EVENT } from "@/lib/favorites";
 
 interface ToolLayoutProps {
   tool: FeaturedTool;
@@ -50,25 +51,23 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({
   const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
-    try {
-      const favs: string[] = JSON.parse(localStorage.getItem("toolverse_favs") || "[]");
+    const syncStar = () => {
+      const favs = getFavorites();
       setIsStarred(favs.includes(tool.id));
-    } catch {}
+    };
+    syncStar();
+
+    window.addEventListener("storage", syncStar);
+    window.addEventListener(FAVORITES_EVENT, syncStar);
+    return () => {
+      window.removeEventListener("storage", syncStar);
+      window.removeEventListener(FAVORITES_EVENT, syncStar);
+    };
   }, [tool.id]);
 
   const toggleStar = () => {
-    try {
-      const favs: string[] = JSON.parse(localStorage.getItem("toolverse_favs") || "[]");
-      let updated: string[];
-      if (favs.includes(tool.id)) {
-        updated = favs.filter((id) => id !== tool.id);
-        setIsStarred(false);
-      } else {
-        updated = [...favs, tool.id];
-        setIsStarred(true);
-      }
-      localStorage.setItem("toolverse_favs", JSON.stringify(updated));
-    } catch {}
+    const updated = toggleFavoriteTool(tool.id);
+    setIsStarred(updated.includes(tool.id));
   };
 
   const handleShare = () => {

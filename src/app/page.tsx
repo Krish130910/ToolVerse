@@ -6,6 +6,7 @@ import { FeaturedTools } from "@/components/home/featured-tools";
 import { ToolsLogoLoopSection } from "@/components/home/tools-logo-loop";
 import { RequestToolBanner } from "@/components/home/request-tool-banner";
 import { FEATURED_TOOLS } from "@/lib/data";
+import { getFavorites, toggleFavoriteTool, FAVORITES_EVENT } from "@/lib/favorites";
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,25 +14,19 @@ export default function HomePage() {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("toolverse_favs");
-      if (saved) {
-        setFavorites(JSON.parse(saved));
-      }
-    } catch {}
+    const syncFavs = () => setFavorites(getFavorites());
+    syncFavs();
+    window.addEventListener("storage", syncFavs);
+    window.addEventListener(FAVORITES_EVENT, syncFavs);
+    return () => {
+      window.removeEventListener("storage", syncFavs);
+      window.removeEventListener(FAVORITES_EVENT, syncFavs);
+    };
   }, []);
 
   const toggleFavorite = (toolId: string) => {
-    let updated: string[];
-    if (favorites.includes(toolId)) {
-      updated = favorites.filter((id) => id !== toolId);
-    } else {
-      updated = [...favorites, toolId];
-    }
+    const updated = toggleFavoriteTool(toolId);
     setFavorites(updated);
-    try {
-      localStorage.setItem("toolverse_favs", JSON.stringify(updated));
-    } catch {}
   };
 
   const filteredTools = FEATURED_TOOLS.filter((t) => {
