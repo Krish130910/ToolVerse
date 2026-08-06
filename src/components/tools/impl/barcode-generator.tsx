@@ -49,7 +49,7 @@ export const BarcodeGeneratorTool: React.FC = () => {
   }, [format]);
 
   return (
-    <div className="space-y-4 max-w-7xl mx-auto">
+    <div className="space-y-4 w-full">
       {/* CARD 1: Input & Format Selection */}
       <InputCard
         value={value}

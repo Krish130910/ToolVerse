@@ -252,7 +252,7 @@ export const UrlShortenerTool: React.FC = () => {
     <>
       <ToastList toasts={toasts} onRemove={removeToast} />
 
-      <div className="space-y-6">
+      <div className="space-y-6 w-full">
         <AnimatePresence mode="wait">
           {/* ════════════════════════════════════════════════════════════════════
               VIEW 1: FORM (GENERATE NEW SHORT LINK)

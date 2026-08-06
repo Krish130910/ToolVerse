@@ -437,44 +437,7 @@ export const DocumentConverterTool: React.FC = () => {
       {/* ------------------------------------------------------------ */}
       {/* 2. SUB-HEADER WITH MAIN ACTION BUTTONS                       */}
       {/* ------------------------------------------------------------ */}
-      <div className="w-full border-b border-zinc-200/80 px-6 py-3 flex items-center justify-between bg-white shrink-0">
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-900 font-medium cursor-pointer">
-            <ArrowLeft className="w-3.5 h-3.5" /> All tools
-          </span>
-          <span className="text-zinc-300">|</span>
-          <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4 text-orange-500" />
-            <h1 className="text-sm font-bold tracking-tight text-zinc-900 font-serif italic">
-              Document Converter
-            </h1>
-          </div>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <Button
-            onClick={handleConvert}
-            disabled={isConverting || !inputContent.trim() || !validationResult.isValid}
-            variant="outline"
-            size="sm"
-            className="text-xs font-bold gap-2 px-4 py-2 border-zinc-300 text-zinc-700 hover:bg-zinc-100 rounded-xl"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isConverting ? "animate-spin" : ""}`} />
-            <span>{isConverting ? "Converting..." : "Run Conversion"}</span>
-          </Button>
-
-          <Button
-            onClick={handleDownload}
-            disabled={!outputContent}
-            variant="default"
-            size="sm"
-            className="text-xs font-bold gap-2 px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-2xs"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Download</span>
-          </Button>
-        </div>
-      </div>
 
       {/* ------------------------------------------------------------ */}
       {/* 3. MAIN WORKSPACE: FULL VIEWPORT EXTENSION WITH NO CLIP      */}

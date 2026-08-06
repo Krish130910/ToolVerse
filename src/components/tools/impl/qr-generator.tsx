@@ -94,7 +94,7 @@ export const QrGeneratorTool: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full">
       {/* 1. TOP SECTION: Content Type Selector (Grid: 5 col desktop, 3 col tablet, 2 col mobile) */}
       <div className="bg-white border border-zinc-200/90 rounded-3xl p-6 shadow-xs">
         <ContentTypeSelector

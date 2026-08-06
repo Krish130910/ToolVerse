@@ -19,7 +19,7 @@ export const JwtDecoderTool: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-8 w-full">
       {/* 1. Encoded JWT Input Card */}
       <InputTokenCard
         jwtInput={jwtInput}

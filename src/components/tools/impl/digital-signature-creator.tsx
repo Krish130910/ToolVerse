@@ -53,7 +53,7 @@ export const DigitalSignatureCreatorTool: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-8 w-full">
       {/* 1. TOP SECTION: Mode Selector Bar */}
       <div className="bg-white border border-zinc-200/90 rounded-3xl p-4 sm:p-5 shadow-xs flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-2">

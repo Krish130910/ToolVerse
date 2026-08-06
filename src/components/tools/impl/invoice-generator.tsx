@@ -80,7 +80,7 @@ export const InvoiceGeneratorTool: React.FC = () => {
   }, []);
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-8 w-full">
       {/* Mobile Screen View Switcher Tabs (Edit Form vs Document Preview) */}
       <div className="flex lg:hidden items-center justify-center gap-2 p-1.5 bg-zinc-100/90 rounded-2xl border border-zinc-200">
         <button

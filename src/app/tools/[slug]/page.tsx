@@ -8,9 +8,13 @@ import { FEATURED_TOOLS } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Clock, PlusCircle } from "lucide-react";
 
-export default function DedicatedToolPage() {
-  const params = useParams();
-  const slug = params?.slug as string;
+export default function DedicatedToolPage({
+  params,
+}: {
+  params: Promise<{ slug: string }> | { slug: string };
+}) {
+  const unwrappedParams = React.use ? React.use(params as any) : params;
+  const slug = (unwrappedParams as any)?.slug || "";
 
   const tool = FEATURED_TOOLS.find((t) => t.slug === slug);
 
@@ -30,8 +34,23 @@ export default function DedicatedToolPage() {
     );
   }
 
+  const fullWidthSlugs = [
+    "document-converter",
+    "audio-converter",
+    "video-gif-converter",
+    "jwt-decoder",
+    "digital-signature-creator",
+    "base64-encoder",
+    "url-shortener",
+    "barcode-generator",
+    "qr-generator",
+    "password-generator",
+    "lorem-ipsum-generator",
+    "invoice-generator",
+  ];
+
   return (
-    <ToolLayout tool={tool} hideRelatedTools={true} containerSize={slug === "document-converter" || slug === "audio-converter" ? "full" : "default"}>
+    <ToolLayout tool={tool} hideRelatedTools={true} containerSize={fullWidthSlugs.includes(slug) ? "full" : "default"}>
       {tool.isLive ? (
         <LiveToolsSuite initialTool={slug} />
       ) : (

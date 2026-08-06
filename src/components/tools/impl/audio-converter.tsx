@@ -21,7 +21,6 @@ import {
   FileAudio,
   Radio,
   Copy,
-  Sparkles,
   XCircle,
   ArrowRightLeft,
   ChevronDown,
@@ -192,7 +191,7 @@ Output File: ${conversionResult.filename} (${conversionResult.formattedSize})`;
   };
 
   return (
-    <div className="w-full bg-[#FAF8F5]/50 min-h-[calc(100vh-100px)] text-zinc-900 font-sans flex flex-col justify-between" role="region" aria-label="Audio Converter Workstation">
+    <div className="w-full text-zinc-900 font-sans space-y-6" role="region" aria-label="Audio Converter Workstation">
       {/* Hidden File Input */}
       <input
         ref={fileInputRef}
@@ -202,255 +201,237 @@ Output File: ${conversionResult.filename} (${conversionResult.formattedSize})`;
         className="hidden"
       />
 
-      {/* 1. TOP TOOLBAR & SUBHEADER */}
-      <div className="w-full border-b border-zinc-200/80 px-6 py-3 flex items-center justify-between bg-white shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-orange-50 text-orange-600 border border-orange-200">
-            <Music className="w-4 h-4" />
-          </div>
-          <div>
-            <h1 className="text-sm font-bold text-zinc-900 tracking-tight flex items-center gap-2">
-              ToolVerse Audio Converter
-              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-orange-50 text-orange-600 border border-orange-200">
-                Client-Side Engine
-              </span>
-            </h1>
-            <p className="text-[11px] text-zinc-500">In-Browser Fast Audio Transcoder</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* Rule 4: Disable Convert Audio button until file uploaded */}
-          <Button
-            onClick={handleStartConversion}
-            disabled={!sourceFile || isConverting}
-            variant="default"
-            size="sm"
-            className="text-xs font-bold gap-2 px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:opacity-40 text-white rounded-xl shadow-2xs transition-all cursor-pointer"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isConverting ? "animate-spin" : ""}`} />
-            <span>{isConverting ? "Transcoding..." : "Convert Audio →"}</span>
-          </Button>
-        </div>
-      </div>
-
       {/* ERROR ALERT DISPLAY */}
       {conversionError && (
-        <div className="px-6 pt-4">
-          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center justify-between shadow-2xs">
-            <div className="flex items-center gap-2.5">
-              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-              <span className="font-semibold">{conversionError}</span>
-            </div>
-            <button onClick={() => setConversionError(null)} className="text-rose-500 hover:text-rose-800 font-bold">
-              Dismiss
-            </button>
+        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center justify-between shadow-2xs">
+          <div className="flex items-center gap-2.5">
+            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+            <span className="font-semibold">{conversionError}</span>
           </div>
+          <button onClick={() => setConversionError(null)} className="text-rose-500 hover:text-rose-800 font-bold">
+            Dismiss
+          </button>
         </div>
       )}
 
-      {/* 2. MAIN 2-COLUMN WORKSPACE LAYOUT */}
-      <div className="flex-1 flex flex-col lg:flex-row w-full bg-[#FAF8F5]/30 min-h-[calc(100vh-140px)] overflow-hidden">
-        
-        {/* ============================================================== */}
-        {/* COLUMN 1: LEFT SIDEBAR                                         */}
-        {/* ============================================================== */}
-        <aside className="w-full lg:w-80 shrink-0 border-r border-zinc-200/80 bg-white p-5 flex flex-col justify-between min-h-[calc(100vh-140px)] space-y-6 overflow-y-auto">
-          <div className="space-y-6">
-            
-            {/* Rule 1: BEFORE UPLOAD - Show Upload Box only. NO CONVERSION SETTINGS */}
-            {!sourceFile ? (
-              <div className="space-y-4">
-                <span className="text-[10px] font-bold tracking-wider text-zinc-400 uppercase flex items-center gap-1.5">
-                  <Upload className="w-3.5 h-3.5 text-zinc-400" />
-                  AUDIO UPLOAD
-                </span>
+      {/* STATE 1: BEFORE UPLOAD — ELEGANT AUDIO UPLOAD HERO BANNER (BETWEEN INTRO & WORKSPACE) */}
+      {!sourceFile ? (
+        <div
+          onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+          onDragLeave={() => setIsDragOver(false)}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+          className={`w-full min-h-[380px] bg-white border-2 border-dashed rounded-2xl p-10 text-center flex flex-col items-center justify-center space-y-5 cursor-pointer transition-all shadow-2xs ${
+            isDragOver ? "border-orange-500 bg-orange-50/40" : "border-zinc-200 hover:border-orange-400 bg-white"
+          }`}
+        >
+          {/* Headphones Icon Badge from Image 4 */}
+          <div className="w-16 h-16 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200 shadow-2xs">
+            <FileAudio className="w-8 h-8" />
+          </div>
 
-                <div className="p-5 bg-zinc-50 border border-zinc-200/80 rounded-2xl text-center space-y-3">
-                  <div className="w-10 h-10 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mx-auto border border-orange-200">
-                    <FileAudio className="w-5 h-5" />
-                  </div>
-                  <div className="space-y-1">
-                    <h3 className="text-xs font-bold text-zinc-800">Select Audio File</h3>
-                    <p className="text-[11px] text-zinc-500 leading-relaxed">
-                      Upload an audio file to analyze details and reveal conversion options.
-                    </p>
-                  </div>
-                  <p className="text-[10px] text-zinc-400 pt-1 border-t border-zinc-200/60 font-mono">
-                    Supports MP3 • WAV • AAC • FLAC • OGG • OPUS
-                  </p>
-                </div>
-              </div>
-            ) : (
-              /* Rule 1: AFTER UPLOAD - Reveal File Details & Conversion Settings */
-              <div className="space-y-5">
-                {/* SOURCE METADATA INFORMATION CARD */}
-                {sourceMetadata && (
-                  <div className="p-4 bg-zinc-50 border border-zinc-200/80 rounded-2xl space-y-2.5">
-                    <div className="flex items-center justify-between text-xs font-bold text-zinc-700 border-b border-zinc-200/60 pb-2">
-                      <span className="flex items-center gap-1.5">
-                        <Info className="w-3.5 h-3.5 text-orange-500" /> File Details
-                      </span>
-                      <span className="font-mono text-[10px] px-2 py-0.5 rounded-full bg-zinc-200 text-zinc-700">
-                        {sourceMetadata.format}
-                      </span>
-                    </div>
+          <div className="space-y-1">
+            <h3 className="text-xl font-bold text-zinc-900 tracking-tight">Select Audio File</h3>
+            <p className="text-xs text-zinc-500 max-w-md mx-auto leading-relaxed">
+              Upload an audio file to analyze duration, sample rate, bitrate, and reveal output conversion options.
+            </p>
+          </div>
 
-                    <div className="grid grid-cols-2 gap-2 text-[11px]">
-                      <div>
-                        <span className="text-zinc-400 block text-[10px]">Duration:</span>
-                        <span className="font-mono font-semibold text-zinc-800">{sourceMetadata.formattedDuration}</span>
-                      </div>
-                      <div>
-                        <span className="text-zinc-400 block text-[10px]">File Size:</span>
-                        <span className="font-mono font-semibold text-zinc-800">{sourceMetadata.formattedSize}</span>
-                      </div>
-                      <div>
-                        <span className="text-zinc-400 block text-[10px]">Sample Rate:</span>
-                        <span className="font-mono font-semibold text-zinc-800">{sourceMetadata.sampleRate} Hz</span>
-                      </div>
-                      <div>
-                        <span className="text-zinc-400 block text-[10px]">Channels:</span>
-                        <span className="font-mono font-semibold text-zinc-800">{sourceMetadata.numberOfChannels === 1 ? "Mono" : "Stereo"}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
+          <Button
+            type="button"
+            variant="default"
+            size="lg"
+            className="text-xs font-bold px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-xs gap-2 cursor-pointer"
+          >
+            <Upload className="w-4 h-4" />
+            <span>Browse Audio File</span>
+          </Button>
 
-                {/* CONVERSION SETTINGS */}
-                <div className="space-y-4">
-                  <span className="text-[10px] font-bold tracking-wider text-zinc-400 uppercase flex items-center gap-1.5">
-                    <SlidersHorizontal className="w-3.5 h-3.5 text-zinc-400" />
-                    CONVERSION SETTINGS
+          <span className="text-[11px] font-mono text-zinc-400 font-semibold pt-2 border-t border-zinc-100">
+            Supports MP3 • WAV • AAC • FLAC • OGG • OPUS
+          </span>
+        </div>
+      ) : (
+        /* STATE 2: AFTER UPLOAD — FULL AUDIO STUDIO WORKSPACE */
+        <div className="flex flex-col lg:flex-row gap-6 w-full items-start">
+          
+          {/* SIDEBAR: METADATA & CONVERSION CONTROLS */}
+          <aside className="w-full lg:w-72 shrink-0 bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-2xs space-y-5 h-fit">
+            {/* SOURCE METADATA INFORMATION CARD */}
+            {sourceMetadata && (
+              <div className="p-4 bg-zinc-50 border border-zinc-200/80 rounded-2xl space-y-2.5">
+                <div className="flex items-center justify-between text-xs font-bold text-zinc-700 border-b border-zinc-200/60 pb-2">
+                  <span className="flex items-center gap-1.5">
+                    <Info className="w-3.5 h-3.5 text-orange-500" /> File Details
                   </span>
+                  <span className="font-mono text-[10px] px-2 py-0.5 rounded-full bg-zinc-200 text-zinc-700">
+                    {sourceMetadata.format}
+                  </span>
+                </div>
 
-                  {/* Rule 6: Clean Dropdown for Output Format */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-700 block">Output Format:</label>
-                    <select
-                      value={targetFormat}
-                      onChange={(e) => setTargetFormat(e.target.value as AudioFormat)}
-                      className="w-full h-10 px-3 rounded-xl border border-zinc-200 bg-white text-xs font-bold text-zinc-800 focus:outline-none focus:border-orange-500 shadow-2xs cursor-pointer"
-                    >
-                      {FORMAT_DROPDOWN_OPTIONS.map((fmt) => (
-                        <option key={fmt.id} value={fmt.id}>
-                          {fmt.label}
-                        </option>
-                      ))}
-                    </select>
+                <div className="grid grid-cols-2 gap-2 text-[11px]">
+                  <div>
+                    <span className="text-zinc-400 block text-[10px]">Duration:</span>
+                    <span className="font-mono font-semibold text-zinc-800">{sourceMetadata.formattedDuration}</span>
                   </div>
-
-                  {/* Rules 7, 8, 9, 10: Advanced Settings Accordion */}
-                  <div className="pt-2 border-t border-zinc-100">
-                    <button
-                      onClick={() => setShowAdvanced(!showAdvanced)}
-                      className="w-full flex items-center justify-between text-xs font-bold text-zinc-600 hover:text-orange-600 py-1 transition-colors"
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <SlidersHorizontal className="w-3.5 h-3.5 text-orange-500" />
-                        Advanced Settings
-                      </span>
-                      {showAdvanced ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                    </button>
-
-                    <AnimatePresence>
-                      {showAdvanced && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="space-y-3 pt-3 overflow-hidden"
-                        >
-                          {/* Rule 10: Bitrate Selector (Default 192 kbps) */}
-                          <div className="space-y-1">
-                            <label className="text-[11px] font-bold text-zinc-600 block">Bitrate:</label>
-                            <select
-                              value={bitrate}
-                              onChange={(e) => setBitrate(Number(e.target.value) as BitrateOption)}
-                              className="w-full h-8 px-2.5 rounded-lg border border-zinc-200 bg-white text-xs font-semibold text-zinc-800"
-                            >
-                              {BITRATE_OPTIONS.map((b) => (
-                                <option key={b} value={b}>
-                                  {b} kbps {b === 192 ? "(Default)" : ""}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-
-                          {/* Rule 9: Sample Rate Selector */}
-                          <div className="space-y-1">
-                            <label className="text-[11px] font-bold text-zinc-600 block">Sample Rate:</label>
-                            <select
-                              value={sampleRate}
-                              onChange={(e) => setSampleRate(Number(e.target.value) as SampleRateOption)}
-                              className="w-full h-8 px-2.5 rounded-lg border border-zinc-200 bg-white text-xs font-semibold text-zinc-800"
-                            >
-                              {SAMPLE_RATE_OPTIONS.map((sr) => (
-                                <option key={sr.value} value={sr.value}>
-                                  {sr.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-
-                          {/* Rule 8: Audio Channels (Stereo / Mono) */}
-                          <div className="space-y-1">
-                            <label className="text-[11px] font-bold text-zinc-600 block">Channels:</label>
-                            <div className="grid grid-cols-2 gap-1.5">
-                              <button
-                                onClick={() => setChannels("stereo")}
-                                className={`py-1.5 rounded-lg text-xs font-bold border transition-all ${
-                                  channels === "stereo"
-                                    ? "bg-orange-50 text-orange-600 border-orange-400"
-                                    : "bg-white text-zinc-700 border-zinc-200"
-                                }`}
-                              >
-                                Stereo
-                              </button>
-                              <button
-                                onClick={() => setChannels("mono")}
-                                className={`py-1.5 rounded-lg text-xs font-bold border transition-all ${
-                                  channels === "mono"
-                                    ? "bg-orange-50 text-orange-600 border-orange-400"
-                                    : "bg-white text-zinc-700 border-zinc-200"
-                                }`}
-                              >
-                                Mono
-                              </button>
-                            </div>
-                          </div>
-
-                          {/* Rule 7: Preserve Metadata Toggle */}
-                          <div className="pt-2 border-t border-zinc-100 flex items-center justify-between text-xs">
-                            <span className="font-semibold text-zinc-600">Preserve Metadata</span>
-                            <button
-                              onClick={() => setPreserveMetadata(!preserveMetadata)}
-                              className={`w-8 h-4.5 rounded-full p-0.5 transition-colors ${
-                                preserveMetadata ? "bg-orange-500" : "bg-zinc-300"
-                              }`}
-                            >
-                              <div
-                                className={`w-3.5 h-3.5 rounded-full bg-white transition-transform ${
-                                  preserveMetadata ? "translate-x-3.5" : "translate-x-0"
-                                }`}
-                              />
-                            </button>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                  <div>
+                    <span className="text-zinc-400 block text-[10px]">File Size:</span>
+                    <span className="font-mono font-semibold text-zinc-800">{sourceMetadata.formattedSize}</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-400 block text-[10px]">Sample Rate:</span>
+                    <span className="font-mono font-semibold text-zinc-800">{sourceMetadata.sampleRate} Hz</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-400 block text-[10px]">Channels:</span>
+                    <span className="font-mono font-semibold text-zinc-800">{sourceMetadata.numberOfChannels === 1 ? "Mono" : "Stereo"}</span>
                   </div>
                 </div>
               </div>
             )}
-          </div>
 
-          {/* Rule 5: Replace Audio / Remove Audio Buttons */}
-          {sourceFile && (
+            {/* START CONVERSION BUTTON */}
+            <Button
+              onClick={handleStartConversion}
+              disabled={isConverting}
+              variant="default"
+              size="sm"
+              className="w-full text-xs font-bold gap-2 py-2.5 bg-orange-600 hover:bg-orange-700 disabled:opacity-40 text-white rounded-xl shadow-2xs transition-all cursor-pointer"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isConverting ? "animate-spin" : ""}`} />
+              <span>{isConverting ? "Transcoding..." : "Convert Audio →"}</span>
+            </Button>
+
+            {/* CONVERSION SETTINGS */}
+            <div className="space-y-4 pt-2 border-t border-zinc-100">
+              <span className="text-[10px] font-bold tracking-wider text-zinc-400 uppercase flex items-center gap-1.5">
+                <SlidersHorizontal className="w-3.5 h-3.5 text-zinc-400" />
+                CONVERSION SETTINGS
+              </span>
+
+              {/* OUTPUT FORMAT PICKER */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-zinc-700 block">Output Format:</label>
+                <select
+                  value={targetFormat}
+                  onChange={(e) => setTargetFormat(e.target.value as AudioFormat)}
+                  className="w-full h-9 px-3 rounded-xl border border-zinc-200 bg-white text-xs font-bold text-zinc-800 focus:outline-none focus:border-orange-500 shadow-2xs cursor-pointer"
+                >
+                  {FORMAT_DROPDOWN_OPTIONS.map((fmt) => (
+                    <option key={fmt.id} value={fmt.id}>
+                      {fmt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* ADVANCED SETTINGS ACCORDION */}
+              <div className="pt-2 border-t border-zinc-100">
+                <button
+                  onClick={() => setShowAdvanced(!showAdvanced)}
+                  className="w-full flex items-center justify-between text-xs font-bold text-zinc-600 hover:text-orange-600 py-1 transition-colors"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <SlidersHorizontal className="w-3.5 h-3.5 text-orange-500" />
+                    Advanced Settings
+                  </span>
+                  {showAdvanced ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                </button>
+
+                <AnimatePresence>
+                  {showAdvanced && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="space-y-3 pt-3 overflow-hidden"
+                    >
+                      {/* Bitrate Selector */}
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-zinc-600 block">Bitrate:</label>
+                        <select
+                          value={bitrate}
+                          onChange={(e) => setBitrate(Number(e.target.value) as BitrateOption)}
+                          className="w-full h-8 px-2.5 rounded-lg border border-zinc-200 bg-white text-xs font-semibold text-zinc-800"
+                        >
+                          {BITRATE_OPTIONS.map((b) => (
+                            <option key={b} value={b}>
+                              {b} kbps {b === 192 ? "(Default)" : ""}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Sample Rate Selector */}
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-zinc-600 block">Sample Rate:</label>
+                        <select
+                          value={sampleRate}
+                          onChange={(e) => setSampleRate(Number(e.target.value) as SampleRateOption)}
+                          className="w-full h-8 px-2.5 rounded-lg border border-zinc-200 bg-white text-xs font-semibold text-zinc-800"
+                        >
+                          {SAMPLE_RATE_OPTIONS.map((sr) => (
+                            <option key={sr.value} value={sr.value}>
+                              {sr.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Audio Channels */}
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-zinc-600 block">Channels:</label>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          <button
+                            onClick={() => setChannels("stereo")}
+                            className={`py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                              channels === "stereo"
+                                ? "bg-orange-50 text-orange-600 border-orange-400"
+                                : "bg-white text-zinc-700 border-zinc-200"
+                            }`}
+                          >
+                            Stereo
+                          </button>
+                          <button
+                            onClick={() => setChannels("mono")}
+                            className={`py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                              channels === "mono"
+                                ? "bg-orange-50 text-orange-600 border-orange-400"
+                                : "bg-white text-zinc-700 border-zinc-200"
+                            }`}
+                          >
+                            Mono
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Preserve Metadata Toggle */}
+                      <div className="pt-2 border-t border-zinc-100 flex items-center justify-between text-xs">
+                        <span className="font-semibold text-zinc-600">Preserve Metadata</span>
+                        <button
+                          onClick={() => setPreserveMetadata(!preserveMetadata)}
+                          className={`w-8 h-4.5 rounded-full p-0.5 transition-colors ${
+                            preserveMetadata ? "bg-orange-500" : "bg-zinc-300"
+                          }`}
+                        >
+                          <div
+                            className={`w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                              preserveMetadata ? "translate-x-3.5" : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Replace / Remove Audio Buttons */}
             <div className="pt-4 border-t border-zinc-100 space-y-2">
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full flex items-center justify-center gap-2 text-xs font-bold py-2 rounded-xl border border-zinc-200 text-zinc-700 hover:border-orange-400 hover:text-orange-600 transition-colors"
+                className="w-full flex items-center justify-center gap-2 text-xs font-bold py-2 rounded-xl border border-zinc-200 text-zinc-700 hover:border-orange-400 hover:text-orange-600 transition-colors cursor-pointer"
               >
                 <ArrowRightLeft className="w-3.5 h-3.5" />
                 <span>Replace Audio</span>
@@ -458,114 +439,53 @@ Output File: ${conversionResult.filename} (${conversionResult.formattedSize})`;
 
               <button
                 onClick={handleRemoveAudio}
-                className="w-full flex items-center justify-center gap-2 text-xs font-semibold py-1.5 text-zinc-400 hover:text-rose-600 transition-colors"
+                className="w-full flex items-center justify-center gap-2 text-xs font-semibold py-1.5 text-zinc-400 hover:text-rose-600 transition-colors cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Remove Audio</span>
               </button>
             </div>
-          )}
-        </aside>
+          </aside>
 
-        {/* ============================================================== */}
-        {/* MAIN PANEL WORKSPACE                                           */}
-        {/* ============================================================== */}
-        <main className="flex-1 p-6 space-y-6 flex flex-col min-h-[calc(100vh-140px)] overflow-y-auto">
-          <div className="flex items-center justify-between">
-            <h2 className="text-[11px] font-bold tracking-wider text-zinc-400 uppercase flex items-center gap-1.5">
-              <Radio className="w-3.5 h-3.5 text-orange-500" />
-              AUDIO STUDIO WORKSPACE
-            </h2>
-
-            {sourceMetadata && (
-              <span className="text-xs font-mono font-bold text-zinc-500">
-                Input: {sourceMetadata.filename}
-              </span>
-            )}
-          </div>
-
-          {/* REAL-TIME CONVERSION PROGRESS CARD */}
-          {isConverting && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="p-5 bg-white border border-orange-200 rounded-2xl shadow-xs space-y-3"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-orange-600 flex items-center gap-2">
-                  <RefreshCw className="w-4 h-4 animate-spin" /> Transcoding to {targetFormat.toUpperCase()}...
-                </span>
-                <span className="text-xs font-mono font-bold text-zinc-800">
-                  {progressPercent}% {etaSec > 0 && `(ETA ~${etaSec}s)`}
-                </span>
-              </div>
-
-              <div className="w-full h-2.5 rounded-full bg-orange-100 overflow-hidden">
-                <div
-                  className="h-full bg-orange-600 rounded-full transition-all duration-300"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-
-              <div className="flex justify-end">
-                <Button
-                  onClick={handleCancelConversion}
-                  variant="outline"
-                  size="sm"
-                  className="text-xs font-semibold text-rose-600 border-rose-200 hover:bg-rose-50"
-                >
-                  <XCircle className="w-3.5 h-3.5 mr-1" /> Cancel Conversion
-                </Button>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Rule 2 & 3: WORKSPACE WHEN NO FILE SELECTED */}
-          {!sourceFile ? (
-            <div
-              onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
-              onDragLeave={() => setIsDragOver(false)}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={`flex-1 bg-white border-2 border-dashed rounded-3xl p-12 text-center flex flex-col items-center justify-center space-y-5 cursor-pointer transition-all ${
-                isDragOver
-                  ? "border-orange-500 bg-orange-50/40"
-                  : "border-zinc-200 hover:border-orange-400 bg-white"
-              }`}
-            >
-              {/* Beautiful Audio Icon */}
-              <div className="w-20 h-20 rounded-3xl bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-200 shadow-2xs">
-                <Music className="w-10 h-10" />
-              </div>
-
-              <div className="space-y-1.5">
-                <h3 className="text-xl font-extrabold text-zinc-900 tracking-tight">
-                  Drop your audio here
-                </h3>
-                <p className="text-xs text-zinc-500">
-                  or click to select an audio file from your computer
-                </p>
-              </div>
-
-              {/* Rule 3: Single Large Browse Button */}
-              <Button
-                type="button"
-                variant="default"
-                size="lg"
-                className="text-xs font-bold px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-xs gap-2 cursor-pointer"
+          {/* MAIN PANEL WORKSPACE */}
+          <main className="flex-1 space-y-6 w-full">
+            {/* REAL-TIME CONVERSION PROGRESS CARD */}
+            {isConverting && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-5 bg-white border border-orange-200 rounded-2xl shadow-xs space-y-3"
               >
-                <Upload className="w-4 h-4" />
-                <span>Browse Files</span>
-              </Button>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-orange-600 flex items-center gap-2">
+                    <RefreshCw className="w-4 h-4 animate-spin" /> Transcoding to {targetFormat.toUpperCase()}...
+                  </span>
+                  <span className="text-xs font-mono font-bold text-zinc-800">
+                    {progressPercent}% {etaSec > 0 && `(ETA ~${etaSec}s)`}
+                  </span>
+                </div>
 
-              <div className="pt-4 border-t border-zinc-100">
-                <span className="text-[11px] font-mono text-zinc-400 font-semibold">
-                  Supports MP3 • WAV • AAC • FLAC • OGG • OPUS
-                </span>
-              </div>
-            </div>
-          ) : (
-            /* WORKSPACE WHEN FILE IS UPLOADED */
+                <div className="w-full h-2.5 rounded-full bg-orange-100 overflow-hidden">
+                  <div
+                    className="h-full bg-orange-600 rounded-full transition-all duration-300"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+
+                <div className="flex justify-end">
+                  <Button
+                    onClick={handleCancelConversion}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs font-semibold text-rose-600 border-rose-200 hover:bg-rose-50"
+                  >
+                    <XCircle className="w-3.5 h-3.5 mr-1" /> Cancel Conversion
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* WAVEFORM TIMELINE PLAYER */}
             <div className="space-y-6">
               <WaveformPlayer
                 audioUrl={sourceUrl}
@@ -649,9 +569,9 @@ Output File: ${conversionResult.filename} (${conversionResult.formattedSize})`;
                 </motion.div>
               )}
             </div>
-          )}
-        </main>
-      </div>
+          </main>
+        </div>
+      )}
     </div>
   );
 };

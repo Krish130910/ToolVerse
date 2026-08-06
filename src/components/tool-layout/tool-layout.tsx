@@ -101,7 +101,10 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({
   };
 
   return (
-    <div className={`pt-2 sm:pt-4 relative min-h-screen bg-[#FAF8F5] flex flex-col ${containerSize === "full" ? "pb-0" : "pb-8"}`}>
+    <div
+      suppressHydrationWarning
+      className={`pt-2 sm:pt-4 relative min-h-screen bg-[#FAF8F5] flex flex-col ${containerSize === "full" ? "pb-0" : "pb-8"}`}
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -43,7 +43,7 @@ export const LoremIpsumGeneratorTool: React.FC = () => {
   }, []);
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-8 w-full">
       {/* 1. Live Statistics Metrics Row */}
       <StatsCard stats={stats} />
 

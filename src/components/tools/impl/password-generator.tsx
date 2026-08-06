@@ -153,7 +153,7 @@ export const PasswordGeneratorTool: React.FC = () => {
   }, [password]);
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-8 w-full">
       {/* 1. Main Generated Result Banner */}
       <ResultCard
         password={password}

@@ -9,9 +9,13 @@ import { FEATURED_TOOLS, ROADMAP_CATEGORIES } from "@/lib/data";
 import { ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-export default function CategoryDetailPage() {
-  const params = useParams();
-  const slug = params?.slug as string;
+export default function CategoryDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }> | { slug: string };
+}) {
+  const unwrappedParams = React.use ? React.use(params as any) : params;
+  const slug = (unwrappedParams as any)?.slug || "";
 
   const category = ROADMAP_CATEGORIES.find((c) => c.slug === slug);
   const categoryTools = FEATURED_TOOLS.filter((t) => t.categorySlug === slug);

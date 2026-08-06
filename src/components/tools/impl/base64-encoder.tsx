@@ -146,7 +146,7 @@ export const Base64EncoderTool: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-6 w-full relative">
       {/* Hidden File Input */}
       <input
         type="file"
