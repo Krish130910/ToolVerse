@@ -28,6 +28,7 @@ interface ToolLayoutProps {
   tool: FeaturedTool;
   children?: React.ReactNode;
   hideRelatedTools?: boolean;
+  containerSize?: "default" | "small" | "large" | "full";
 }
 
 const TOOL_ICON_MAP: Record<string, React.ReactNode> = {
@@ -46,6 +47,7 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({
   tool,
   children,
   hideRelatedTools = false,
+  containerSize = "default",
 }) => {
   const [isStarred, setIsStarred] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -99,12 +101,12 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({
   };
 
   return (
-    <div className="pt-2 sm:pt-4 pb-8 relative min-h-screen bg-[#FAF8F5]">
+    <div className={`pt-2 sm:pt-4 relative min-h-screen bg-[#FAF8F5] flex flex-col ${containerSize === "full" ? "pb-0" : "pb-8"}`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Container>
+      <Container size={containerSize} className={containerSize === "full" ? "flex-1 flex flex-col" : ""}>
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-2 text-xs text-zinc-600 mb-3 font-medium">
           <Link href="/" className="hover:text-orange-600 transition-colors">
@@ -199,7 +201,7 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({
         </div>
 
         {/* Main Workspace Area */}
-        <div className="mb-4">{children}</div>
+        <div className={containerSize === "full" ? "flex-1 flex flex-col mb-0" : "mb-4"}>{children}</div>
 
         {/* Related Tools Section - Only rendered if not hidden */}
         {!hideRelatedTools && relatedTools.length > 0 && (

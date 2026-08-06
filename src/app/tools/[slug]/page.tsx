@@ -31,7 +31,7 @@ export default function DedicatedToolPage() {
   }
 
   return (
-    <ToolLayout tool={tool} hideRelatedTools={true}>
+    <ToolLayout tool={tool} hideRelatedTools={true} containerSize={slug === "document-converter" ? "full" : "default"}>
       {tool.isLive ? (
         <LiveToolsSuite initialTool={slug} />
       ) : (
