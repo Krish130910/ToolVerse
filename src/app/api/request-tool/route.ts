@@ -117,15 +117,15 @@ export async function POST(request: Request) {
 
     // 5. STEP B: Send Email Notification via Nodemailer Gmail SMTP ONLY AFTER Database Save Succeeds
     if (createdRecord) {
-      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      if (emailUser && emailPass) {
         try {
           const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 465,
             secure: true,
             auth: {
-              user: process.env.EMAIL_USER,
-              pass: process.env.EMAIL_PASS,
+              user: emailUser,
+              pass: emailPass,
             },
           });
 
@@ -149,7 +149,7 @@ Submitted At:
 ${formattedDate}`;
 
           await transporter.sendMail({
-            from: `"ToolVerse" <${process.env.EMAIL_USER}>`,
+            from: `"ToolVerse" <${emailUser}>`,
             to: adminEmail,
             subject: "🔔 New Tool Request - ToolVerse",
             text: emailText,
