@@ -47,6 +47,7 @@ export default function DedicatedToolPage({
     "password-generator",
     "lorem-ipsum-generator",
     "invoice-generator",
+    "text-formatter",
   ];
 
   return (
