@@ -49,6 +49,7 @@ export default function DedicatedToolPage({
     "invoice-generator",
     "text-formatter",
     "svg-editor",
+    "markdown-editor",
   ];
 
   return (
