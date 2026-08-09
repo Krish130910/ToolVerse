@@ -131,11 +131,11 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({
         </nav>
 
         {/* Tool Header Card */}
-        <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 mb-4 shadow-xs">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-2">
+        <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 mb-4 shadow-xs min-w-0 w-full">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 min-w-0 w-full">
+            <div className="space-y-2 min-w-0 flex-1">
               {/* Badges Row */}
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap min-w-0">
                 <Badge variant="emerald">{tool.categoryName}</Badge>
                 {tool.isLive ? (
                   <Badge variant="emerald" className="gap-1 font-mono text-[10px]">
@@ -150,23 +150,23 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({
               </div>
 
               {/* Icon + Title Row */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 min-w-0">
                 <div className="p-2.5 rounded-xl bg-orange-50 border border-orange-200/80 shrink-0 shadow-2xs">
                   {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-5.5 h-5.5 text-orange-500" />}
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight truncate">
                   {tool.name}
                 </h1>
               </div>
 
               {/* Description */}
-              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed max-w-2xl">
+              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed max-w-2xl min-w-0">
                 {tool.description || tool.tagline}
               </p>
             </div>
 
             {/* Action Bar */}
-            <div className="flex items-center gap-2.5 shrink-0 self-start md:self-auto">
+            <div className="flex items-center gap-2.5 shrink-0 self-start lg:self-auto min-w-0">
               <button
                 onClick={toggleStar}
                 className={`flex items-center gap-1.5 h-9 px-3.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${

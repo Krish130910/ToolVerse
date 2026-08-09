@@ -55,7 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </Link>
 
             {/* Center: Navigation Text Links */}
-            <nav className="hidden md:flex items-center gap-7 lg:gap-9 text-xs font-semibold text-zinc-600">
+            <nav className="hidden lg:flex items-center gap-7 lg:gap-9 text-xs font-semibold text-zinc-600">
               {/* Categories Dropdown Text Link */}
               <CategoriesDropdown />
 
@@ -83,17 +83,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             </nav>
 
             {/* Right: Starred, Search & Primary CTA */}
-            <div className="hidden md:flex items-center gap-2.5 shrink-0">
+            <div className="hidden sm:flex items-center gap-2 sm:gap-2.5 shrink-0">
               {/* Starred Tools Dropdown */}
               <StarredDropdown />
 
               {/* Clean search trigger */}
               <button
                 onClick={onSearchClick}
-                className="flex items-center gap-2 w-40 lg:w-48 h-8.5 px-3 rounded-lg bg-white/90 border border-zinc-200/90 text-xs text-zinc-500 hover:text-zinc-800 hover:border-orange-300 transition-all cursor-pointer group shadow-2xs"
+                className="flex items-center gap-2 w-28 sm:w-36 lg:w-48 h-8.5 px-3 rounded-lg bg-white/90 border border-zinc-200/90 text-xs text-zinc-500 hover:text-zinc-800 hover:border-orange-300 transition-all cursor-pointer group shadow-2xs"
               >
                 <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-orange-500 transition-colors" />
-                <span className="text-zinc-500 group-hover:text-zinc-800 transition-colors text-[11px]">
+                <span className="text-zinc-500 group-hover:text-zinc-800 transition-colors text-[11px] truncate">
                   Search tools...
                 </span>
               </button>
@@ -103,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 size="sm"
                 variant="default"
                 onClick={onRequestToolClick}
-                className="flex items-center gap-1.5 text-xs font-bold rounded-lg px-3.5 h-8.5 shadow-2xs"
+                className="flex items-center gap-1.5 text-xs font-bold rounded-lg px-3.5 h-8.5 shadow-2xs shrink-0"
               >
                 <PlusCircle className="w-3.5 h-3.5" />
                 <span>Request Tool</span>
@@ -111,7 +111,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Mobile Actions */}
-            <div className="flex md:hidden items-center gap-2">
+            <div className="flex sm:hidden items-center gap-2">
               <StarredDropdown />
               <button
                 onClick={onSearchClick}

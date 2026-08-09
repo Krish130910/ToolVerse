@@ -34,7 +34,7 @@ export default function DedicatedToolPage({
     );
   }
 
-  const fullWidthSlugs = [
+  const largeWidthSlugs = [
     "document-converter",
     "audio-converter",
     "video-gif-converter",
@@ -48,10 +48,11 @@ export default function DedicatedToolPage({
     "lorem-ipsum-generator",
     "invoice-generator",
     "text-formatter",
+    "svg-editor",
   ];
 
   return (
-    <ToolLayout tool={tool} hideRelatedTools={true} containerSize={fullWidthSlugs.includes(slug) ? "full" : "default"}>
+    <ToolLayout tool={tool} hideRelatedTools={true} containerSize={largeWidthSlugs.includes(slug) ? "large" : "default"}>
       {tool.isLive ? (
         <LiveToolsSuite initialTool={slug} />
       ) : (
