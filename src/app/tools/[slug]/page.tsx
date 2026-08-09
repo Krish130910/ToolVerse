@@ -50,6 +50,7 @@ export default function DedicatedToolPage({
     "text-formatter",
     "svg-editor",
     "markdown-editor",
+    "json-formatter",
   ];
 
   return (
