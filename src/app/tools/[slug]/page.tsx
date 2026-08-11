@@ -7,6 +7,7 @@ import { LiveToolsSuite } from "@/components/tools/live-tools-suite";
 import { FEATURED_TOOLS } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Clock, PlusCircle } from "lucide-react";
+import { ScrollExpand } from "@/components/ui/scroll-expand";
 
 export default function DedicatedToolPage({
   params,
@@ -37,7 +38,23 @@ export default function DedicatedToolPage({
   return (
     <ToolLayout tool={tool} hideRelatedTools={true} containerSize="large">
       {tool.isLive ? (
-        <LiveToolsSuite initialTool={slug} />
+        <ScrollExpand
+          useWindowScroll={true}
+          startWidth={88}
+          startHeight={68}
+          startRadius={24}
+          endRadius={16}
+          scrollDistance={0.35}
+          holdDistance={0.1}
+          smoothing={0.08}
+          overlayScrim={0}
+          scrollHint="Scroll to expand tool workspace ↓"
+          className="w-full"
+        >
+          <div className="w-full h-full p-2 sm:p-4">
+            <LiveToolsSuite initialTool={slug} />
+          </div>
+        </ScrollExpand>
       ) : (
         <div className="bg-white border border-zinc-200/90 rounded-2xl p-10 text-center space-y-4 shadow-xs">
           <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-orange-50 border border-orange-200 text-orange-500">

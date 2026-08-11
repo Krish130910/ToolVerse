@@ -28,13 +28,13 @@ interface FeaturedToolsProps {
 }
 
 const TOOL_ICON_MAP: Record<string, React.ReactNode> = {
-  Braces: <Braces className="w-5 h-5 text-orange-500" />,
-  KeyRound: <KeyRound className="w-5 h-5 text-orange-500" />,
-  QrCode: <QrCode className="w-5 h-5 text-orange-500" />,
-  Lock: <Lock className="w-5 h-5 text-orange-500" />,
-  Binary: <Binary className="w-5 h-5 text-orange-500" />,
-  Layers: <Layers className="w-5 h-5 text-orange-500" />,
-  Palette: <Palette className="w-5 h-5 text-orange-500" />,
+  Braces: <Braces className="w-6 h-6 text-orange-500" />,
+  KeyRound: <KeyRound className="w-6 h-6 text-orange-500" />,
+  QrCode: <QrCode className="w-6 h-6 text-orange-500" />,
+  Lock: <Lock className="w-6 h-6 text-orange-500" />,
+  Binary: <Binary className="w-6 h-6 text-orange-500" />,
+  Layers: <Layers className="w-6 h-6 text-orange-500" />,
+  Palette: <Palette className="w-6 h-6 text-orange-500" />,
 };
 
 export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
@@ -60,7 +60,7 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
   });
 
   return (
-    <section id="featured-tools" className="pb-12 pt-2 bg-[#FAF8F5]">
+    <section id="featured-tools" className="pb-16 pt-4 bg-[#FAF8F5]">
       <Container>
         {/* Tools Display */}
         {filteredTools.length === 0 ? (
@@ -90,15 +90,15 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
                     className="flex flex-col justify-between h-full group transition-all duration-200 rounded-[22px] border border-zinc-200/90 hover:border-orange-400 bg-white shadow-xs hover:shadow-xl hover:-translate-y-1 overflow-hidden"
                   >
                     {/* Top App Preview Mockup Window */}
-                    <div className="relative aspect-[16/10] bg-[#121215] border-b border-zinc-200/80 rounded-t-[20px] overflow-hidden p-4 flex items-center justify-center group-hover:bg-[#18181B] transition-colors">
+                    <div className="relative aspect-[16/9.5] bg-[#121215] border-b border-zinc-200/80 rounded-t-[20px] overflow-hidden p-5 sm:p-6 flex items-center justify-center group-hover:bg-[#18181B] transition-colors">
                       {/* App UI Header Bar */}
-                      <div className="absolute top-2.5 left-3 right-3 h-5.5 rounded-md bg-zinc-800/90 flex items-center px-2.5 justify-between">
+                      <div className="absolute top-3 left-3.5 right-3.5 h-6 rounded-md bg-zinc-800/90 flex items-center px-2.5 justify-between">
                         <div className="flex items-center gap-1.5">
                           <span className="w-2 h-2 rounded-full bg-rose-500/80" />
                           <span className="w-2 h-2 rounded-full bg-amber-500/80" />
                           <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
                         </div>
-                        <span className="text-[9px] font-mono text-zinc-400 truncate">
+                        <span className="text-[10px] font-mono text-zinc-400 truncate">
                           {tool.slug}.toolverse
                         </span>
                         <button
@@ -110,45 +110,45 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
                           className="text-zinc-400 hover:text-amber-400 transition-colors"
                           title={isFav ? "Remove Star" : "Star Tool"}
                         >
-                          <Star className={`w-3 h-3 ${isFav ? "fill-amber-400 text-amber-400" : ""}`} />
+                          <Star className={`w-3.5 h-3.5 ${isFav ? "fill-amber-400 text-amber-400" : ""}`} />
                         </button>
                       </div>
 
                       {/* Central Tool Icon / Preview Illustration */}
-                      <div className="pt-4 flex flex-col items-center justify-center space-y-1.5 text-center">
-                        <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700/80 shadow-md group-hover:scale-110 group-hover:border-orange-500/60 transition-all">
+                      <div className="pt-4 flex flex-col items-center justify-center space-y-2 text-center">
+                        <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-700/80 shadow-md group-hover:scale-110 group-hover:border-orange-500/60 transition-all">
                           {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-6 h-6 text-orange-500" />}
                         </div>
-                        <span className="text-[10px] font-mono text-zinc-400 group-hover:text-orange-400 transition-colors">
+                        <span className="text-[11px] font-mono text-zinc-400 group-hover:text-orange-400 transition-colors font-medium">
                           {tool.name}
                         </span>
                       </div>
                     </div>
 
                     {/* Card Body */}
-                    <div className="p-5 flex flex-col justify-between flex-1 space-y-4">
+                    <div className="p-6 flex flex-col justify-between flex-1 space-y-5">
                       <div>
                         {/* Title */}
-                        <div className="flex items-center justify-between mb-1">
-                          <h3 className="text-base font-extrabold text-zinc-900 group-hover:text-orange-600 transition-colors tracking-tight font-serif italic">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <h3 className="text-lg sm:text-[21px] font-extrabold text-zinc-900 group-hover:text-orange-600 transition-colors tracking-tight font-serif italic leading-snug">
                             {tool.name}
                           </h3>
                         </div>
 
                         {/* Description */}
-                        <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed">
+                        <p className="text-xs sm:text-[14.5px] text-zinc-500 line-clamp-2 leading-relaxed">
                           {tool.tagline}
                         </p>
                       </div>
 
                       {/* Bottom Footer Bar */}
-                      <div className="pt-3 border-t border-zinc-100 flex items-center justify-between">
-                        <div className="flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 group-hover:text-zinc-600 transition-colors">
+                      <div className="pt-3.5 border-t border-zinc-100 flex items-center justify-between">
+                        <div className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-zinc-400 group-hover:text-zinc-600 transition-colors">
                           <span>↘</span>
                           <span>{tool.categoryName}</span>
                         </div>
 
-                        <div className="w-8 h-8 rounded-full bg-zinc-100 group-hover:bg-orange-500 text-zinc-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-2xs group-hover:scale-105">
+                        <div className="w-8.5 h-8.5 rounded-full bg-zinc-100 group-hover:bg-orange-500 text-zinc-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-2xs group-hover:scale-105">
                           <ArrowRight className="w-4 h-4" />
                         </div>
                       </div>
@@ -172,22 +172,22 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
                 >
                   <Link
                     href={`/tools/${tool.slug}`}
-                    className="flex items-center justify-between p-4 rounded-xl border border-zinc-200/90 bg-white hover:border-orange-400 hover:shadow-md transition-all group"
+                    className="flex items-center justify-between p-4.5 sm:p-5 rounded-2xl border border-zinc-200/90 bg-white hover:border-orange-400 hover:shadow-md transition-all group"
                   >
-                    <div className="flex items-center gap-3.5">
-                      <div className="p-2.5 rounded-xl bg-zinc-900 text-orange-500 border border-zinc-700/80">
-                        {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-5 h-5 text-orange-500" />}
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 rounded-xl bg-zinc-900 text-orange-500 border border-zinc-700/80">
+                        {TOOL_ICON_MAP[tool.iconName] || <Braces className="w-5.5 h-5.5 text-orange-500" />}
                       </div>
                       <div>
-                        <h4 className="text-sm font-extrabold text-zinc-900 group-hover:text-orange-600 transition-colors">
+                        <h4 className="text-base sm:text-lg font-extrabold text-zinc-900 group-hover:text-orange-600 transition-colors">
                           {tool.name}
                         </h4>
-                        <p className="text-xs text-zinc-500 line-clamp-1">{tool.tagline}</p>
+                        <p className="text-xs sm:text-sm text-zinc-500 line-clamp-1">{tool.tagline}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-extrabold uppercase text-zinc-400 bg-zinc-100 px-2.5 py-1 rounded-md">
+                      <span className="text-[11px] font-extrabold uppercase text-zinc-400 bg-zinc-100 px-3 py-1 rounded-md">
                         {tool.categoryName}
                       </span>
                       <button
