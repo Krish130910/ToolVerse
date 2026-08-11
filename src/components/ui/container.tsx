@@ -10,14 +10,14 @@ interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Container: React.FC<ContainerProps> = ({
   children,
   className,
-  size = "default",
+  size = "large",
   ...props
 }) => {
   const sizeClasses = {
     small: "max-w-4xl",
-    default: "max-w-7xl",
+    default: "max-w-[90rem]",
     large: "max-w-[90rem]",
-    full: "max-w-none w-full px-2 sm:px-4 lg:px-6",
+    full: "max-w-none w-full px-4 sm:px-6 lg:px-8",
   };
 
   return (

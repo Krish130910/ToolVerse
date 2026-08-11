@@ -34,27 +34,8 @@ export default function DedicatedToolPage({
     );
   }
 
-  const largeWidthSlugs = [
-    "document-converter",
-    "audio-converter",
-    "video-gif-converter",
-    "jwt-decoder",
-    "digital-signature-creator",
-    "base64-encoder",
-    "url-shortener",
-    "barcode-generator",
-    "qr-generator",
-    "password-generator",
-    "lorem-ipsum-generator",
-    "invoice-generator",
-    "text-formatter",
-    "svg-editor",
-    "markdown-editor",
-    "json-formatter",
-  ];
-
   return (
-    <ToolLayout tool={tool} hideRelatedTools={true} containerSize={largeWidthSlugs.includes(slug) ? "large" : "default"}>
+    <ToolLayout tool={tool} hideRelatedTools={true} containerSize="large">
       {tool.isLive ? (
         <LiveToolsSuite initialTool={slug} />
       ) : (

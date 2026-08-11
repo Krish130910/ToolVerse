@@ -47,7 +47,7 @@ export const ToolLayout: React.FC<ToolLayoutProps> = ({
   tool,
   children,
   hideRelatedTools = false,
-  containerSize = "default",
+  containerSize = "large",
 }) => {
   const [isStarred, setIsStarred] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
