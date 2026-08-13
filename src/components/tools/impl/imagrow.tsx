@@ -374,9 +374,9 @@ export const ImaGrowTool: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6 max-w-6xl mx-auto px-1 sm:px-0">
       {/* Upload Header */}
-      <div className="bg-white border border-zinc-200/90 rounded-2xl p-6 shadow-xs text-center space-y-4">
+      <div className="bg-white border border-zinc-200/90 rounded-2xl p-4 sm:p-6 shadow-xs text-center space-y-4">
         {errorMsg && (
           <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -390,7 +390,7 @@ export const ImaGrowTool: React.FC = () => {
         )}
 
         {!imageSrc ? (
-          <label className="border-2 border-dashed border-orange-200 hover:border-orange-400 bg-orange-50/40 rounded-2xl p-10 flex flex-col items-center justify-center cursor-pointer transition-all">
+          <label className="border-2 border-dashed border-orange-200 hover:border-orange-400 bg-orange-50/40 rounded-2xl p-6 sm:p-10 flex flex-col items-center justify-center cursor-pointer transition-all focus-within:ring-2 focus-within:ring-orange-500">
             <div className="p-4 rounded-2xl bg-orange-500/10 text-orange-600 mb-3">
               <Upload className="w-8 h-8" />
             </div>
@@ -398,7 +398,13 @@ export const ImaGrowTool: React.FC = () => {
             <p className="text-xs text-zinc-500 max-w-sm mt-1">
               Upscale photos to 2x, 4x, 8x HD/4K resolutions with multi-pass step resampling & detail sharpening.
             </p>
-            <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              className="hidden"
+              aria-label="Upload Image to ImaGrow Upscaler"
+            />
           </label>
         ) : (
           <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-orange-50/70 border border-orange-200 rounded-xl gap-4">
@@ -416,19 +422,26 @@ export const ImaGrowTool: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               <label className="cursor-pointer">
                 <Button size="sm" variant="outline" className="text-xs gap-1.5">
                   <RefreshCw className="w-3 h-3" />
                   <span>Replace Photo</span>
                 </Button>
-                <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  aria-label="Replace Photo"
+                />
               </label>
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={handleClearImage}
                 className="text-xs text-zinc-500 hover:text-red-600"
+                aria-label="Clear Photo"
               >
                 Clear
               </Button>
@@ -451,13 +464,13 @@ export const ImaGrowTool: React.FC = () => {
           {/* Controls Column */}
           <div className="lg:col-span-5 space-y-6">
             {/* Upscaling Multipliers */}
-            <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-xs space-y-5">
+            <div className="bg-white border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs space-y-5">
               <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
                 <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-2">
                   <Zap className="w-4 h-4 text-orange-500" />
                   <span>ImaGrow Scale Multipliers</span>
                 </h3>
-                <Button size="sm" variant="ghost" onClick={resetAll} className="text-xs gap-1 text-zinc-500">
+                <Button size="sm" variant="ghost" onClick={resetAll} className="text-xs gap-1 text-zinc-500" aria-label="Reset Settings">
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Reset</span>
                 </Button>
@@ -471,6 +484,7 @@ export const ImaGrowTool: React.FC = () => {
                     <button
                       key={factor}
                       onClick={() => updateScaleFactor(factor)}
+                      aria-pressed={scaleFactor === factor}
                       className={`py-2 rounded-xl text-xs font-mono font-bold border transition-all ${
                         scaleFactor === factor
                           ? "bg-orange-500 text-white border-orange-500 shadow-2xs"
@@ -489,6 +503,7 @@ export const ImaGrowTool: React.FC = () => {
                   <label className="text-xs font-bold text-zinc-700">Target Dimensions (px):</label>
                   <button
                     onClick={() => setLockAspectRatio(!lockAspectRatio)}
+                    aria-pressed={lockAspectRatio}
                     className="flex items-center gap-1 text-[11px] font-medium text-orange-600 hover:underline"
                   >
                     {lockAspectRatio ? <Lock className="w-3 h-3" /> : <Unlock className="w-3 h-3" />}
@@ -503,6 +518,7 @@ export const ImaGrowTool: React.FC = () => {
                       value={targetWidth || ""}
                       onChange={(e) => handleWidthChange(Number(e.target.value))}
                       className="text-xs font-mono"
+                      aria-label="Target Width in pixels"
                     />
                   </div>
                   <div className="space-y-1">
@@ -512,12 +528,13 @@ export const ImaGrowTool: React.FC = () => {
                       value={targetHeight || ""}
                       onChange={(e) => handleHeightChange(Number(e.target.value))}
                       className="text-xs font-mono"
+                      aria-label="Target Height in pixels"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Resampling Mode (Accurately labeled) */}
+              {/* Resampling Mode */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-zinc-700">Resampling Algorithm:</label>
                 <div className="grid grid-cols-3 gap-2">
@@ -529,6 +546,7 @@ export const ImaGrowTool: React.FC = () => {
                     <button
                       key={m.key}
                       onClick={() => setScalingMode(m.key as ScalingMode)}
+                      aria-pressed={scalingMode === m.key}
                       className={`py-1.5 px-2 rounded-lg text-xs font-medium border transition-all ${
                         scalingMode === m.key
                           ? "bg-zinc-900 text-white border-zinc-900 font-bold"
@@ -558,6 +576,7 @@ export const ImaGrowTool: React.FC = () => {
                     value={sharpness}
                     onChange={(e) => setSharpness(Number(e.target.value))}
                     className="w-full accent-orange-500"
+                    aria-label="Detail Sharpening percentage"
                   />
                 </div>
 
@@ -571,6 +590,7 @@ export const ImaGrowTool: React.FC = () => {
                       value={brightness}
                       onChange={(e) => setBrightness(Number(e.target.value))}
                       className="w-full accent-orange-500"
+                      aria-label="Brightness percentage"
                     />
                   </div>
                   <div className="space-y-1">
@@ -582,6 +602,7 @@ export const ImaGrowTool: React.FC = () => {
                       value={contrast}
                       onChange={(e) => setContrast(Number(e.target.value))}
                       className="w-full accent-orange-500"
+                      aria-label="Contrast percentage"
                     />
                   </div>
                   <div className="space-y-1">
@@ -593,6 +614,7 @@ export const ImaGrowTool: React.FC = () => {
                       value={saturation}
                       onChange={(e) => setSaturation(Number(e.target.value))}
                       className="w-full accent-orange-500"
+                      aria-label="Saturation percentage"
                     />
                   </div>
                 </div>
@@ -607,6 +629,7 @@ export const ImaGrowTool: React.FC = () => {
                       <button
                         key={f}
                         onClick={() => setFormat(f)}
+                        aria-pressed={format === f}
                         className={`px-2.5 py-1 rounded text-xs font-bold uppercase border ${
                           format === f ? "bg-orange-500 text-white border-orange-500" : "bg-zinc-100 text-zinc-600 border-zinc-200"
                         }`}
@@ -627,6 +650,7 @@ export const ImaGrowTool: React.FC = () => {
                       value={quality}
                       onChange={(e) => setQuality(Number(e.target.value))}
                       className="w-full accent-orange-500"
+                      aria-label="Export Quality percentage"
                     />
                   </div>
                 )}
@@ -645,7 +669,7 @@ export const ImaGrowTool: React.FC = () => {
 
           {/* Interactive Before / After Canvas Preview */}
           <div className="lg:col-span-7 space-y-4">
-            <div className="bg-white border border-zinc-200/90 rounded-2xl p-6 shadow-xs space-y-4">
+            <div className="bg-white border border-zinc-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-100 pb-3 gap-2">
                 <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-2">
                   <Eye className="w-4 h-4 text-orange-500" />
@@ -662,6 +686,7 @@ export const ImaGrowTool: React.FC = () => {
                       <button
                         key={v.key}
                         onClick={() => setViewMode(v.key as typeof viewMode)}
+                        aria-pressed={viewMode === v.key}
                         className={`px-2.5 py-1 rounded text-[11px] font-medium flex items-center gap-1 capitalize transition-all ${
                           viewMode === v.key ? "bg-white text-zinc-900 shadow-2xs font-bold" : "text-zinc-500"
                         }`}
@@ -746,6 +771,7 @@ export const ImaGrowTool: React.FC = () => {
                     value={splitPos}
                     onChange={(e) => setSplitPos(Number(e.target.value))}
                     className="w-full accent-orange-500 cursor-ew-resize"
+                    aria-label="Interactive comparison position"
                   />
                 </div>
               )}
