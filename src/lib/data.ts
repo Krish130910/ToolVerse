@@ -252,7 +252,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
     id: "tool-6",
     name: "ImaGrow",
     slug: "imagrow",
-    tagline: "Upscale and enhance image resolution with smart bicubic canvas processing.",
+    tagline: "Upscale and enhance image resolution with smart multi-pass step resampling & detail sharpening.",
     categorySlug: "image-tools",
     categoryName: "Image & Asset Tools",
     badgeText: "Live Tool",
