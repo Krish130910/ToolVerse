@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
@@ -8,8 +8,7 @@ import { Button } from "@/components/ui/button";
 import { CategoriesDropdown } from "@/components/layout/categories-dropdown";
 import { StarredDropdown } from "@/components/layout/starred-dropdown";
 import { Wrench, Search, Menu, X, PlusCircle } from "lucide-react";
-
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 
 interface NavbarProps {
   onSearchClick?: () => void;
@@ -21,28 +20,34 @@ export const Navbar: React.FC<NavbarProps> = ({
   onRequestToolClick,
 }) => {
   const pathname = usePathname();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 15);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (current) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    if (current > previous && current > 120) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+  });
 
   const navLinks = [
     { href: "/about", label: "About" },
   ];
 
   return (
-    <div className="sticky top-0 z-50 flex flex-col">
-      {/* Integrated Compact Header (Height 56px) */}
-      <header
-        className="h-14 flex items-center bg-[#FAF8F5]/95 backdrop-blur-md border-b border-black/[0.06] transition-shadow duration-200"
-      >
-        <Container size="large" className="w-full">
+    <motion.header
+      className="sticky top-0 z-50 h-14 flex items-center bg-[#FAF8F5]/95 backdrop-blur-md border-b border-black/[0.06] shadow-2xs transition-shadow"
+      animate={{
+        y: hidden ? -64 : 0,
+        opacity: hidden ? 0 : 1,
+      }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
+      <Container size="large" className="w-full">
           <div className="flex items-center justify-between">
             {/* Left: Logo Only */}
             <Link href="/" className="flex items-center gap-2 group shrink-0">
@@ -176,7 +181,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </AnimatePresence>
         </Container>
-      </header>
-    </div>
+    </motion.header>
   );
 };

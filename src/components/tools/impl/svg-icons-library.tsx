@@ -711,166 +711,166 @@ export const SvgIconsLibraryTool: React.FC = () => {
       {/* 2-Column Layout: Left Options & Inspector Sidebar + Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start w-full">
         {/* LEFT SIDEBAR: OPTIONS & INSPECTOR PANEL */}
-        <aside className="lg:col-span-4 xl:col-span-3 bg-white border border-zinc-200/90 rounded-2xl p-4 shadow-xs space-y-4 self-start">
-          <div className="flex items-center justify-between border-b border-zinc-100 pb-2.5">
-            <h3 className="text-xs font-bold text-zinc-900 uppercase tracking-wider flex items-center gap-2">
-              <Sliders className="w-3.5 h-3.5 text-orange-500" />
+        <aside className="lg:col-span-4 xl:col-span-3 bg-white border border-zinc-200/90 rounded-2xl p-4 shadow-xs lg:sticky lg:top-[72px] lg:h-[calc(100vh-88px)] lg:max-h-[calc(100vh-88px)] lg:flex lg:flex-col w-full">
+          {/* STABLE HEADER */}
+          <div className="flex items-center justify-between border-b border-zinc-100 pb-2.5 shrink-0 mb-3.5">
+            <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-wider flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5 text-orange-500 shrink-0" />
               <span>Options & Inspector</span>
             </h3>
-            <span className="text-[10px] font-mono text-zinc-400 bg-zinc-100 px-2 py-0.5 rounded-full font-semibold">
-              Inspect
+            <span className="text-[9px] font-mono text-zinc-400 bg-zinc-100 px-2 py-0.5 rounded-md font-semibold">
+              Inspector
             </span>
           </div>
 
-          {/* SELECTED ICON INSPECTOR CARD */}
-          <div className="bg-zinc-50 border border-zinc-200/90 rounded-xl p-3.5 space-y-3 shadow-2xs">
-            <div className="flex items-center justify-between border-b border-zinc-200/60 pb-2.5">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div style={{ color }} className="p-2 bg-white rounded-lg border border-zinc-200 flex items-center justify-center shrink-0 shadow-2xs">
-                  <SelectedIconComp size={Math.min(size, 32)} strokeWidth={strokeWidth} />
+          {/* INTERNAL SCROLLABLE BODY */}
+          <div className="flex-1 lg:overflow-y-auto space-y-4 pr-0.5 custom-scrollbar min-h-0">
+            {/* SELECTED ICON INSPECTOR CARD */}
+            <div className="bg-zinc-50/90 border border-zinc-200/80 rounded-xl p-3.5 space-y-3 shadow-2xs">
+              <div className="flex items-center justify-between border-b border-zinc-200/60 pb-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div style={{ color }} className="w-9 h-9 rounded-lg bg-white border border-zinc-200 flex items-center justify-center shrink-0 shadow-2xs">
+                    <SelectedIconComp size={Math.min(size, 24)} strokeWidth={strokeWidth} />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-zinc-900 truncate">
+                      {selectedIcon.name}
+                    </h4>
+                    <span className="text-[9px] font-mono text-orange-600 font-semibold bg-orange-50 px-1.5 py-0.2 rounded border border-orange-200/60 inline-block">
+                      {selectedIcon.category}
+                    </span>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <h4 className="text-xs font-bold text-zinc-900 truncate flex items-center gap-1.5">
-                    <span>{selectedIcon.name}</span>
-                  </h4>
-                  <span className="text-[10px] font-mono text-orange-600 font-semibold bg-orange-50 px-1.5 py-0.2 rounded border border-orange-200/60">
-                    {selectedIcon.category}
-                  </span>
-                </div>
-              </div>
 
-              <button
-                onClick={(e) => copySvg(selectedIcon, e)}
-                className="p-1.5 rounded-lg text-zinc-400 hover:text-orange-600 hover:bg-orange-50 transition-colors"
-                title="Copy SVG Code"
-              >
-                {copiedType === `svg-${selectedIcon.id}` ? (
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                ) : (
-                  <Copy className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </div>
-
-            {/* Export Action Buttons */}
-            <div className="grid grid-cols-2 gap-1.5">
-              <Button
-                onClick={() => copySvg(selectedIcon)}
-                size="sm"
-                className="text-[11px] font-bold gap-1 bg-orange-600 hover:bg-orange-700 text-white shadow-2xs h-8"
-              >
-                {copiedType === `svg-${selectedIcon.id}` ? <Check className="w-3 h-3 text-emerald-200" /> : <Copy className="w-3 h-3" />}
-                <span>{copiedType === `svg-${selectedIcon.id}` ? "Copied!" : "Copy SVG"}</span>
-              </Button>
-
-              <Button
-                onClick={() => copyJsx(selectedIcon)}
-                variant="outline"
-                size="sm"
-                className="text-[11px] font-bold gap-1 border-zinc-300 hover:bg-zinc-100 text-zinc-800 h-8"
-              >
-                {copiedType === `jsx-${selectedIcon.id}` ? <Check className="w-3 h-3 text-emerald-600" /> : <Code className="w-3 h-3" />}
-                <span>{copiedType === `jsx-${selectedIcon.id}` ? "Copied!" : "Copy JSX"}</span>
-              </Button>
-
-              <Button
-                onClick={() => downloadSvg(selectedIcon)}
-                variant="secondary"
-                size="sm"
-                className="text-[11px] font-semibold gap-1 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 h-8"
-              >
-                <Download className="w-3 h-3" />
-                <span>SVG File</span>
-              </Button>
-
-              <Button
-                onClick={() => downloadPng(selectedIcon)}
-                variant="secondary"
-                size="sm"
-                className="text-[11px] font-semibold gap-1 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 h-8"
-              >
-                <Download className="w-3 h-3" />
-                <span>PNG Image</span>
-              </Button>
-            </div>
-
-            {/* SVG Source Code Snippet */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between text-[10px] font-bold text-zinc-500">
-                <span>Customized SVG Code</span>
                 <button
-                  onClick={() => copySvg(selectedIcon)}
-                  className="text-orange-600 hover:underline font-semibold"
+                  onClick={(e) => copySvg(selectedIcon, e)}
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-orange-600 hover:bg-orange-50 transition-colors shrink-0 cursor-pointer"
+                  title="Copy SVG Code"
                 >
-                  Copy Code
+                  {copiedType === `svg-${selectedIcon.id}` ? (
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
                 </button>
               </div>
-              <div className="p-2 bg-slate-900 text-slate-100 rounded-lg text-[9px] font-mono overflow-x-auto max-h-24 shadow-inner">
-                <pre>{getCustomizedSvg(selectedIcon)}</pre>
-              </div>
-            </div>
-          </div>
 
-          {/* ICON APPEARANCE CONTROLS */}
-          <div className="space-y-3.5 pt-1">
-            <h4 className="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Appearance Controls</h4>
+              {/* Export Action Buttons */}
+              <div className="grid grid-cols-2 gap-1.5">
+                <Button
+                  onClick={() => copySvg(selectedIcon)}
+                  size="sm"
+                  className="text-[11px] font-bold gap-1 bg-orange-600 hover:bg-orange-700 text-white shadow-2xs h-8 px-2 cursor-pointer"
+                >
+                  {copiedType === `svg-${selectedIcon.id}` ? <Check className="w-3 h-3 text-emerald-200" /> : <Copy className="w-3 h-3" />}
+                  <span className="truncate">{copiedType === `svg-${selectedIcon.id}` ? "Copied!" : "Copy SVG"}</span>
+                </Button>
 
-            {/* Icon Color Picker & Swatches */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
-                <span>Color</span>
-                <span className="font-mono text-[10px] text-zinc-400">{color}</span>
+                <Button
+                  onClick={() => copyJsx(selectedIcon)}
+                  variant="outline"
+                  size="sm"
+                  className="text-[11px] font-bold gap-1 border-zinc-300 hover:bg-zinc-100 text-zinc-800 h-8 px-2 cursor-pointer"
+                >
+                  {copiedType === `jsx-${selectedIcon.id}` ? <Check className="w-3 h-3 text-emerald-600" /> : <Code className="w-3 h-3" />}
+                  <span className="truncate">{copiedType === `jsx-${selectedIcon.id}` ? "Copied!" : "Copy JSX"}</span>
+                </Button>
+
+                <Button
+                  onClick={() => downloadSvg(selectedIcon)}
+                  variant="secondary"
+                  size="sm"
+                  className="text-[11px] font-semibold gap-1 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 h-8 px-2 cursor-pointer"
+                >
+                  <Download className="w-3 h-3 shrink-0" />
+                  <span className="truncate">SVG File</span>
+                </Button>
+
+                <Button
+                  onClick={() => downloadPng(selectedIcon)}
+                  variant="secondary"
+                  size="sm"
+                  className="text-[11px] font-semibold gap-1 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 h-8 px-2 cursor-pointer"
+                >
+                  <Download className="w-3 h-3 shrink-0" />
+                  <span className="truncate">PNG Image</span>
+                </Button>
               </div>
-              <div className="flex items-center gap-1.5 flex-wrap bg-zinc-50 border border-zinc-200/80 p-2 rounded-xl">
-                {COLOR_PRESETS.map((preset) => (
+
+              {/* SVG Source Code Snippet */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[10px] font-bold text-zinc-500">
+                  <span>Customized SVG Code</span>
                   <button
-                    key={preset.value}
-                    onClick={() => setColor(preset.value)}
-                    style={{ backgroundColor: preset.value }}
-                    className={`w-5 h-5 rounded-full transition-all border border-black/10 cursor-pointer ${
-                      color === preset.value ? "ring-2 ring-orange-500 scale-110 shadow-xs" : "hover:scale-105 opacity-80 hover:opacity-100"
-                    }`}
-                    title={preset.label}
-                    aria-label={`Color preset ${preset.label}`}
-                  />
-                ))}
-                <input
-                  type="color"
-                  value={color}
-                  onChange={(e) => setColor(e.target.value)}
-                  className="w-6 h-6 rounded cursor-pointer border-0 bg-transparent ml-auto"
-                  aria-label="Custom color picker"
-                  title="Custom Color Picker"
-                />
+                    onClick={() => copySvg(selectedIcon)}
+                    className="text-orange-600 hover:underline font-semibold text-[10px] cursor-pointer"
+                  >
+                    Copy Code
+                  </button>
+                </div>
+                <div className="p-2.5 bg-slate-900 text-slate-100 rounded-xl text-[9.5px] font-mono leading-relaxed overflow-x-auto max-h-44 shadow-inner border border-slate-800">
+                  <pre>{getCustomizedSvg(selectedIcon)}</pre>
+                </div>
               </div>
             </div>
 
-            {/* Size Slider Control */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
-                <span>Size</span>
-                <span className="font-mono text-[10px] text-zinc-700 font-bold">{size}px</span>
+            {/* ICON APPEARANCE CONTROLS */}
+            <div className="space-y-3.5 pt-2 border-t border-zinc-100">
+              <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Appearance</h4>
+
+              {/* Icon Color Picker & Swatches */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
+                  <span>Color</span>
+                  <span className="font-mono text-[10px] text-zinc-500 font-semibold">{color}</span>
+                </div>
+                <div className="flex items-center gap-1.5 flex-wrap bg-zinc-50/80 border border-zinc-200/80 p-2 rounded-xl">
+                  {COLOR_PRESETS.map((preset) => (
+                    <button
+                      key={preset.value}
+                      onClick={() => setColor(preset.value)}
+                      style={{ backgroundColor: preset.value }}
+                      className={`w-5 h-5 rounded-full transition-all border border-black/10 cursor-pointer ${
+                        color === preset.value ? "ring-2 ring-orange-500 scale-110 shadow-xs" : "hover:scale-105 opacity-80 hover:opacity-100"
+                      }`}
+                      title={preset.label}
+                      aria-label={`Color preset ${preset.label}`}
+                    />
+                  ))}
+                  <input
+                    type="color"
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                    className="w-5.5 h-5.5 rounded cursor-pointer border-0 bg-transparent ml-auto shrink-0"
+                    aria-label="Custom color picker"
+                    title="Custom Color Picker"
+                  />
+                </div>
               </div>
-              <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200/80 px-3 py-1.5 rounded-xl">
+
+              {/* Size Slider Control */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
+                  <span>Size</span>
+                  <span className="font-mono text-[10px] text-zinc-700 font-bold">{size}px</span>
+                </div>
                 <input
                   type="range"
                   min="16"
                   max="64"
                   value={size}
                   onChange={(e) => setSize(Number(e.target.value))}
-                  className="w-full accent-orange-500 cursor-pointer"
+                  className="w-full h-1.5 accent-orange-500 cursor-pointer bg-zinc-200/80 rounded-lg"
                   aria-label="Icon size slider"
                 />
               </div>
-            </div>
 
-            {/* Stroke Width Slider Control */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
-                <span>Stroke Width</span>
-                <span className="font-mono text-[10px] text-zinc-700 font-bold">{strokeWidth}px</span>
-              </div>
-              <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200/80 px-3 py-1.5 rounded-xl">
+              {/* Stroke Width Slider Control */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
+                  <span>Stroke Width</span>
+                  <span className="font-mono text-[10px] text-zinc-700 font-bold">{strokeWidth}px</span>
+                </div>
                 <input
                   type="range"
                   min="1"
@@ -878,7 +878,7 @@ export const SvgIconsLibraryTool: React.FC = () => {
                   step="0.5"
                   value={strokeWidth}
                   onChange={(e) => setStrokeWidth(Number(e.target.value))}
-                  className="w-full accent-orange-500 cursor-pointer"
+                  className="w-full h-1.5 accent-orange-500 cursor-pointer bg-zinc-200/80 rounded-lg"
                   aria-label="Icon stroke width slider"
                 />
               </div>
@@ -887,7 +887,7 @@ export const SvgIconsLibraryTool: React.FC = () => {
         </aside>
 
         {/* RIGHT MAIN CONTENT AREA */}
-        <main className="lg:col-span-8 xl:col-span-9 space-y-4 min-w-0 w-full">
+        <main className="lg:col-span-8 xl:col-span-9 min-w-0 w-full lg:sticky lg:top-[72px] lg:h-[calc(100vh-88px)] lg:max-h-[calc(100vh-88px)] lg:overflow-y-auto custom-scrollbar space-y-4 pr-1">
           {/* HEADER SECTION CARD (Title, Search, Category Filter Toolbar) */}
           <div className="bg-white border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
             {/* Title & Count Row */}
