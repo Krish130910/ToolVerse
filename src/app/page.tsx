@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { HeroSection } from "@/components/home/hero-section";
 import { FeaturedTools } from "@/components/home/featured-tools";
 import { ToolsLogoLoopSection } from "@/components/home/tools-logo-loop";
 import { RequestToolBanner } from "@/components/home/request-tool-banner";
 import { FEATURED_TOOLS } from "@/lib/data";
 import { getFavorites, toggleFavoriteTool, FAVORITES_EVENT } from "@/lib/favorites";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,24 +25,26 @@ export default function HomePage() {
     };
   }, []);
 
-  const toggleFavorite = (toolId: string) => {
+  const toggleFavorite = useCallback((toolId: string) => {
     const updated = toggleFavoriteTool(toolId);
     setFavorites(updated);
-  };
+  }, []);
 
-  const filteredTools = FEATURED_TOOLS.filter((t) => {
-    if (selectedCategory !== "all" && t.categorySlug !== selectedCategory) {
-      return false;
-    }
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      t.name.toLowerCase().includes(q) ||
-      t.tagline.toLowerCase().includes(q) ||
-      t.categoryName.toLowerCase().includes(q) ||
-      (t.tags && t.tags.some((tag) => tag.toLowerCase().includes(q)))
-    );
-  });
+  const filteredTools = useMemo(() => {
+    return FEATURED_TOOLS.filter((t) => {
+      if (selectedCategory !== "all" && t.categorySlug !== selectedCategory) {
+        return false;
+      }
+      if (!searchQuery) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        t.name.toLowerCase().includes(q) ||
+        t.tagline.toLowerCase().includes(q) ||
+        t.categoryName.toLowerCase().includes(q) ||
+        (t.tags && t.tags.some((tag) => tag.toLowerCase().includes(q)))
+      );
+    });
+  }, [selectedCategory, searchQuery]);
 
   return (
     <div className="space-y-0 pb-4">
@@ -63,10 +66,14 @@ export default function HomePage() {
       />
 
       {/* Infinite Logo Loop Ticker at Bottom of Home Screen */}
-      <ToolsLogoLoopSection />
+      <ScrollReveal yOffset={16} duration={0.4}>
+        <ToolsLogoLoopSection />
+      </ScrollReveal>
 
-      {/* Interactive Request Tool Pixel Transition Banner */}
-      <RequestToolBanner />
+      {/* Interactive Request Tool Banner */}
+      <ScrollReveal yOffset={16} duration={0.4}>
+        <RequestToolBanner />
+      </ScrollReveal>
     </div>
   );
 }

@@ -17,6 +17,7 @@ import {
   ArrowRight,
   Grid,
 } from "lucide-react";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   Code2: <Code2 className="w-6 h-6 text-orange-500" />,
@@ -33,18 +34,20 @@ export default function CategoriesPage() {
     <div className="py-8 sm:py-12 relative min-h-screen bg-[#FAF8F5]">
       <Container>
         {/* Header */}
-        <div className="space-y-2 mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-xs font-semibold text-orange-600">
-            <Grid className="w-3.5 h-3.5" />
-            <span>Taxonomy Index</span>
+        <ScrollReveal yOffset={14} duration={0.35}>
+          <div className="space-y-2 mb-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-xs font-semibold text-orange-600">
+              <Grid className="w-3.5 h-3.5" />
+              <span>Taxonomy Index</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 tracking-tight">
+              Tool Categories Directory
+            </h1>
+            <p className="text-xs sm:text-sm text-zinc-600 max-w-xl leading-relaxed">
+              Organized taxonomies for rapid access to developer utilities, security tools, and asset generation suite.
+            </p>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 tracking-tight">
-            Tool Categories Directory
-          </h1>
-          <p className="text-xs sm:text-sm text-zinc-600 max-w-xl leading-relaxed">
-            Organized taxonomies for rapid access to developer utilities, security tools, and asset generation suite.
-          </p>
-        </div>
+        </ScrollReveal>
 
         {/* Categories Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

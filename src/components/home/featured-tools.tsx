@@ -45,19 +45,21 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
   onToggleFavorite,
   showOnlyFavorites,
 }) => {
-  const filteredTools = tools.filter((tool) => {
-    if (showOnlyFavorites && !favorites.includes(tool.id)) {
-      return false;
-    }
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      tool.name.toLowerCase().includes(q) ||
-      tool.tagline.toLowerCase().includes(q) ||
-      tool.categoryName.toLowerCase().includes(q) ||
-      (tool.tags && tool.tags.some((tag) => tag.toLowerCase().includes(q)))
-    );
-  });
+  const filteredTools = React.useMemo(() => {
+    return tools.filter((tool) => {
+      if (showOnlyFavorites && !favorites.includes(tool.id)) {
+        return false;
+      }
+      if (!searchQuery) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        tool.name.toLowerCase().includes(q) ||
+        tool.tagline.toLowerCase().includes(q) ||
+        tool.categoryName.toLowerCase().includes(q) ||
+        (tool.tags && tool.tags.some((tag) => tag.toLowerCase().includes(q)))
+      );
+    });
+  }, [tools, showOnlyFavorites, favorites, searchQuery]);
 
   return (
     <section id="featured-tools" className="pb-16 pt-4 bg-[#FAF8F5]">
@@ -75,14 +77,14 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
         ) : viewMode === "grid" ? (
           /* Grid View */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTools.map((tool, idx) => {
+            {filteredTools.map((tool) => {
               const isFav = favorites.includes(tool.id);
               return (
                 <motion.div
                   key={tool.id}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2, delay: Math.min(idx * 0.02, 0.2) }}
+                  transition={{ duration: 0.15 }}
                   className="h-full"
                 >
                   <Link
@@ -161,14 +163,14 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
         ) : (
           /* Compact List View */
           <div className="space-y-3">
-            {filteredTools.map((tool, idx) => {
+            {filteredTools.map((tool) => {
               const isFav = favorites.includes(tool.id);
               return (
                 <motion.div
                   key={tool.id}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.15, delay: Math.min(idx * 0.02, 0.15) }}
+                  transition={{ duration: 0.15 }}
                 >
                   <Link
                     href={`/tools/${tool.slug}`}

@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Container } from "@/components/ui/container";
 import { SearchBar } from "@/components/home/search-bar";
 import { FeaturedTools } from "@/components/home/featured-tools";
 import { FEATURED_TOOLS } from "@/lib/data";
 import { Compass } from "lucide-react";
 import { getFavorites, toggleFavoriteTool, FAVORITES_EVENT } from "@/lib/favorites";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,27 +27,29 @@ export default function ExplorePage() {
     };
   }, []);
 
-  const toggleFavorite = (toolId: string) => {
+  const toggleFavorite = useCallback((toolId: string) => {
     const updated = toggleFavoriteTool(toolId);
     setFavorites(updated);
-  };
+  }, []);
 
   return (
     <div className="py-8 sm:py-12 space-y-6 bg-[#FAF8F5]">
       <Container>
         {/* Page Header */}
-        <div className="space-y-2 mb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-xs font-semibold text-orange-600">
-            <Compass className="w-3.5 h-3.5" />
-            <span>Platform App Directory</span>
+        <ScrollReveal yOffset={14} duration={0.35}>
+          <div className="space-y-2 mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-xs font-semibold text-orange-600">
+              <Compass className="w-3.5 h-3.5" />
+              <span>Platform App Directory</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 tracking-tight">
+              Explore All Developer Utilities
+            </h1>
+            <p className="text-xs sm:text-sm text-zinc-600 max-w-xl leading-relaxed">
+              Search, filter, bookmark, and run {FEATURED_TOOLS.length} privacy-first web &amp; AI developer utilities directly inside your browser.
+            </p>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 tracking-tight">
-            Explore All Developer Utilities
-          </h1>
-          <p className="text-xs sm:text-sm text-zinc-600 max-w-xl leading-relaxed">
-            Search, filter, bookmark, and run {FEATURED_TOOLS.length} privacy-first web &amp; AI developer utilities directly inside your browser.
-          </p>
-        </div>
+        </ScrollReveal>
       </Container>
 
       {/* Search & Filter Bar */}
