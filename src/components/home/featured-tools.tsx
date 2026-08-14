@@ -146,7 +146,6 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
                       {/* Bottom Footer Bar */}
                       <div className="pt-3.5 border-t border-zinc-100 flex items-center justify-between">
                         <div className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-zinc-400 group-hover:text-zinc-600 transition-colors">
-                          <span>↘</span>
                           <span>{tool.categoryName}</span>
                         </div>
 
