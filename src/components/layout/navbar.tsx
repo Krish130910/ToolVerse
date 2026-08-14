@@ -40,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <motion.header
-      className="sticky top-0 z-50 h-14 flex items-center bg-[#FAF8F5]/95 backdrop-blur-md border-b border-black/[0.06] shadow-2xs transition-shadow"
+      className="sticky top-0 z-50 h-16 flex items-center bg-[#FAF8F5]/95 backdrop-blur-md border-b border-black/[0.06] shadow-2xs transition-shadow"
       animate={{
         y: hidden ? -64 : 0,
         opacity: hidden ? 0 : 1,
@@ -50,17 +50,17 @@ export const Navbar: React.FC<NavbarProps> = ({
       <Container size="large" className="w-full">
           <div className="flex items-center justify-between">
             {/* Left: Logo Only */}
-            <Link href="/" className="flex items-center gap-2 group shrink-0">
-              <div className="h-7.5 w-7.5 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shadow-2xs group-hover:border-orange-400/40 group-hover:bg-orange-500/20 transition-all">
-                <Wrench className="w-4 h-4 text-orange-600 group-hover:scale-110 transition-transform" />
+            <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+              <div className="h-8.5 w-8.5 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shadow-2xs group-hover:border-orange-400/40 group-hover:bg-orange-500/20 transition-all">
+                <Wrench className="w-4.5 h-4.5 text-orange-600 group-hover:scale-110 transition-transform" />
               </div>
-              <span className="font-extrabold text-sm sm:text-base tracking-tight text-zinc-900 group-hover:text-orange-600 transition-colors">
+              <span className="font-extrabold text-base sm:text-lg tracking-tight text-zinc-900 group-hover:text-orange-600 transition-colors">
                 ToolVerse
               </span>
             </Link>
 
             {/* Center: Navigation Text Links */}
-            <nav className="hidden lg:flex items-center gap-7 lg:gap-9 text-xs font-semibold text-zinc-600">
+            <nav className="hidden lg:flex items-center gap-8 lg:gap-10 text-sm sm:text-[15px] font-bold text-zinc-700">
               {/* Categories Dropdown Text Link */}
               <CategoriesDropdown />
 
@@ -71,7 +71,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     key={link.href}
                     href={link.href}
                     className={`relative py-1 transition-colors ${
-                      isActive ? "text-zinc-900 font-bold" : "hover:text-zinc-900"
+                      isActive ? "text-zinc-900 font-extrabold" : "hover:text-zinc-900"
                     }`}
                   >
                     <span>{link.label}</span>
@@ -88,17 +88,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             </nav>
 
             {/* Right: Starred, Search & Primary CTA */}
-            <div className="hidden sm:flex items-center gap-2 sm:gap-2.5 shrink-0">
+            <div className="hidden sm:flex items-center gap-2.5 sm:gap-3 shrink-0">
               {/* Starred Tools Dropdown */}
               <StarredDropdown />
 
               {/* Clean search trigger */}
               <button
                 onClick={onSearchClick}
-                className="flex items-center gap-2 w-28 sm:w-36 lg:w-48 h-8.5 px-3 rounded-lg bg-white/90 border border-zinc-200/90 text-xs text-zinc-500 hover:text-zinc-800 hover:border-orange-300 transition-all cursor-pointer group shadow-2xs"
+                className="flex items-center gap-2 w-32 sm:w-40 lg:w-52 h-9 px-3 rounded-xl bg-white/90 border border-zinc-200/90 text-xs sm:text-sm text-zinc-500 hover:text-zinc-800 hover:border-orange-300 transition-all cursor-pointer group shadow-2xs"
               >
-                <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-orange-500 transition-colors" />
-                <span className="text-zinc-500 group-hover:text-zinc-800 transition-colors text-[11px] truncate">
+                <Search className="w-4 h-4 text-zinc-400 group-hover:text-orange-500 transition-colors" />
+                <span className="text-zinc-500 group-hover:text-zinc-800 transition-colors text-xs sm:text-sm truncate">
                   Search tools...
                 </span>
               </button>
@@ -108,9 +108,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 size="sm"
                 variant="default"
                 onClick={onRequestToolClick}
-                className="flex items-center gap-1.5 text-xs font-bold rounded-lg px-3.5 h-8.5 shadow-2xs shrink-0"
+                className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold rounded-xl px-4 h-9 shadow-2xs shrink-0 cursor-pointer"
               >
-                <PlusCircle className="w-3.5 h-3.5" />
+                <PlusCircle className="w-4 h-4" />
                 <span>Request Tool</span>
               </Button>
             </div>

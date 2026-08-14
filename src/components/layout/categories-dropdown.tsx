@@ -40,7 +40,7 @@ export const CategoriesDropdown: React.FC = () => {
       {/* Clean Text Link Trigger (No pill border) */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1 text-xs sm:text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors cursor-pointer py-1"
+        className="flex items-center gap-1.5 text-sm sm:text-[15px] font-bold text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer py-1"
         aria-expanded={isOpen}
       >
         <span>Categories</span>

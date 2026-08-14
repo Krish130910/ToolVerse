@@ -648,7 +648,10 @@ export const SvgIconsLibraryTool: React.FC = () => {
 
   const getCustomizedSvg = useCallback(
     (icon: IconDef) => {
-      return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round">\n  ${icon.svgContent}\n</svg>`;
+      const innerContent = (icon.svgContent || "")
+        .replace(/></g, ">\n  <")
+        .trim();
+      return `<svg xmlns="http://www.w3.org/2000/svg"\n  width="${size}" height="${size}"\n  viewBox="0 0 24 24" fill="none"\n  stroke="${color}" stroke-width="${strokeWidth}"\n  stroke-linecap="round" stroke-linejoin="round">\n  ${innerContent}\n</svg>`;
     },
     [size, color, strokeWidth]
   );
@@ -724,13 +727,13 @@ export const SvgIconsLibraryTool: React.FC = () => {
           </div>
 
           {/* INTERNAL SCROLLABLE BODY */}
-          <div className="flex-1 lg:overflow-y-auto space-y-4 pr-0.5 custom-scrollbar min-h-0">
+          <div className="flex-1 lg:overflow-y-auto space-y-3.5 pr-0.5 custom-scrollbar min-h-0 flex flex-col">
             {/* SELECTED ICON INSPECTOR CARD */}
-            <div className="bg-zinc-50/90 border border-zinc-200/80 rounded-xl p-3.5 space-y-3 shadow-2xs">
-              <div className="flex items-center justify-between border-b border-zinc-200/60 pb-2.5">
+            <div className="bg-zinc-50/90 border border-zinc-200/80 rounded-xl p-3 space-y-2.5 shadow-2xs shrink-0">
+              <div className="flex items-center justify-between border-b border-zinc-200/60 pb-2">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div style={{ color }} className="w-9 h-9 rounded-lg bg-white border border-zinc-200 flex items-center justify-center shrink-0 shadow-2xs">
-                    <SelectedIconComp size={Math.min(size, 24)} strokeWidth={strokeWidth} />
+                  <div style={{ color }} className="w-8.5 h-8.5 rounded-lg bg-white border border-zinc-200 flex items-center justify-center shrink-0 shadow-2xs">
+                    <SelectedIconComp size={Math.min(size, 22)} strokeWidth={strokeWidth} />
                   </div>
                   <div className="min-w-0">
                     <h4 className="text-xs font-bold text-zinc-900 truncate">
@@ -755,12 +758,12 @@ export const SvgIconsLibraryTool: React.FC = () => {
                 </button>
               </div>
 
-              {/* Export Action Buttons */}
+              {/* Export Action Buttons Grid */}
               <div className="grid grid-cols-2 gap-1.5">
                 <Button
                   onClick={() => copySvg(selectedIcon)}
                   size="sm"
-                  className="text-[11px] font-bold gap-1 bg-orange-600 hover:bg-orange-700 text-white shadow-2xs h-8 px-2 cursor-pointer"
+                  className="text-[11px] font-bold gap-1 bg-orange-600 hover:bg-orange-700 text-white shadow-2xs h-7.5 px-2 cursor-pointer"
                 >
                   {copiedType === `svg-${selectedIcon.id}` ? <Check className="w-3 h-3 text-emerald-200" /> : <Copy className="w-3 h-3" />}
                   <span className="truncate">{copiedType === `svg-${selectedIcon.id}` ? "Copied!" : "Copy SVG"}</span>
@@ -770,7 +773,7 @@ export const SvgIconsLibraryTool: React.FC = () => {
                   onClick={() => copyJsx(selectedIcon)}
                   variant="outline"
                   size="sm"
-                  className="text-[11px] font-bold gap-1 border-zinc-300 hover:bg-zinc-100 text-zinc-800 h-8 px-2 cursor-pointer"
+                  className="text-[11px] font-bold gap-1 border-zinc-300 hover:bg-zinc-100 text-zinc-800 h-7.5 px-2 cursor-pointer"
                 >
                   {copiedType === `jsx-${selectedIcon.id}` ? <Check className="w-3 h-3 text-emerald-600" /> : <Code className="w-3 h-3" />}
                   <span className="truncate">{copiedType === `jsx-${selectedIcon.id}` ? "Copied!" : "Copy JSX"}</span>
@@ -780,7 +783,7 @@ export const SvgIconsLibraryTool: React.FC = () => {
                   onClick={() => downloadSvg(selectedIcon)}
                   variant="secondary"
                   size="sm"
-                  className="text-[11px] font-semibold gap-1 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 h-8 px-2 cursor-pointer"
+                  className="text-[11px] font-semibold gap-1 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 h-7.5 px-2 cursor-pointer"
                 >
                   <Download className="w-3 h-3 shrink-0" />
                   <span className="truncate">SVG File</span>
@@ -790,47 +793,31 @@ export const SvgIconsLibraryTool: React.FC = () => {
                   onClick={() => downloadPng(selectedIcon)}
                   variant="secondary"
                   size="sm"
-                  className="text-[11px] font-semibold gap-1 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 h-8 px-2 cursor-pointer"
+                  className="text-[11px] font-semibold gap-1 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 h-7.5 px-2 cursor-pointer"
                 >
                   <Download className="w-3 h-3 shrink-0" />
                   <span className="truncate">PNG Image</span>
                 </Button>
               </div>
-
-              {/* SVG Source Code Snippet */}
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-[10px] font-bold text-zinc-500">
-                  <span>Customized SVG Code</span>
-                  <button
-                    onClick={() => copySvg(selectedIcon)}
-                    className="text-orange-600 hover:underline font-semibold text-[10px] cursor-pointer"
-                  >
-                    Copy Code
-                  </button>
-                </div>
-                <div className="p-2.5 bg-slate-900 text-slate-100 rounded-xl text-[9.5px] font-mono leading-relaxed overflow-x-auto max-h-44 shadow-inner border border-slate-800">
-                  <pre>{getCustomizedSvg(selectedIcon)}</pre>
-                </div>
-              </div>
             </div>
 
             {/* ICON APPEARANCE CONTROLS */}
-            <div className="space-y-3.5 pt-2 border-t border-zinc-100">
+            <div className="space-y-2.5 pt-1.5 border-t border-zinc-100 shrink-0">
               <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Appearance</h4>
 
               {/* Icon Color Picker & Swatches */}
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
                   <span>Color</span>
                   <span className="font-mono text-[10px] text-zinc-500 font-semibold">{color}</span>
                 </div>
-                <div className="flex items-center gap-1.5 flex-wrap bg-zinc-50/80 border border-zinc-200/80 p-2 rounded-xl">
+                <div className="flex items-center gap-1.5 flex-wrap bg-zinc-50/80 border border-zinc-200/80 p-1.5 rounded-xl">
                   {COLOR_PRESETS.map((preset) => (
                     <button
                       key={preset.value}
                       onClick={() => setColor(preset.value)}
                       style={{ backgroundColor: preset.value }}
-                      className={`w-5 h-5 rounded-full transition-all border border-black/10 cursor-pointer ${
+                      className={`w-4.5 h-4.5 rounded-full transition-all border border-black/10 cursor-pointer ${
                         color === preset.value ? "ring-2 ring-orange-500 scale-110 shadow-xs" : "hover:scale-105 opacity-80 hover:opacity-100"
                       }`}
                       title={preset.label}
@@ -841,7 +828,7 @@ export const SvgIconsLibraryTool: React.FC = () => {
                     type="color"
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
-                    className="w-5.5 h-5.5 rounded cursor-pointer border-0 bg-transparent ml-auto shrink-0"
+                    className="w-5 h-5 rounded cursor-pointer border-0 bg-transparent ml-auto shrink-0"
                     aria-label="Custom color picker"
                     title="Custom Color Picker"
                   />
@@ -849,7 +836,7 @@ export const SvgIconsLibraryTool: React.FC = () => {
               </div>
 
               {/* Size Slider Control */}
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
                   <span>Size</span>
                   <span className="font-mono text-[10px] text-zinc-700 font-bold">{size}px</span>
@@ -866,7 +853,7 @@ export const SvgIconsLibraryTool: React.FC = () => {
               </div>
 
               {/* Stroke Width Slider Control */}
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
                   <span>Stroke Width</span>
                   <span className="font-mono text-[10px] text-zinc-700 font-bold">{strokeWidth}px</span>
@@ -881,6 +868,23 @@ export const SvgIconsLibraryTool: React.FC = () => {
                   className="w-full h-1.5 accent-orange-500 cursor-pointer bg-zinc-200/80 rounded-lg"
                   aria-label="Icon stroke width slider"
                 />
+              </div>
+            </div>
+
+            {/* EXPANDED SVG CODE COMPONENT (Fills Bottom Space) */}
+            <div className="space-y-1.5 pt-2 border-t border-zinc-100 flex-1 flex flex-col min-h-[160px]">
+              <div className="flex items-center justify-between text-[10px] font-bold text-zinc-500 shrink-0">
+                <span>Customized SVG Code</span>
+                <button
+                  onClick={() => copySvg(selectedIcon)}
+                  className="text-orange-600 hover:text-orange-700 font-semibold text-[10px] cursor-pointer flex items-center gap-1"
+                >
+                  <Copy className="w-3 h-3" />
+                  <span>Copy Code</span>
+                </button>
+              </div>
+              <div className="p-3 bg-[#18181B] text-zinc-100 rounded-xl text-[10px] font-mono leading-relaxed overflow-auto flex-1 shadow-inner border border-zinc-800 custom-scrollbar min-h-[130px]">
+                <pre className="whitespace-pre">{getCustomizedSvg(selectedIcon)}</pre>
               </div>
             </div>
           </div>

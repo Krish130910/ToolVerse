@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Container } from "@/components/ui/container";
-import { Search, X } from "lucide-react";
+import { Search, X, Cpu, Grid, ShieldCheck, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { BruhGrowBackground } from "@/components/ui/bruhgrow-background";
 import { StrokeText } from "@/components/ui/stroke-text";
@@ -24,7 +24,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     <BruhGrowBackground className="pt-14 sm:pt-18 lg:pt-20 pb-12 sm:pb-16 border-b border-zinc-200/80 relative overflow-hidden">
       <section className="relative z-10">
         <Container>
-          <div className="flex flex-col items-center text-center space-y-7 max-w-4xl mx-auto">
+          <div className="flex flex-col items-center text-center space-y-6 sm:space-y-7 max-w-4xl mx-auto">
 
             {/* StrokeText Hero Title */}
             <div className="w-full space-y-3">
@@ -88,6 +88,56 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <X className="w-5 h-5" />
                   </button>
                 )}
+              </div>
+            </motion.div>
+
+            {/* Hero Stats Bar (2nd Image Stats Pill Box) */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.75, duration: 0.4, type: "tween", ease: "easeOut" }}
+              className="w-full max-w-4xl pt-3"
+            >
+              <div className="bg-white/90 backdrop-blur-md border border-zinc-200/90 rounded-2xl p-2 sm:p-2.5 shadow-xs grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-2.5">
+                <div className="flex items-center gap-3 p-2.5 sm:p-3 rounded-xl bg-orange-50/50 border border-orange-200/50 text-left hover:bg-orange-50/80 transition-colors">
+                  <div className="w-9 h-9 rounded-xl bg-orange-500 text-white flex items-center justify-center shrink-0 shadow-2xs font-extrabold">
+                    <Cpu className="w-4.5 h-4.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm sm:text-base font-black text-zinc-900 font-mono leading-none">33</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-zinc-600 truncate mt-0.5">Browser-Based Tools</div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-2.5 sm:p-3 rounded-xl bg-orange-50/50 border border-orange-200/50 text-left hover:bg-orange-50/80 transition-colors">
+                  <div className="w-9 h-9 rounded-xl bg-orange-500 text-white flex items-center justify-center shrink-0 shadow-2xs font-extrabold">
+                    <Grid className="w-4.5 h-4.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm sm:text-base font-black text-zinc-900 font-mono leading-none">9</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-zinc-600 truncate mt-0.5">Categories</div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-2.5 sm:p-3 rounded-xl bg-orange-50/50 border border-orange-200/50 text-left hover:bg-orange-50/80 transition-colors">
+                  <div className="w-9 h-9 rounded-xl bg-orange-500 text-white flex items-center justify-center shrink-0 shadow-2xs font-extrabold">
+                    <ShieldCheck className="w-4.5 h-4.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm sm:text-base font-black text-zinc-900 font-mono leading-none">100%</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-zinc-600 truncate mt-0.5">Client Privacy</div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-2.5 sm:p-3 rounded-xl bg-orange-50/50 border border-orange-200/50 text-left hover:bg-orange-50/80 transition-colors">
+                  <div className="w-9 h-9 rounded-xl bg-orange-500 text-white flex items-center justify-center shrink-0 shadow-2xs font-extrabold">
+                    <Zap className="w-4.5 h-4.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm sm:text-base font-black text-zinc-900 font-mono leading-none">0.0s</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-zinc-600 truncate mt-0.5">Server Latency</div>
+                  </div>
+                </div>
               </div>
             </motion.div>
 

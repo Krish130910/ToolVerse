@@ -62,7 +62,7 @@ export const FeaturedTools: React.FC<FeaturedToolsProps> = ({
   }, [tools, showOnlyFavorites, favorites, searchQuery]);
 
   return (
-    <section id="featured-tools" className="pb-16 pt-4 bg-[#FAF8F5]">
+    <section id="featured-tools" className="pb-16 pt-8 bg-[#FAF8F5]">
       <Container>
         {/* Tools Display */}
         {filteredTools.length === 0 ? (
