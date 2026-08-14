@@ -140,10 +140,10 @@ export default function AboutPage() {
                 </p>
               </div>
               <Link
-                href="/explore"
+                href="/"
                 className="inline-flex items-center gap-1.5 text-xs font-extrabold text-orange-600 hover:text-orange-700 transition-colors"
               >
-                <span>Explore Interactive Directory</span>
+                <span>Browse All Tools Catalog</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>

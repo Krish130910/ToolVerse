@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 
 // Standard Utility Implementations
 import { SvgIconsLibraryTool } from "@/components/tools/impl/svg-icons-library";
-import { ColorPaletteGeneratorTool } from "@/components/tools/impl/color-palette-generator";
+import { ColorPalettesTool } from "@/components/tools/impl/color-palettes";
 import { PdfPageNumbererTool } from "@/components/tools/impl/pdf-page-numberer";
 import { AiFlowchartGeneratorTool } from "@/components/tools/impl/ai-flowchart-generator";
 import { AudioConverterTool } from "@/components/tools/impl/audio-converter";
@@ -88,8 +88,9 @@ export const LiveToolsSuite: React.FC<LiveToolsSuiteProps> = ({
       // Standard In-Browser Utilities
       case "svg-icons-library":
         return <SvgIconsLibraryTool />;
+      case "color-palettes":
       case "color-palette-generator":
-        return <ColorPaletteGeneratorTool />;
+        return <ColorPalettesTool />;
       case "pdf-page-numberer":
         return <PdfPageNumbererTool />;
       case "ai-flowchart-generator":

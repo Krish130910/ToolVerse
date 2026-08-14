@@ -145,18 +145,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="md:hidden mt-3 pt-3 border-t border-zinc-200 pb-3 space-y-1.5 text-xs bg-white rounded-2xl p-3 border shadow-lg"
               >
                 <Link
-                  href="/explore"
+                  href="/"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block px-3 py-2 rounded-xl text-zinc-700 font-semibold hover:bg-orange-50 hover:text-orange-600 transition-colors"
                 >
-                  Explore Directory
-                </Link>
-                <Link
-                  href="/categories"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-xl text-zinc-700 font-semibold hover:bg-orange-50 hover:text-orange-600 transition-colors"
-                >
-                  Categories Index
+                  All Tools
                 </Link>
                 <Link
                   href="/about"

@@ -32,13 +32,8 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-1.5 text-xs text-zinc-600">
               <li>
-                <Link href="/explore" className="hover:text-orange-600 transition-colors">
-                  Explore Directory
-                </Link>
-              </li>
-              <li>
-                <Link href="/categories" className="hover:text-orange-600 transition-colors">
-                  Tool Categories
+                <Link href="/" className="hover:text-orange-600 transition-colors">
+                  All Tools Catalog
                 </Link>
               </li>
             </ul>

@@ -16,8 +16,13 @@ export const GlobalLayout: React.FC<{ children: React.ReactNode }> = ({
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
   const [requestToolOpen, setRequestToolOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const isToolPage = pathname.startsWith("/tools/");
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isToolPage = pathname ? pathname.startsWith("/tools/") : false;
 
   return (
     <ThemeProvider>
@@ -34,7 +39,7 @@ export const GlobalLayout: React.FC<{ children: React.ReactNode }> = ({
             onRequestToolClick={() => setRequestToolOpen(true)}
           />
           <main className="flex-1">{children}</main>
-          {!isToolPage && <Footer />}
+          {mounted && !isToolPage && <Footer />}
 
           {/* Global Command Palette / Search Modal */}
           <CommandPalette
