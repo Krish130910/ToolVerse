@@ -587,8 +587,7 @@ export const SvgIconsLibraryTool: React.FC = () => {
   const [copiedType, setCopiedType] = useState<string | null>(null);
   const [selectedIcon, setSelectedIcon] = useState<IconDef>(ICONS_COLLECTION[0]);
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [visibleCount, setVisibleCount] = useState(60);
+  const [visibleCount, setVisibleCount] = useState(96);
 
   const categories: { key: string; label: string }[] = [
     { key: "All", label: "All Icons" },
@@ -670,25 +669,25 @@ export const SvgIconsLibraryTool: React.FC = () => {
     setTimeout(() => setCopiedType(null), 2000);
   };
 
-  const downloadSvg = () => {
-    const customizedSvg = getCustomizedSvg(selectedIcon);
+  const downloadSvg = (icon: IconDef = selectedIcon) => {
+    const customizedSvg = getCustomizedSvg(icon);
     const blob = new Blob([customizedSvg], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${selectedIcon.name.toLowerCase()}.svg`;
+    a.download = `${icon.name.toLowerCase()}.svg`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
-  const downloadPng = () => {
-    const svgStr = getCustomizedSvg(selectedIcon);
+  const downloadPng = (icon: IconDef = selectedIcon) => {
+    const svgStr = getCustomizedSvg(icon);
     const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
     const blobURL = URL.createObjectURL(blob);
     const image = new Image();
     image.onload = () => {
       const canvas = document.createElement("canvas");
-      const scaleFactor = 4; // High DPI scale factor
+      const scaleFactor = 4;
       canvas.width = size * scaleFactor;
       canvas.height = size * scaleFactor;
       const context = canvas.getContext("2d");
@@ -697,7 +696,7 @@ export const SvgIconsLibraryTool: React.FC = () => {
         const png = canvas.toDataURL("image/png");
         const a = document.createElement("a");
         a.href = png;
-        a.download = `${selectedIcon.name.toLowerCase()}.png`;
+        a.download = `${icon.name.toLowerCase()}.png`;
         a.click();
       }
       URL.revokeObjectURL(blobURL);
@@ -708,234 +707,286 @@ export const SvgIconsLibraryTool: React.FC = () => {
   const SelectedIconComp = selectedIcon.IconComponent;
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto px-1 sm:px-0">
-      {/* Search & Customization Toolbar */}
-      <div className="bg-white border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
-        <div className="flex flex-col md:flex-row items-center gap-4 justify-between">
-          {/* Search Input */}
-          <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder={`Search ${ICONS_COLLECTION.length}+ vector SVG icons by name, category, or tag...`}
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setVisibleCount(60);
-              }}
-              className="w-full h-10 pl-10 pr-4 rounded-xl border border-zinc-200 bg-zinc-50 text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-orange-500/40"
-              aria-label="Search SVG icons"
-            />
-          </div>
-
-          {/* Controls: Size, Stroke, Color */}
-          <div className="flex items-center gap-2.5 w-full md:w-auto flex-wrap justify-between sm:justify-start">
-            <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200 px-3 py-1.5 rounded-xl text-xs">
-              <span className="text-zinc-500 font-semibold">Size:</span>
-              <input
-                type="range"
-                min="16"
-                max="64"
-                value={size}
-                onChange={(e) => setSize(Number(e.target.value))}
-                className="w-16 sm:w-20 accent-orange-500"
-                aria-label="Icon size"
-              />
-              <span className="font-mono text-zinc-700 font-bold w-8 text-right">{size}px</span>
-            </div>
-
-            <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200 px-3 py-1.5 rounded-xl text-xs">
-              <span className="text-zinc-500 font-semibold">Stroke:</span>
-              <input
-                type="range"
-                min="1"
-                max="4"
-                step="0.5"
-                value={strokeWidth}
-                onChange={(e) => setStrokeWidth(Number(e.target.value))}
-                className="w-14 sm:w-16 accent-orange-500"
-                aria-label="Icon stroke width"
-              />
-              <span className="font-mono text-zinc-700 font-bold w-7 text-right">{strokeWidth}px</span>
-            </div>
-
-            {/* Color Swatches & Picker */}
-            <div className="flex items-center gap-1.5 bg-zinc-50 border border-zinc-200 px-2.5 py-1.5 rounded-xl text-xs">
-              <span className="text-zinc-500 font-semibold mr-1">Color:</span>
-              {COLOR_PRESETS.map((preset) => (
-                <button
-                  key={preset.value}
-                  onClick={() => setColor(preset.value)}
-                  style={{ backgroundColor: preset.value }}
-                  className={`w-4 h-4 rounded-full transition-all border border-black/10 ${
-                    color === preset.value ? "ring-2 ring-orange-500 scale-110" : "hover:scale-105"
-                  }`}
-                  title={preset.label}
-                  aria-label={`Color preset ${preset.label}`}
-                />
-              ))}
-              <input
-                type="color"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-                className="w-5 h-5 rounded cursor-pointer border-0 bg-transparent ml-1"
-                aria-label="Custom color picker"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Category Filter Pills Bar */}
-        <div className="flex items-center justify-between pt-2 border-t border-zinc-100 flex-wrap gap-2">
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1.5 max-w-full">
-            {categories.map((cat) => {
-              const count = categoryCounts[cat.key] || 0;
-              return (
-                <button
-                  key={cat.key}
-                  onClick={() => {
-                    setSelectedCategory(cat.key);
-                    setVisibleCount(60);
-                  }}
-                  aria-pressed={selectedCategory === cat.key}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
-                    selectedCategory === cat.key
-                      ? "bg-orange-500 text-white shadow-2xs font-bold"
-                      : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
-                  }`}
-                >
-                  <span>{cat.label}</span>
-                  <span
-                    className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
-                      selectedCategory === cat.key ? "bg-white/20 text-white" : "bg-zinc-200/80 text-zinc-600"
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="flex items-center gap-1 p-1 bg-zinc-100 rounded-lg shrink-0">
-            <button
-              onClick={() => setViewMode("grid")}
-              aria-label="Grid View"
-              aria-pressed={viewMode === "grid"}
-              className={`p-1.5 rounded-md transition-all ${
-                viewMode === "grid" ? "bg-white shadow-2xs text-orange-600" : "text-zinc-500 hover:text-zinc-800"
-              }`}
-            >
-              <Grid className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setViewMode("list")}
-              aria-label="List View"
-              aria-pressed={viewMode === "list"}
-              className={`p-1.5 rounded-md transition-all ${
-                viewMode === "list" ? "bg-white shadow-2xs text-orange-600" : "text-zinc-500 hover:text-zinc-800"
-              }`}
-            >
-              <List className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Workspace Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Icons Grid / List Column */}
-        <div className="lg:col-span-7 xl:col-span-8 space-y-4">
-          <div className="flex items-center justify-between text-xs text-zinc-500 font-medium">
-            <span>
-              Showing <strong>{visibleIcons.length}</strong> of <strong>{filteredIcons.length}</strong> vector icons
-              {selectedCategory !== "All" && ` in ${selectedCategory}`}
+    <div className="w-full relative">
+      {/* 2-Column Layout: Left Options & Inspector Sidebar + Main Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start w-full">
+        {/* LEFT SIDEBAR: OPTIONS & INSPECTOR PANEL */}
+        <aside className="lg:col-span-4 xl:col-span-3 bg-white border border-zinc-200/90 rounded-2xl p-4 shadow-xs space-y-4 self-start">
+          <div className="flex items-center justify-between border-b border-zinc-100 pb-2.5">
+            <h3 className="text-xs font-bold text-zinc-900 uppercase tracking-wider flex items-center gap-2">
+              <Sliders className="w-3.5 h-3.5 text-orange-500" />
+              <span>Options & Inspector</span>
+            </h3>
+            <span className="text-[10px] font-mono text-zinc-400 bg-zinc-100 px-2 py-0.5 rounded-full font-semibold">
+              Inspect
             </span>
-            {favorites.length > 0 && (
-              <span className="text-amber-600 font-bold flex items-center gap-1">
-                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                <span>{favorites.length} Starred</span>
-              </span>
-            )}
           </div>
 
+          {/* SELECTED ICON INSPECTOR CARD */}
+          <div className="bg-zinc-50 border border-zinc-200/90 rounded-xl p-3.5 space-y-3 shadow-2xs">
+            <div className="flex items-center justify-between border-b border-zinc-200/60 pb-2.5">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div style={{ color }} className="p-2 bg-white rounded-lg border border-zinc-200 flex items-center justify-center shrink-0 shadow-2xs">
+                  <SelectedIconComp size={Math.min(size, 32)} strokeWidth={strokeWidth} />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-xs font-bold text-zinc-900 truncate flex items-center gap-1.5">
+                    <span>{selectedIcon.name}</span>
+                  </h4>
+                  <span className="text-[10px] font-mono text-orange-600 font-semibold bg-orange-50 px-1.5 py-0.2 rounded border border-orange-200/60">
+                    {selectedIcon.category}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={(e) => copySvg(selectedIcon, e)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-orange-600 hover:bg-orange-50 transition-colors"
+                title="Copy SVG Code"
+              >
+                {copiedType === `svg-${selectedIcon.id}` ? (
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                ) : (
+                  <Copy className="w-3.5 h-3.5" />
+                )}
+              </button>
+            </div>
+
+            {/* Export Action Buttons */}
+            <div className="grid grid-cols-2 gap-1.5">
+              <Button
+                onClick={() => copySvg(selectedIcon)}
+                size="sm"
+                className="text-[11px] font-bold gap-1 bg-orange-600 hover:bg-orange-700 text-white shadow-2xs h-8"
+              >
+                {copiedType === `svg-${selectedIcon.id}` ? <Check className="w-3 h-3 text-emerald-200" /> : <Copy className="w-3 h-3" />}
+                <span>{copiedType === `svg-${selectedIcon.id}` ? "Copied!" : "Copy SVG"}</span>
+              </Button>
+
+              <Button
+                onClick={() => copyJsx(selectedIcon)}
+                variant="outline"
+                size="sm"
+                className="text-[11px] font-bold gap-1 border-zinc-300 hover:bg-zinc-100 text-zinc-800 h-8"
+              >
+                {copiedType === `jsx-${selectedIcon.id}` ? <Check className="w-3 h-3 text-emerald-600" /> : <Code className="w-3 h-3" />}
+                <span>{copiedType === `jsx-${selectedIcon.id}` ? "Copied!" : "Copy JSX"}</span>
+              </Button>
+
+              <Button
+                onClick={() => downloadSvg(selectedIcon)}
+                variant="secondary"
+                size="sm"
+                className="text-[11px] font-semibold gap-1 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 h-8"
+              >
+                <Download className="w-3 h-3" />
+                <span>SVG File</span>
+              </Button>
+
+              <Button
+                onClick={() => downloadPng(selectedIcon)}
+                variant="secondary"
+                size="sm"
+                className="text-[11px] font-semibold gap-1 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 h-8"
+              >
+                <Download className="w-3 h-3" />
+                <span>PNG Image</span>
+              </Button>
+            </div>
+
+            {/* SVG Source Code Snippet */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-[10px] font-bold text-zinc-500">
+                <span>Customized SVG Code</span>
+                <button
+                  onClick={() => copySvg(selectedIcon)}
+                  className="text-orange-600 hover:underline font-semibold"
+                >
+                  Copy Code
+                </button>
+              </div>
+              <div className="p-2 bg-slate-900 text-slate-100 rounded-lg text-[9px] font-mono overflow-x-auto max-h-24 shadow-inner">
+                <pre>{getCustomizedSvg(selectedIcon)}</pre>
+              </div>
+            </div>
+          </div>
+
+          {/* ICON APPEARANCE CONTROLS */}
+          <div className="space-y-3.5 pt-1">
+            <h4 className="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Appearance Controls</h4>
+
+            {/* Icon Color Picker & Swatches */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
+                <span>Color</span>
+                <span className="font-mono text-[10px] text-zinc-400">{color}</span>
+              </div>
+              <div className="flex items-center gap-1.5 flex-wrap bg-zinc-50 border border-zinc-200/80 p-2 rounded-xl">
+                {COLOR_PRESETS.map((preset) => (
+                  <button
+                    key={preset.value}
+                    onClick={() => setColor(preset.value)}
+                    style={{ backgroundColor: preset.value }}
+                    className={`w-5 h-5 rounded-full transition-all border border-black/10 cursor-pointer ${
+                      color === preset.value ? "ring-2 ring-orange-500 scale-110 shadow-xs" : "hover:scale-105 opacity-80 hover:opacity-100"
+                    }`}
+                    title={preset.label}
+                    aria-label={`Color preset ${preset.label}`}
+                  />
+                ))}
+                <input
+                  type="color"
+                  value={color}
+                  onChange={(e) => setColor(e.target.value)}
+                  className="w-6 h-6 rounded cursor-pointer border-0 bg-transparent ml-auto"
+                  aria-label="Custom color picker"
+                  title="Custom Color Picker"
+                />
+              </div>
+            </div>
+
+            {/* Size Slider Control */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
+                <span>Size</span>
+                <span className="font-mono text-[10px] text-zinc-700 font-bold">{size}px</span>
+              </div>
+              <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200/80 px-3 py-1.5 rounded-xl">
+                <input
+                  type="range"
+                  min="16"
+                  max="64"
+                  value={size}
+                  onChange={(e) => setSize(Number(e.target.value))}
+                  className="w-full accent-orange-500 cursor-pointer"
+                  aria-label="Icon size slider"
+                />
+              </div>
+            </div>
+
+            {/* Stroke Width Slider Control */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-[11px] font-bold text-zinc-700">
+                <span>Stroke Width</span>
+                <span className="font-mono text-[10px] text-zinc-700 font-bold">{strokeWidth}px</span>
+              </div>
+              <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200/80 px-3 py-1.5 rounded-xl">
+                <input
+                  type="range"
+                  min="1"
+                  max="4"
+                  step="0.5"
+                  value={strokeWidth}
+                  onChange={(e) => setStrokeWidth(Number(e.target.value))}
+                  className="w-full accent-orange-500 cursor-pointer"
+                  aria-label="Icon stroke width slider"
+                />
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* RIGHT MAIN CONTENT AREA */}
+        <main className="lg:col-span-8 xl:col-span-9 space-y-4 min-w-0 w-full">
+          {/* HEADER SECTION CARD (Title, Search, Category Filter Toolbar) */}
+          <div className="bg-white border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
+            {/* Title & Count Row */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+              <div>
+                <h2 className="text-lg font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
+                  <span>{selectedCategory === "All" ? "All Vector SVG Icons" : `${selectedCategory} Icons`}</span>
+                  <span className="text-xs font-mono font-bold bg-orange-50 text-orange-600 border border-orange-200/80 px-2.5 py-0.5 rounded-full">
+                    {filteredIcons.length} icons
+                  </span>
+                </h2>
+                <p className="text-xs text-zinc-500 mt-0.5">
+                  Search, filter categories, and customize icons for web and mobile apps.
+                </p>
+              </div>
+
+              {favorites.length > 0 && (
+                <span className="text-amber-600 text-xs font-bold flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-3 py-1 rounded-xl shrink-0">
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  <span>{favorites.length} Starred</span>
+                </span>
+              )}
+            </div>
+
+            {/* 1. Full-Width Compact Search Bar */}
+            <div className="relative w-full">
+              <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search icon name, tag, or category..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setVisibleCount(96);
+                }}
+                className="w-full h-10 pl-10 pr-9 rounded-xl border border-zinc-200 bg-zinc-50/80 text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-orange-500/30 font-medium"
+                aria-label="Search SVG icons"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 p-1"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* 2. Compact Filter Toolbar: Horizontally Scrollable Categories + Sort & View Mode */}
+            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pt-1 border-t border-zinc-100">
+              {/* Category Filter Pills (Horizontally Scrollable) */}
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 max-w-full">
+                {categories.map((cat) => {
+                  const count = categoryCounts[cat.key] || 0;
+                  const isActive = selectedCategory === cat.key;
+                  return (
+                    <button
+                      key={cat.key}
+                      onClick={() => {
+                        setSelectedCategory(cat.key);
+                        setVisibleCount(96);
+                      }}
+                      aria-pressed={isActive}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
+                        isActive
+                          ? "bg-orange-500 text-white shadow-2xs font-bold"
+                          : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/80"
+                      }`}
+                    >
+                      <span>{cat.label}</span>
+                      <span
+                        className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+                          isActive ? "bg-white/25 text-white font-bold" : "bg-zinc-200/70 text-zinc-500"
+                        }`}
+                      >
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+            </div>
+          </div>
+
+          {/* Icons Grid */}
           {filteredIcons.length === 0 ? (
-            <div className="bg-white border border-zinc-200/90 rounded-2xl p-12 text-center space-y-3">
+            <div className="bg-white border border-zinc-200/90 rounded-2xl p-12 text-center space-y-3 shadow-xs">
               <Search className="w-8 h-8 text-zinc-300 mx-auto" />
               <h4 className="text-sm font-bold text-zinc-800">No icons found</h4>
               <p className="text-xs text-zinc-500 max-w-xs mx-auto">
-                No icons matched your query &quot;{search}&quot;. Try searching for another term.
+                No icons matched &quot;{search}&quot;. Try adjusting your search query or clear category filters.
               </p>
               <Button size="sm" variant="outline" onClick={() => { setSearch(""); setSelectedCategory("All"); }}>
                 Clear Filters
               </Button>
             </div>
-          ) : viewMode === "grid" ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
-              {visibleIcons.map((icon) => {
-                const IconC = icon.IconComponent;
-                const isSelected = selectedIcon.id === icon.id;
-                const isFav = favorites.includes(icon.id);
-
-                return (
-                  <button
-                    key={icon.id}
-                    onClick={() => setSelectedIcon(icon)}
-                    className={`p-4 rounded-xl border flex flex-col items-center justify-center space-y-2 transition-all relative group cursor-pointer ${
-                      isSelected
-                        ? "bg-orange-50/80 border-orange-400 shadow-xs ring-2 ring-orange-500/20"
-                        : "bg-white border-zinc-200/90 hover:border-orange-300 hover:shadow-xs"
-                    }`}
-                  >
-                    <button
-                      onClick={(e) => toggleFavorite(icon.id, e)}
-                      aria-label={`Favorite ${icon.name}`}
-                      className="absolute top-2 right-2 text-zinc-300 hover:text-amber-400 transition-colors p-1"
-                    >
-                      <Star className={`w-3.5 h-3.5 ${isFav ? "fill-amber-400 text-amber-400" : ""}`} />
-                    </button>
-
-                    <div style={{ color }} className="p-2 flex items-center justify-center">
-                      <IconC size={Math.min(size, 36)} strokeWidth={strokeWidth} />
-                    </div>
-
-                    <span className="text-[11px] font-bold text-zinc-800 truncate w-full text-center">
-                      {icon.name}
-                    </span>
-
-                    {/* Hover Toolbar */}
-                    <div className="absolute inset-x-1 bottom-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white/95 backdrop-blur-xs rounded-lg p-1 flex items-center justify-center gap-1 border border-zinc-200 shadow-xs">
-                      <button
-                        onClick={(e) => copySvg(icon, e)}
-                        className="p-1 rounded text-[10px] font-bold text-zinc-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-1"
-                        title="Copy SVG"
-                      >
-                        {copiedType === `svg-${icon.id}` ? (
-                          <Check className="w-3 h-3 text-emerald-600" />
-                        ) : (
-                          <Copy className="w-3 h-3" />
-                        )}
-                        <span>SVG</span>
-                      </button>
-                      <button
-                        onClick={(e) => copyJsx(icon, e)}
-                        className="p-1 rounded text-[10px] font-bold text-zinc-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-1"
-                        title="Copy JSX"
-                      >
-                        {copiedType === `jsx-${icon.id}` ? (
-                          <Check className="w-3 h-3 text-emerald-600" />
-                        ) : (
-                          <Code className="w-3 h-3" />
-                        )}
-                        <span>JSX</span>
-                      </button>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
           ) : (
-            <div className="space-y-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5">
               {visibleIcons.map((icon) => {
                 const IconC = icon.IconComponent;
                 const isSelected = selectedIcon.id === icon.id;
@@ -945,138 +996,82 @@ export const SvgIconsLibraryTool: React.FC = () => {
                   <div
                     key={icon.id}
                     onClick={() => setSelectedIcon(icon)}
-                    className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
+                    className={`p-2.5 rounded-xl border flex flex-col justify-between items-center transition-all relative group cursor-pointer h-28 w-full ${
                       isSelected
-                        ? "bg-orange-50 border-orange-400 shadow-2xs"
-                        : "bg-white border-zinc-200 hover:border-orange-300"
+                        ? "bg-orange-50/80 border-orange-500 ring-2 ring-orange-500/20 shadow-xs"
+                        : "bg-white border-zinc-200/90 hover:border-orange-300 hover:shadow-2xs"
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div style={{ color }} className="p-1.5 bg-zinc-50 rounded-lg border border-zinc-200">
-                        <IconC size={24} strokeWidth={strokeWidth} />
+                    {/* Top Action Icons Row */}
+                    <div className="w-full flex items-center justify-between">
+                      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={(e) => copySvg(icon, e)}
+                          className="p-1 rounded-md text-zinc-400 hover:text-orange-600 hover:bg-orange-50 transition-all"
+                          title="Copy SVG Code"
+                          aria-label={`Copy ${icon.name} SVG`}
+                        >
+                          {copiedType === `svg-${icon.id}` ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          ) : (
+                            <Copy className="w-3.5 h-3.5" />
+                          )}
+                        </button>
+                        <button
+                          onClick={(e) => copyJsx(icon, e)}
+                          className="p-1 rounded-md text-zinc-400 hover:text-orange-600 hover:bg-orange-50 transition-all"
+                          title="Copy JSX Component"
+                          aria-label={`Copy ${icon.name} JSX`}
+                        >
+                          {copiedType === `jsx-${icon.id}` ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          ) : (
+                            <Code className="w-3.5 h-3.5" />
+                          )}
+                        </button>
                       </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-zinc-900">{icon.name}</h4>
-                        <span className="text-[10px] text-zinc-400">
-                          {icon.category} • {icon.tags.slice(0, 3).join(", ")}
-                        </span>
-                      </div>
-                    </div>
 
-                    <div className="flex items-center gap-2">
                       <button
                         onClick={(e) => toggleFavorite(icon.id, e)}
-                        className="p-1.5 rounded-lg border border-zinc-200 text-zinc-400 hover:text-amber-400"
                         aria-label={`Favorite ${icon.name}`}
+                        className={`p-1 transition-colors ${
+                          isFav ? "text-amber-400" : "text-zinc-300 hover:text-amber-400 opacity-0 group-hover:opacity-100"
+                        }`}
                       >
-                        <Star className={`w-3.5 h-3.5 ${isFav ? "fill-amber-400 text-amber-400" : ""}`} />
+                        <Star className={`w-3.5 h-3.5 ${isFav ? "fill-amber-400" : ""}`} />
                       </button>
-                      <Button size="sm" variant="outline" onClick={() => setSelectedIcon(icon)} className="text-xs">
-                        Select
-                      </Button>
                     </div>
+
+                    {/* Icon Preview */}
+                    <div style={{ color }} className="w-8 h-8 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                      <IconC size={Math.min(size, 32)} strokeWidth={strokeWidth} />
+                    </div>
+
+                    {/* Icon Label */}
+                    <span className="text-[11px] font-bold text-zinc-700 truncate w-full text-center px-1 group-hover:text-orange-600 transition-colors">
+                      {icon.name}
+                    </span>
                   </div>
                 );
               })}
             </div>
           )}
 
-          {/* Load More Pagination Button */}
+          {/* Load More Button */}
           {visibleCount < filteredIcons.length && (
-            <div className="text-center pt-4">
+            <div className="text-center pt-3 pb-6">
               <Button
                 variant="outline"
-                onClick={() => setVisibleCount((prev) => prev + 60)}
-                className="text-xs font-bold gap-2 shadow-xs border-zinc-300"
+                onClick={() => setVisibleCount((prev) => prev + 96)}
+                className="text-xs font-bold gap-2 shadow-xs border-zinc-300 bg-white"
               >
                 <span>Load More Icons ({filteredIcons.length - visibleCount} remaining)</span>
               </Button>
             </div>
           )}
-        </div>
-
-        {/* Selected Icon Inspector Sidebar */}
-        <div className="lg:col-span-5 xl:col-span-4 bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-xs space-y-5 h-fit lg:sticky lg:top-6">
-          <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
-            <div className="flex items-center gap-2">
-              <div style={{ color }}>
-                <SelectedIconComp size={20} strokeWidth={strokeWidth} />
-              </div>
-              <h3 className="text-sm font-bold text-zinc-900">{selectedIcon.name}</h3>
-            </div>
-            <span className="text-[10px] font-mono bg-orange-50 text-orange-600 border border-orange-200 px-2 py-0.5 rounded-md font-bold">
-              {selectedIcon.category}
-            </span>
-          </div>
-
-          {/* Large SVG Preview Container */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 flex items-center justify-center shadow-inner relative group min-h-44">
-            <div style={{ color }} className="transition-all transform group-hover:scale-110">
-              <SelectedIconComp size={Math.max(size * 2, 56)} strokeWidth={strokeWidth} />
-            </div>
-            <span className="absolute bottom-2 right-3 text-[10px] font-mono text-zinc-400">
-              {size}×{size}px • {strokeWidth}px stroke
-            </span>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                onClick={() => copySvg(selectedIcon)}
-                variant="default"
-                className="text-xs font-bold gap-1.5 w-full bg-orange-600 hover:bg-orange-700 text-white"
-              >
-                {copiedType === `svg-${selectedIcon.id}` ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copiedType === `svg-${selectedIcon.id}` ? "Copied!" : "Copy SVG"}</span>
-              </Button>
-              <Button
-                onClick={() => copyJsx(selectedIcon)}
-                variant="outline"
-                className="text-xs font-bold gap-1.5 w-full border-zinc-300 hover:bg-zinc-50"
-              >
-                {copiedType === `jsx-${selectedIcon.id}` ? <Check className="w-3.5 h-3.5" /> : <Code className="w-3.5 h-3.5" />}
-                <span>{copiedType === `jsx-${selectedIcon.id}` ? "Copied!" : "Copy JSX"}</span>
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                onClick={downloadSvg}
-                variant="secondary"
-                className="text-xs font-semibold gap-1.5 w-full bg-zinc-100 text-zinc-800 hover:bg-zinc-200"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>SVG File</span>
-              </Button>
-              <Button
-                onClick={downloadPng}
-                variant="secondary"
-                className="text-xs font-semibold gap-1.5 w-full bg-zinc-100 text-zinc-800 hover:bg-zinc-200"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>PNG Image</span>
-              </Button>
-            </div>
-          </div>
-
-          {/* SVG Source Code Block */}
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-bold text-zinc-700 flex items-center justify-between">
-              <span>Customized SVG Code:</span>
-              <button
-                onClick={() => copySvg(selectedIcon)}
-                className="text-orange-600 hover:underline font-semibold text-[10px]"
-              >
-                Copy Code
-              </button>
-            </label>
-            <div className="p-3 bg-slate-900 text-slate-100 rounded-xl text-[10px] font-mono overflow-x-auto max-h-36 shadow-inner">
-              <pre>{getCustomizedSvg(selectedIcon)}</pre>
-            </div>
-          </div>
-        </div>
+        </main>
       </div>
     </div>
   );
 };
+
