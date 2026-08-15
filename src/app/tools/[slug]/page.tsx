@@ -14,16 +14,25 @@ export default function DedicatedToolPage({
   params: Promise<{ slug: string }> | { slug: string };
 }) {
   const unwrappedParams = React.use ? React.use(params as any) : params;
-  const slug = (unwrappedParams as any)?.slug || "";
+  const rawSlug = (unwrappedParams as any)?.slug || "";
+  const slug =
+    rawSlug === "color-palette" || rawSlug === "color-palette-generator"
+      ? "color-palettes"
+      : rawSlug;
 
-  const tool = FEATURED_TOOLS.find((t) => t.slug === slug);
+  const tool = FEATURED_TOOLS.find(
+    (t) =>
+      t.slug === slug ||
+      (t.slug === "color-palettes" &&
+        (rawSlug === "color-palette" || rawSlug === "color-palette-generator"))
+  );
 
   if (!tool) {
     return (
       <div className="py-20 text-center space-y-4 bg-[#FAF8F5] min-h-screen">
         <h2 className="text-2xl font-bold text-zinc-900">Tool Not Found</h2>
         <p className="text-xs text-zinc-600">
-          The requested tool route <code className="text-orange-600 font-mono">/tools/{slug}</code> does not exist.
+          The requested tool route <code className="text-orange-600 font-mono">/tools/{rawSlug}</code> does not exist.
         </p>
         <a href="/tools">
           <Button variant="default" size="sm">
@@ -38,7 +47,7 @@ export default function DedicatedToolPage({
     <ToolLayout tool={tool} hideRelatedTools={true} containerSize="large">
       {tool.isLive ? (
         <div className="w-full">
-          <LiveToolsSuite initialTool={slug} />
+          <LiveToolsSuite initialTool={tool.slug} />
         </div>
       ) : (
         <div className="bg-white border border-zinc-200/90 rounded-2xl p-10 text-center space-y-4 shadow-xs">

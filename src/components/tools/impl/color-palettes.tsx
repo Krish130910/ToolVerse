@@ -364,6 +364,12 @@ export const ColorPalettesTool: React.FC = () => {
   const [copiedHex, setCopiedHex] = useState<string | null>(null);
   const [copiedPaletteId, setCopiedPaletteId] = useState<string | null>(null);
   const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [visibleCount, setVisibleCount] = useState<number>(48);
+
+  // Reset visible count when category or search changes for fast rendering
+  useEffect(() => {
+    setVisibleCount(48);
+  }, [selectedCategory, searchQuery]);
 
   // Load saved favorites from localStorage
   useEffect(() => {
@@ -408,7 +414,7 @@ export const ColorPalettesTool: React.FC = () => {
     return counts;
   }, [savedIds]);
 
-  // Fast Filtered Palettes Memo (All 999 loaded at once)
+  // Fast Filtered Palettes Memo
   const filteredPalettes = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
 
@@ -433,6 +439,10 @@ export const ColorPalettesTool: React.FC = () => {
     });
   }, [selectedCategory, searchQuery, savedIds]);
 
+  const visiblePalettes = useMemo(() => {
+    return filteredPalettes.slice(0, visibleCount);
+  }, [filteredPalettes, visibleCount]);
+
   // Copy Single Color Hex
   const handleCopyColor = useCallback((hex: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -452,23 +462,15 @@ export const ColorPalettesTool: React.FC = () => {
 
   return (
     <div className="w-full relative space-y-5">
-      {/* Top Header Bar: Title, Search & Saved Trigger */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-zinc-200/90 rounded-2xl p-4 shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-600 shadow-2xs">
-            <PaletteIcon className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="text-base sm:text-lg font-black text-zinc-900 tracking-tight flex items-center gap-2">
-              <span>Color Palettes</span>
-              <span className="text-[11px] font-mono font-bold bg-orange-50 text-orange-600 border border-orange-200/60 px-2 py-0.5 rounded-full">
-                999 PALETTES
-              </span>
-            </h2>
-            <p className="text-xs text-zinc-500 font-medium">
-              Browse 999 unique color palettes. Click any shade to copy hex codes instantly.
-            </p>
-          </div>
+      {/* Search & Filter Toolbar Bar */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white border border-zinc-200/90 rounded-2xl p-3 shadow-2xs">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-mono font-bold bg-orange-50 text-orange-600 border border-orange-200/60 px-2.5 py-1 rounded-xl">
+            999 PALETTES
+          </span>
+          <span className="text-xs text-zinc-500 font-medium hidden sm:inline">
+            Click any shade to copy hex code
+          </span>
         </div>
 
         {/* Search Bar & Saved Button */}
@@ -559,7 +561,7 @@ export const ColorPalettesTool: React.FC = () => {
                   : `${CATEGORIES.find((c) => c.id === selectedCategory)?.label || selectedCategory} Palettes`}
               </span>
               <span className="text-zinc-400 font-normal text-[11px]">
-                ({filteredPalettes.length} total)
+                (Showing {visiblePalettes.length} of {filteredPalettes.length})
               </span>
             </h3>
           </div>
@@ -588,20 +590,36 @@ export const ColorPalettesTool: React.FC = () => {
               )}
             </div>
           ) : (
-            /* Palettes Responsive Grid (All 999 loaded at once with memoized Cards) */
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-              {filteredPalettes.map((palette) => (
-                <PaletteCard
-                  key={palette.id}
-                  palette={palette}
-                  isSaved={savedIds.includes(palette.id)}
-                  onCopyColor={handleCopyColor}
-                  onCopyPalette={handleCopyPalette}
-                  onToggleSave={toggleSave}
-                  copiedHex={copiedHex}
-                  copiedPaletteId={copiedPaletteId}
-                />
-              ))}
+            /* Fast Paginated Palettes Responsive Grid */
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                {visiblePalettes.map((palette) => (
+                  <PaletteCard
+                    key={palette.id}
+                    palette={palette}
+                    isSaved={savedIds.includes(palette.id)}
+                    onCopyColor={handleCopyColor}
+                    onCopyPalette={handleCopyPalette}
+                    onToggleSave={toggleSave}
+                    copiedHex={copiedHex}
+                    copiedPaletteId={copiedPaletteId}
+                  />
+                ))}
+              </div>
+
+              {/* Load More Button */}
+              {visibleCount < filteredPalettes.length && (
+                <div className="text-center pt-2 pb-6">
+                  <Button
+                    onClick={() => setVisibleCount((prev) => prev + 48)}
+                    variant="outline"
+                    size="lg"
+                    className="font-bold border-zinc-200 text-zinc-800 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 shadow-2xs cursor-pointer rounded-xl px-8"
+                  >
+                    <span>Load More Palettes ({filteredPalettes.length - visibleCount} remaining)</span>
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </main>
