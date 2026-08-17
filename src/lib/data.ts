@@ -249,7 +249,7 @@ export const FEATURED_TOOLS: FeaturedTool[] = [
     tags: ["Image", "Resize", "Crop", "Batch", "WebGL"],
   },
   {
-    id: "tool-34",
+    id: "tool-36",
     name: "UUID v4 Generator",
     slug: "uuid-generator",
     tagline: "Generate cryptographically secure UUID v4 unique identifiers individually or in bulk.",
