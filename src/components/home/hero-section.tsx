@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import { BruhGrowBackground } from "@/components/ui/bruhgrow-background";
 import { StrokeText } from "@/components/ui/stroke-text";
 
+import { FEATURED_TOOLS, ROADMAP_CATEGORIES } from "@/lib/data";
+
 interface HeroSectionProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
@@ -91,7 +93,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             </motion.div>
 
-            {/* Hero Stats Bar (2nd Image Stats Pill Box) */}
+            {/* Hero Stats Bar */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -104,7 +106,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <Cpu className="w-4.5 h-4.5" />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-sm sm:text-base font-black text-zinc-900 font-mono leading-none">33</div>
+                    <div className="text-sm sm:text-base font-black text-zinc-900 font-mono leading-none">{FEATURED_TOOLS.length}</div>
                     <div className="text-[11px] sm:text-xs font-bold text-zinc-600 truncate mt-0.5">Browser-Based Tools</div>
                   </div>
                 </div>

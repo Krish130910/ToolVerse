@@ -21,6 +21,7 @@ import {
   ArrowRight,
   Link as LinkIcon,
   Wrench,
+  FileText,
 } from "lucide-react";
 import { getFavorites, toggleFavoriteTool, FAVORITES_EVENT } from "@/lib/favorites";
 
@@ -41,6 +42,7 @@ const TOOL_ICON_MAP: Record<string, React.ReactNode> = {
   Palette: <Palette className="w-6 h-6 text-orange-500" />,
   Link: <LinkIcon className="w-6 h-6 text-orange-500" />,
   Wrench: <Wrench className="w-6 h-6 text-orange-500" />,
+  FileText: <FileText className="w-6 h-6 text-orange-500" />,
 };
 
 export const ToolLayout: React.FC<ToolLayoutProps> = ({
