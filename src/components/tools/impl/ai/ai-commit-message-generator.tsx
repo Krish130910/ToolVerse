@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { GitCommit, Copy, Check, Trash2, Zap, AlertCircle, Clock, Square } from "lucide-react";
+import { GitCommit, Copy, Check, Trash2, AlertCircle, Clock, Square } from "lucide-react";
+import { AISetupScreen } from "./ai-setup-screen";
 
 const COMMIT_TYPES = [
   { id: "all", label: "Auto Detect Type" },
@@ -22,6 +23,7 @@ export const AICommitMessageGenerator: React.FC = () => {
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
+  const [isKeyMissing, setIsKeyMissing] = useState(false);
   const [hasHistory, setHasHistory] = useState(false);
 
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -50,6 +52,7 @@ export const AICommitMessageGenerator: React.FC = () => {
 
     setLoading(true);
     setError("");
+    setIsKeyMissing(false);
 
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -57,22 +60,21 @@ export const AICommitMessageGenerator: React.FC = () => {
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
-    const fullPrompt = commitType !== "all" 
-      ? `[Commit Type: ${commitType}] ${prompt.trim()}`
-      : prompt.trim();
-
     try {
       const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
-          tool: "commit-message",
-          prompt: fullPrompt,
+          tool: "ai-commit-message-generator",
+          prompt: prompt.trim(),
+          options: {
+            commitType,
+          },
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (res.ok && data.success) {
         setOutput(data.result);
@@ -82,7 +84,11 @@ export const AICommitMessageGenerator: React.FC = () => {
         );
         setHasHistory(true);
       } else {
-        setError(data.error || "Failed to generate Conventional Commit message.");
+        if (res.status === 401 || data.errorType === "API_KEY_REQUIRED") {
+          setIsKeyMissing(true);
+        } else {
+          setError(data.message || data.error || "Failed to generate Conventional Commit message.");
+        }
       }
     } catch (err: any) {
       if (err.name === "AbortError") {
@@ -118,6 +124,15 @@ export const AICommitMessageGenerator: React.FC = () => {
     localStorage.removeItem("toolverse_ai_commit_message");
     setHasHistory(false);
   };
+
+  if (isKeyMissing) {
+    return (
+      <AISetupScreen
+        toolName="AI Commit Message Generator"
+        message="Please configure GEMINI_API_KEY or OPENAI_API_KEY in .env.local to enable AI Commit Message generation."
+      />
+    );
+  }
 
   return (
     <div className="space-y-6 text-zinc-900">

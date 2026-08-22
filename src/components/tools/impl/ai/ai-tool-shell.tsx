@@ -78,52 +78,40 @@ export const AIToolShell: React.FC<AIToolShellProps> = ({ toolSlug, renderInputC
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
-          toolSlug,
+          tool: toolSlug,
           prompt,
           options,
-          stream: true,
         }),
       });
 
-      const providerHeader = response.headers.get("X-AI-Provider") || "AI Engine";
+      const providerHeader = response.headers.get("X-AI-Provider") || "ToolVerse AI";
       setProviderName(providerHeader);
 
-      if (!response.ok) {
-        const errJson = await response.json().catch(() => ({}));
-        if (response.status === 401 || errJson.errorType === "API_KEY_REQUIRED") {
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || !data.success) {
+        if (response.status === 401 || data.errorType === "API_KEY_REQUIRED") {
           setErrorInfo({
             isKeyMissing: true,
-            message: errJson.message || "API key is required.",
+            message: data.message || data.error || "API key is required.",
           });
         } else {
           setErrorInfo({
             isKeyMissing: false,
-            message: errJson.message || `Server returned error status ${response.status}.`,
+            message: data.message || data.error || `Server returned error status ${response.status}.`,
           });
         }
         setLoading(false);
         return;
       }
 
-      // Stream progressive text chunks
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let accumulated = "";
-
-      if (reader) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value, { stream: true });
-          accumulated += chunk;
-          setOutput(accumulated);
-        }
-      }
+      const generatedResult = data.result || "";
+      setOutput(generatedResult);
 
       // Save session to localStorage
       localStorage.setItem(
         `toolverse_ai_${toolSlug}`,
-        JSON.stringify({ prompt, output: accumulated, options })
+        JSON.stringify({ prompt, output: generatedResult, options })
       );
       setHasHistory(true);
     } catch (err: any) {
@@ -132,7 +120,7 @@ export const AIToolShell: React.FC<AIToolShellProps> = ({ toolSlug, renderInputC
       } else {
         setErrorInfo({
           isKeyMissing: false,
-          message: err.message || "Failed to stream response from AI provider.",
+          message: err.message || "Failed to receive response from AI provider.",
         });
       }
     } finally {
@@ -258,7 +246,7 @@ export const AIToolShell: React.FC<AIToolShellProps> = ({ toolSlug, renderInputC
             />
             <div className="flex justify-between items-center mt-1 text-[11px] text-zinc-400">
               <span>{prompt.length} characters</span>
-              <span>Streaming Response Enabled</span>
+              <span>AI Inference Engine</span>
             </div>
           </div>
 
