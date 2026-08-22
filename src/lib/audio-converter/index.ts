@@ -223,7 +223,6 @@ export async function convertAudioFile(options: AudioConversionOptions): Promise
   const {
     file,
     targetFormat,
-    bitrateKbps,
     targetSampleRate,
     channels,
     onProgress,
@@ -252,16 +251,6 @@ export async function convertAudioFile(options: AudioConversionOptions): Promise
 
   // Progress Update 3: Encoding Output Format
   onProgress?.(65, 0.8, 0.4);
-
-  const mimeTypeMap: Record<AudioFormat, string> = {
-    wav: "audio/wav",
-    mp3: "audio/mpeg",
-    ogg: "audio/ogg",
-    aac: "audio/aac",
-    flac: "audio/flac",
-    m4a: "audio/mp4",
-    opus: "audio/opus",
-  };
 
   const outputBlob = encodeWAV(resampledBuffer);
 

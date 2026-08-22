@@ -93,11 +93,13 @@ export const downloadPdf = (
   const printWindow = window.open("", "_blank");
   if (!printWindow) return false;
 
+  const docTitle = filename.replace(/\.pdf$/i, "");
+
   printWindow.document.write(`
     <!DOCTYPE html>
     <html>
       <head>
-        <title>Digital Signature Document</title>
+        <title>${docTitle}</title>
         <style>
           @page { size: A4 portrait; margin: 20mm; }
           body {

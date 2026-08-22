@@ -1,4 +1,4 @@
-import { LoremOptions, LoremStats, OutputFormat } from "./types";
+import { LoremOptions, LoremStats } from "./types";
 import { getWordlistByTheme, getThemePrefix } from "./wordlists";
 
 /**

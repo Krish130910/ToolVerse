@@ -1,4 +1,4 @@
-import { ConversionOptions, DocumentFormat, VALID_CONVERSION_MAP } from "./types";
+import { ConversionOptions, VALID_CONVERSION_MAP } from "./types";
 import { validateDocument } from "./validators";
 
 /**
@@ -86,13 +86,10 @@ export function txtToMarkdown(txt: string): string {
   const lines = txt.split("\n");
   const result: string[] = [];
 
-  let inList = false;
-
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) {
       result.push("");
-      inList = false;
       continue;
     }
 
@@ -107,14 +104,12 @@ export function txtToMarkdown(txt: string): string {
     // Check if line looks like bullet item
     if (/^[-*•]\s+/.test(line)) {
       result.push(line.replace(/^•\s+/, "- "));
-      inList = true;
       continue;
     }
 
     // Check if line looks like numbered item
     if (/^\d+[\.\)]\s+/.test(line)) {
       result.push(line.replace(/^(\d+)[\.\)]\s+/, "$1. "));
-      inList = true;
       continue;
     }
 
