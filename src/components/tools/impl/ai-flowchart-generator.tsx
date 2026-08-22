@@ -265,7 +265,7 @@ export const AiFlowchartGeneratorTool: React.FC = () => {
     return (
       <AISetupScreen
         toolName="AI Flowchart Generator"
-        message="Please configure GEMINI_API_KEY or OPENAI_API_KEY in .env.local to enable AI Flowchart generation."
+        message="Start Ollama locally ('ollama run llama3.2') or configure an AI key in .env.local to enable AI generation."
       />
     );
   }

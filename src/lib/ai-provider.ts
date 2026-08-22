@@ -208,7 +208,335 @@ export function parseFlowchartGraph(rawText: string): FlowchartGraphData {
   };
 }
 
-class GeminiSpecializedProvider implements AIProvider {
+/**
+ * Resolves the appropriate Ollama model name for each tool or global fallback.
+ */
+export function getOllamaModel(toolConfig: AIToolConfig): string {
+  const globalModel = process.env.OLLAMA_MODEL || process.env.LOCAL_MODEL_ID || "llama3.2";
+
+  switch (toolConfig.slug) {
+    case "ai-commit-message-generator":
+      return process.env.OLLAMA_COMMIT_MODEL || globalModel;
+    case "ai-code-converter":
+      return process.env.OLLAMA_CODE_MODEL || globalModel;
+    case "ai-readme-generator":
+      return process.env.OLLAMA_README_MODEL || globalModel;
+    case "ai-api-docs-generator":
+      return process.env.OLLAMA_APIDOCS_MODEL || globalModel;
+    case "ai-email-generator":
+      return process.env.OLLAMA_EMAIL_MODEL || globalModel;
+    case "ai-flowchart-generator":
+      return process.env.OLLAMA_FLOWCHART_MODEL || globalModel;
+    default:
+      return globalModel;
+  }
+}
+
+/**
+ * Default Local Development Provider: Ollama
+ * Connects directly to local Ollama instance (http://127.0.0.1:11434 or http://localhost:11434).
+ */
+export class OllamaProvider implements AIProvider {
+  name = "Ollama Local Engine";
+  inferenceType = "local_fine_tuned" as const;
+
+  async generateContent(
+    systemPrompt: string,
+    userPrompt: string,
+    toolConfig: AIToolConfig
+  ): Promise<AIResponsePayload> {
+    const startTime = Date.now();
+    const rawBaseUrl = process.env.OLLAMA_BASE_URL || process.env.LOCAL_INFERENCE_URL || "http://127.0.0.1:11434";
+    // Normalize localhost to 127.0.0.1 for high-speed IPv4 socket connection on Windows
+    const baseUrl = rawBaseUrl.replace("://localhost:", "://127.0.0.1:");
+    const model = getOllamaModel(toolConfig);
+
+    try {
+      // Use Ollama /api/chat endpoint with separate system & user messages
+      const response = await fetch(`${baseUrl}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(60000),
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          stream: false,
+          options: {
+            temperature: 0.3,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const errorJson = await response.json().catch(() => ({}));
+        const errMsg = errorJson.error || `Ollama server returned status ${response.status}`;
+
+        if (errMsg.includes("not found") || errMsg.includes("pull")) {
+          return {
+            success: false,
+            error: `Ollama model '${model}' is not pulled locally. Run 'ollama pull ${model}' in your terminal to install it.`,
+            errorType: "PROVIDER_ERROR",
+            statusCode: 404,
+          };
+        }
+
+        return {
+          success: false,
+          error: errMsg,
+          errorType: "PROVIDER_ERROR",
+          statusCode: response.status >= 500 ? 500 : 400,
+        };
+      }
+
+      const data = await response.json();
+      const text = data.message?.content || data.response || "";
+
+      if (!text || !text.trim()) {
+        return {
+          success: false,
+          error: `Ollama model '${model}' returned an empty output.`,
+          errorType: "PROVIDER_ERROR",
+          statusCode: 500,
+        };
+      }
+
+      let structuredData: any = undefined;
+      if (toolConfig.outputFormat === "graph" || toolConfig.slug === "ai-flowchart-generator") {
+        structuredData = parseFlowchartGraph(text);
+      }
+
+      return {
+        success: true,
+        result: text.trim(),
+        data: structuredData,
+        metadata: {
+          modelId: model,
+          modelVersion: "ollama-local",
+          provider: `Ollama (${model})`,
+          inferenceType: "local_fine_tuned",
+          latencyMs: Date.now() - startTime,
+        },
+      };
+    } catch (err: any) {
+      if (err.name === "TimeoutError" || err.name === "AbortError") {
+        return {
+          success: false,
+          error: `Ollama inference timed out after 60s for model '${model}'. Ensure your machine has sufficient RAM/VRAM.`,
+          errorType: "TIMEOUT",
+          statusCode: 504,
+        };
+      }
+
+      return {
+        success: false,
+        error: `Ollama server is unreachable at ${baseUrl}. Start Ollama with 'ollama serve' or run a model with 'ollama run ${model}'.`,
+        errorType: "PROVIDER_ERROR",
+        statusCode: 503,
+      };
+    }
+  }
+}
+
+/**
+ * Optional Local/Self-Hosted Provider: vLLM (OpenAI-compatible)
+ */
+export class VLLMProvider implements AIProvider {
+  name = "vLLM High-Throughput Engine";
+  inferenceType = "local_fine_tuned" as const;
+
+  async generateContent(
+    systemPrompt: string,
+    userPrompt: string,
+    toolConfig: AIToolConfig
+  ): Promise<AIResponsePayload> {
+    const startTime = Date.now();
+    const baseUrl = process.env.VLLM_BASE_URL || process.env.LOCAL_INFERENCE_URL || "http://localhost:8000";
+    const model = process.env.VLLM_MODEL || process.env.LOCAL_MODEL_ID || "toolverse/general-coder-v1.0";
+
+    try {
+      const response = await fetch(`${baseUrl}/v1/chat/completions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(45000),
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+        }),
+      });
+
+      if (!response.ok) {
+        const errorJson = await response.json().catch(() => ({}));
+        return {
+          success: false,
+          error: errorJson.error?.message || `vLLM error (Status ${response.status})`,
+          errorType: "PROVIDER_ERROR",
+          statusCode: response.status >= 500 ? 500 : 400,
+        };
+      }
+
+      const data = await response.json();
+      const text = data.choices?.[0]?.message?.content || "";
+
+      let structuredData: any = undefined;
+      if (toolConfig.outputFormat === "graph" || toolConfig.slug === "ai-flowchart-generator") {
+        structuredData = parseFlowchartGraph(text);
+      }
+
+      return {
+        success: true,
+        result: text.trim(),
+        data: structuredData,
+        metadata: {
+          modelId: model,
+          modelVersion: "vllm-local",
+          provider: "Local vLLM Model Server",
+          inferenceType: "local_fine_tuned",
+          latencyMs: Date.now() - startTime,
+        },
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        error: `vLLM Server Offline: ${err.message}. Ensure vLLM is running at ${baseUrl}.`,
+        errorType: "PROVIDER_ERROR",
+        statusCode: 503,
+      };
+    }
+  }
+}
+
+/**
+ * Optional Cloud Provider: OpenAI
+ */
+export class OpenAISpecializedProvider implements AIProvider {
+  name = "OpenAI";
+  inferenceType = "external_cloud" as const;
+
+  async generateContent(
+    systemPrompt: string,
+    userPrompt: string,
+    toolConfig: AIToolConfig
+  ): Promise<AIResponsePayload> {
+    const startTime = Date.now();
+    const apiKey = process.env.OPENAI_API_KEY?.trim();
+
+    if (!apiKey) {
+      return {
+        success: false,
+        error: "OPENAI_API_KEY is not configured in environment variables (.env.local).",
+        errorType: "API_KEY_REQUIRED",
+        statusCode: 401,
+      };
+    }
+
+    const modelName = process.env.OPENAI_MODEL?.trim() || "gpt-4o-mini";
+
+    try {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        signal: AbortSignal.timeout(30000),
+        body: JSON.stringify({
+          model: modelName,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+        }),
+      });
+
+      if (!response.ok) {
+        const errorJson = await response.json().catch(() => ({}));
+        const message = errorJson.error?.message || `OpenAI API error (Status ${response.status})`;
+
+        if (response.status === 401 || response.status === 403) {
+          return {
+            success: false,
+            error: "Invalid OpenAI API key. Please check your OPENAI_API_KEY in .env.local.",
+            errorType: "API_KEY_REQUIRED",
+            statusCode: 401,
+          };
+        }
+
+        if (response.status === 429) {
+          return {
+            success: false,
+            error: "OpenAI rate limit or quota exceeded.",
+            errorType: "RATE_LIMITED",
+            statusCode: 429,
+          };
+        }
+
+        return {
+          success: false,
+          error: message,
+          errorType: "PROVIDER_ERROR",
+          statusCode: response.status >= 500 ? 500 : 400,
+        };
+      }
+
+      const data = await response.json();
+      const text = data.choices?.[0]?.message?.content;
+
+      if (!text || !text.trim()) {
+        return {
+          success: false,
+          error: "OpenAI model returned an empty response.",
+          errorType: "PROVIDER_ERROR",
+          statusCode: 500,
+        };
+      }
+
+      let structuredData: any = undefined;
+      if (toolConfig.outputFormat === "graph" || toolConfig.slug === "ai-flowchart-generator") {
+        structuredData = parseFlowchartGraph(text);
+      }
+
+      return {
+        success: true,
+        result: text.trim(),
+        data: structuredData,
+        metadata: {
+          modelId: modelName,
+          modelVersion: "gpt-4o-mini",
+          provider: "OpenAI Cloud",
+          inferenceType: "external_cloud",
+          latencyMs: Date.now() - startTime,
+        },
+      };
+    } catch (err: any) {
+      if (err.name === "TimeoutError" || err.name === "AbortError") {
+        return {
+          success: false,
+          error: "AI provider request timed out (30s limit). Please retry.",
+          errorType: "TIMEOUT",
+          statusCode: 504,
+        };
+      }
+
+      return {
+        success: false,
+        error: err.message || "Failed to communicate with OpenAI API.",
+        errorType: "PROVIDER_ERROR",
+        statusCode: 500,
+      };
+    }
+  }
+}
+
+/**
+ * Optional Cloud Provider: Google Gemini
+ */
+export class GeminiSpecializedProvider implements AIProvider {
   name = "Google Gemini";
   inferenceType = "external_cloud" as const;
 
@@ -324,228 +652,38 @@ class GeminiSpecializedProvider implements AIProvider {
   }
 }
 
-class OpenAISpecializedProvider implements AIProvider {
-  name = "OpenAI";
-  inferenceType = "external_cloud" as const;
-
-  async generateContent(
-    systemPrompt: string,
-    userPrompt: string,
-    toolConfig: AIToolConfig
-  ): Promise<AIResponsePayload> {
-    const startTime = Date.now();
-    const apiKey = process.env.OPENAI_API_KEY?.trim();
-
-    if (!apiKey) {
-      return {
-        success: false,
-        error: "OPENAI_API_KEY is not configured in environment variables (.env.local).",
-        errorType: "API_KEY_REQUIRED",
-        statusCode: 401,
-      };
-    }
-
-    const modelName = process.env.OPENAI_MODEL?.trim() || "gpt-4o-mini";
-
-    try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        signal: AbortSignal.timeout(30000),
-        body: JSON.stringify({
-          model: modelName,
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-        }),
-      });
-
-      if (!response.ok) {
-        const errorJson = await response.json().catch(() => ({}));
-        const message = errorJson.error?.message || `OpenAI API error (Status ${response.status})`;
-
-        if (response.status === 401 || response.status === 403) {
-          return {
-            success: false,
-            error: "Invalid OpenAI API key. Please check your OPENAI_API_KEY.",
-            errorType: "API_KEY_REQUIRED",
-            statusCode: 401,
-          };
-        }
-
-        if (response.status === 429) {
-          return {
-            success: false,
-            error: "OpenAI rate limit or quota exceeded.",
-            errorType: "RATE_LIMITED",
-            statusCode: 429,
-          };
-        }
-
-        return {
-          success: false,
-          error: message,
-          errorType: "PROVIDER_ERROR",
-          statusCode: response.status >= 500 ? 500 : 400,
-        };
-      }
-
-      const data = await response.json();
-      const text = data.choices?.[0]?.message?.content;
-
-      if (!text || !text.trim()) {
-        return {
-          success: false,
-          error: "AI model returned an empty response.",
-          errorType: "PROVIDER_ERROR",
-          statusCode: 500,
-        };
-      }
-
-      let structuredData: any = undefined;
-      if (toolConfig.outputFormat === "graph" || toolConfig.slug === "ai-flowchart-generator") {
-        structuredData = parseFlowchartGraph(text);
-      }
-
-      return {
-        success: true,
-        result: text.trim(),
-        data: structuredData,
-        metadata: {
-          modelId: modelName,
-          modelVersion: "gpt-4o-mini",
-          provider: "OpenAI Cloud",
-          inferenceType: "external_cloud",
-          latencyMs: Date.now() - startTime,
-        },
-      };
-    } catch (err: any) {
-      if (err.name === "TimeoutError" || err.name === "AbortError") {
-        return {
-          success: false,
-          error: "AI provider request timed out (30s limit). Please retry.",
-          errorType: "TIMEOUT",
-          statusCode: 504,
-        };
-      }
-
-      return {
-        success: false,
-        error: err.message || "Failed to communicate with OpenAI API.",
-        errorType: "PROVIDER_ERROR",
-        statusCode: 500,
-      };
-    }
-  }
-}
-
-class LocalInferenceProvider implements AIProvider {
-  name = "ToolVerse Local Inference (Ollama/vLLM)";
-  inferenceType = "local_fine_tuned" as const;
-
-  async generateContent(
-    systemPrompt: string,
-    userPrompt: string,
-    toolConfig: AIToolConfig
-  ): Promise<AIResponsePayload> {
-    const startTime = Date.now();
-    const localUrl = process.env.LOCAL_INFERENCE_URL || "http://localhost:11434";
-    const isVllm = process.env.LOCAL_INFERENCE_TYPE === "vllm";
-    const modelId = process.env.LOCAL_MODEL_ID || (isVllm ? "toolverse/general-coder-v1.0" : "llama3.1:8b");
-
-    try {
-      if (isVllm) {
-        const res = await fetch(`${localUrl}/v1/chat/completions`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: AbortSignal.timeout(30000),
-          body: JSON.stringify({
-            model: modelId,
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userPrompt },
-            ],
-          }),
-        });
-
-        if (!res.ok) throw new Error(`vLLM server error (${res.status})`);
-        const data = await res.json();
-        const text = data.choices?.[0]?.message?.content || "";
-
-        let structuredData: any = undefined;
-        if (toolConfig.outputFormat === "graph" || toolConfig.slug === "ai-flowchart-generator") {
-          structuredData = parseFlowchartGraph(text);
-        }
-
-        return {
-          success: true,
-          result: text,
-          data: structuredData,
-          metadata: {
-            modelId,
-            modelVersion: "vllm-local",
-            provider: "Local vLLM Model Server",
-            inferenceType: "local_fine_tuned",
-            latencyMs: Date.now() - startTime,
-          },
-        };
-      } else {
-        const res = await fetch(`${localUrl}/api/generate`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: AbortSignal.timeout(30000),
-          body: JSON.stringify({
-            model: modelId,
-            prompt: `${systemPrompt}\n\n${userPrompt}`,
-            stream: false,
-          }),
-        });
-
-        if (!res.ok) throw new Error(`Ollama server error (${res.status})`);
-        const data = await res.json();
-        const text = data.response || "";
-
-        let structuredData: any = undefined;
-        if (toolConfig.outputFormat === "graph" || toolConfig.slug === "ai-flowchart-generator") {
-          structuredData = parseFlowchartGraph(text);
-        }
-
-        return {
-          success: true,
-          result: text,
-          data: structuredData,
-          metadata: {
-            modelId,
-            modelVersion: "ollama-local",
-            provider: "Local Ollama Model Server",
-            inferenceType: "local_fine_tuned",
-            latencyMs: Date.now() - startTime,
-          },
-        };
-      }
-    } catch (err: any) {
-      return {
-        success: false,
-        error: `Local Inference Server Offline: ${err.message}. Ensure Ollama or vLLM is running at ${localUrl}.`,
-        errorType: "PROVIDER_ERROR",
-        statusCode: 503,
-      };
-    }
-  }
-}
-
+/**
+ * Hybrid Provider Factory:
+ * 1. Checks explicit AI_PROVIDER env var ('ollama' | 'openai' | 'vllm' | 'gemini')
+ * 2. Checks optional cloud keys if explicitly enabled
+ * 3. Defaults to Ollama for local development
+ */
 export function getAIProvider(): AIProvider {
-  if (process.env.USE_LOCAL_INFERENCE === "true") {
-    return new LocalInferenceProvider();
-  }
-  if (process.env.OPENAI_API_KEY && !process.env.GEMINI_API_KEY) {
+  const configuredProvider = process.env.AI_PROVIDER?.trim().toLowerCase();
+
+  if (configuredProvider === "openai") {
     return new OpenAISpecializedProvider();
   }
-  return new GeminiSpecializedProvider();
+
+  if (configuredProvider === "vllm" || process.env.LOCAL_INFERENCE_TYPE === "vllm") {
+    return new VLLMProvider();
+  }
+
+  if (configuredProvider === "gemini") {
+    return new GeminiSpecializedProvider();
+  }
+
+  if (configuredProvider === "ollama") {
+    return new OllamaProvider();
+  }
+
+  // Auto-resolution: if OPENAI_API_KEY is configured and AI_PROVIDER is unset, support OpenAI
+  if (process.env.OPENAI_API_KEY && !process.env.USE_OLLAMA) {
+    return new OpenAISpecializedProvider();
+  }
+
+  // Default development provider is Ollama
+  return new OllamaProvider();
 }
 
 /**
@@ -560,4 +698,5 @@ export async function processAIRequest(payload: AIRequestPayload): Promise<AIRes
 
   return await provider.generateContent(toolConfig.systemPrompt, enhancedUserPrompt, toolConfig);
 }
+
 

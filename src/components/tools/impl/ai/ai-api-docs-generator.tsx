@@ -134,7 +134,7 @@ export const AIApiDocsGenerator: React.FC = () => {
     return (
       <AISetupScreen
         toolName="AI API Docs Generator"
-        message="Please configure GEMINI_API_KEY or OPENAI_API_KEY in .env.local to enable AI API Documentation generation."
+        message="Start Ollama locally ('ollama run llama3.2') or configure an AI key in .env.local to enable AI generation."
       />
     );
   }

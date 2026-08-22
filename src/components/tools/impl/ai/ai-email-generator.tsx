@@ -130,7 +130,7 @@ export const AIEmailGenerator: React.FC = () => {
     return (
       <AISetupScreen
         toolName="AI Email Generator"
-        message="Please configure GEMINI_API_KEY or OPENAI_API_KEY in .env.local to enable AI Email drafting."
+        message="Start Ollama locally ('ollama run llama3.2') or configure an AI key in .env.local to enable AI generation."
       />
     );
   }
