@@ -209,36 +209,35 @@ export function parseFlowchartGraph(rawText: string): FlowchartGraphData {
 }
 
 /**
- * Resolves the appropriate Ollama model name for each tool or global fallback.
+ * Resolves the appropriate OpenRouter model name for each tool or global fallback.
  */
-export function getOllamaModel(toolConfig: AIToolConfig): string {
-  const globalModel = process.env.OLLAMA_MODEL || process.env.LOCAL_MODEL_ID || "llama3.2";
+export function getOpenRouterModel(toolConfig: AIToolConfig): string {
+  const globalModel = process.env.OPENROUTER_MODEL || "openrouter/free";
 
   switch (toolConfig.slug) {
     case "ai-commit-message-generator":
-      return process.env.OLLAMA_COMMIT_MODEL || globalModel;
+      return process.env.OPENROUTER_COMMIT_MODEL || globalModel;
     case "ai-code-converter":
-      return process.env.OLLAMA_CODE_MODEL || globalModel;
+      return process.env.OPENROUTER_CODE_MODEL || globalModel;
     case "ai-readme-generator":
-      return process.env.OLLAMA_README_MODEL || globalModel;
+      return process.env.OPENROUTER_README_MODEL || globalModel;
     case "ai-api-docs-generator":
-      return process.env.OLLAMA_APIDOCS_MODEL || globalModel;
+      return process.env.OPENROUTER_APIDOCS_MODEL || globalModel;
     case "ai-email-generator":
-      return process.env.OLLAMA_EMAIL_MODEL || globalModel;
+      return process.env.OPENROUTER_EMAIL_MODEL || globalModel;
     case "ai-flowchart-generator":
-      return process.env.OLLAMA_FLOWCHART_MODEL || globalModel;
+      return process.env.OPENROUTER_FLOWCHART_MODEL || globalModel;
     default:
       return globalModel;
   }
 }
 
 /**
- * Default Local Development Provider: Ollama
- * Connects directly to local Ollama instance (http://127.0.0.1:11434 or http://localhost:11434).
+ * Primary Cloud Provider: OpenRouter
  */
-export class OllamaProvider implements AIProvider {
-  name = "Ollama Local Engine";
-  inferenceType = "local_fine_tuned" as const;
+export class OpenRouterProvider implements AIProvider {
+  name = "OpenRouter";
+  inferenceType = "external_cloud" as const;
 
   async generateContent(
     systemPrompt: string,
@@ -246,58 +245,79 @@ export class OllamaProvider implements AIProvider {
     toolConfig: AIToolConfig
   ): Promise<AIResponsePayload> {
     const startTime = Date.now();
-    const rawBaseUrl = process.env.OLLAMA_BASE_URL || process.env.LOCAL_INFERENCE_URL || "http://127.0.0.1:11434";
-    // Normalize localhost to 127.0.0.1 for high-speed IPv4 socket connection on Windows
-    const baseUrl = rawBaseUrl.replace("://localhost:", "://127.0.0.1:");
-    const model = getOllamaModel(toolConfig);
+    const apiKey = process.env.OPENROUTER_API_KEY?.trim();
+
+    if (!apiKey) {
+      return {
+        success: false,
+        error: "OPENROUTER_API_KEY is not configured in environment variables (.env.local).",
+        errorType: "API_KEY_REQUIRED",
+        statusCode: 401,
+      };
+    }
+
+    const modelName = getOpenRouterModel(toolConfig);
 
     try {
-      // Use Ollama /api/chat endpoint with separate system & user messages
-      const response = await fetch(`${baseUrl}/api/chat`, {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+          "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://toolverse.dev",
+          "X-Title": "ToolVerse",
+        },
         signal: AbortSignal.timeout(60000),
         body: JSON.stringify({
-          model,
+          model: modelName,
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: userPrompt },
           ],
-          stream: false,
-          options: {
-            temperature: 0.3,
-          },
+          temperature: 0.3,
         }),
       });
 
       if (!response.ok) {
         const errorJson = await response.json().catch(() => ({}));
-        const errMsg = errorJson.error || `Ollama server returned status ${response.status}`;
+        const message =
+          errorJson.error?.message ||
+          errorJson.error ||
+          `OpenRouter API error (Status ${response.status})`;
 
-        if (errMsg.includes("not found") || errMsg.includes("pull")) {
+        if (response.status === 401 || response.status === 403) {
           return {
             success: false,
-            error: `Ollama model '${model}' is not pulled locally. Run 'ollama pull ${model}' in your terminal to install it.`,
-            errorType: "PROVIDER_ERROR",
-            statusCode: 404,
+            error: "Invalid OpenRouter API key. Please check your OPENROUTER_API_KEY in .env.local.",
+            errorType: "API_KEY_REQUIRED",
+            statusCode: 401,
+          };
+        }
+
+        if (response.status === 429) {
+          return {
+            success: false,
+            error: "OpenRouter rate limit or credit quota exceeded. Please check your OpenRouter credits.",
+            errorType: "RATE_LIMITED",
+            statusCode: 429,
           };
         }
 
         return {
           success: false,
-          error: errMsg,
+          error: message,
           errorType: "PROVIDER_ERROR",
           statusCode: response.status >= 500 ? 500 : 400,
         };
       }
 
       const data = await response.json();
-      const text = data.message?.content || data.response || "";
+      const text = data.choices?.[0]?.message?.content;
 
       if (!text || !text.trim()) {
         return {
           success: false,
-          error: `Ollama model '${model}' returned an empty output.`,
+          error: "OpenRouter model returned an empty response.",
           errorType: "PROVIDER_ERROR",
           statusCode: 500,
         };
@@ -313,10 +333,10 @@ export class OllamaProvider implements AIProvider {
         result: text.trim(),
         data: structuredData,
         metadata: {
-          modelId: model,
-          modelVersion: "ollama-local",
-          provider: `Ollama (${model})`,
-          inferenceType: "local_fine_tuned",
+          modelId: modelName,
+          modelVersion: "openrouter",
+          provider: `OpenRouter (${modelName})`,
+          inferenceType: "external_cloud",
           latencyMs: Date.now() - startTime,
         },
       };
@@ -324,7 +344,7 @@ export class OllamaProvider implements AIProvider {
       if (err.name === "TimeoutError" || err.name === "AbortError") {
         return {
           success: false,
-          error: `Ollama inference timed out after 60s for model '${model}'. Ensure your machine has sufficient RAM/VRAM.`,
+          error: "AI provider request timed out (60s limit). Please retry.",
           errorType: "TIMEOUT",
           statusCode: 504,
         };
@@ -332,9 +352,9 @@ export class OllamaProvider implements AIProvider {
 
       return {
         success: false,
-        error: `Ollama server is unreachable at ${baseUrl}. Start Ollama with 'ollama serve' or run a model with 'ollama run ${model}'.`,
+        error: err.message || "Failed to communicate with OpenRouter API.",
         errorType: "PROVIDER_ERROR",
-        statusCode: 503,
+        statusCode: 500,
       };
     }
   }
@@ -653,13 +673,18 @@ export class GeminiSpecializedProvider implements AIProvider {
 }
 
 /**
- * Hybrid Provider Factory:
- * 1. Checks explicit AI_PROVIDER env var ('ollama' | 'openai' | 'vllm' | 'gemini')
- * 2. Checks optional cloud keys if explicitly enabled
- * 3. Defaults to Ollama for local development
+ * AI Provider Factory:
+ * 1. Checks explicit AI_PROVIDER env var ('openrouter' | 'openai' | 'vllm' | 'gemini')
+ * 2. Checks OPENROUTER_API_KEY
+ * 3. Falls back to OpenAI / Gemini / vLLM if configured
+ * 4. Defaults to OpenRouter
  */
 export function getAIProvider(): AIProvider {
   const configuredProvider = process.env.AI_PROVIDER?.trim().toLowerCase();
+
+  if (configuredProvider === "openrouter") {
+    return new OpenRouterProvider();
+  }
 
   if (configuredProvider === "openai") {
     return new OpenAISpecializedProvider();
@@ -673,17 +698,21 @@ export function getAIProvider(): AIProvider {
     return new GeminiSpecializedProvider();
   }
 
-  if (configuredProvider === "ollama") {
-    return new OllamaProvider();
+  // Auto-resolution: if OPENROUTER_API_KEY is configured and AI_PROVIDER is unset
+  if (process.env.OPENROUTER_API_KEY) {
+    return new OpenRouterProvider();
   }
 
-  // Auto-resolution: if OPENAI_API_KEY is configured and AI_PROVIDER is unset, support OpenAI
-  if (process.env.OPENAI_API_KEY && !process.env.USE_OLLAMA) {
+  if (process.env.OPENAI_API_KEY) {
     return new OpenAISpecializedProvider();
   }
 
-  // Default development provider is Ollama
-  return new OllamaProvider();
+  if (process.env.GEMINI_API_KEY) {
+    return new GeminiSpecializedProvider();
+  }
+
+  // Default provider is OpenRouter
+  return new OpenRouterProvider();
 }
 
 /**

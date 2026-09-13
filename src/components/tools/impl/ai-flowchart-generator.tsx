@@ -265,7 +265,7 @@ export const AiFlowchartGeneratorTool: React.FC = () => {
     return (
       <AISetupScreen
         toolName="AI Flowchart Generator"
-        message="Start Ollama locally ('ollama run llama3.2') or configure an AI key in .env.local to enable AI generation."
+        message="Configure OPENROUTER_API_KEY in .env.local to enable AI generation."
       />
     );
   }

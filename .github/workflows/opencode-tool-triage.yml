@@ -1,0 +1,72 @@
+name: OpenCode Tool Triage & Feasibility Bot
+
+on:
+  repository_dispatch:
+    types: [tool_request]
+  issues:
+    types: [opened, labeled]
+  workflow_dispatch:
+    inputs:
+      tool_name:
+        description: "Name of the requested tool"
+        required: true
+        default: "JSON to CSV Exporter"
+      user_message:
+        description: "User description and requirements"
+        required: true
+        default: "Client-side tool to convert nested JSON to clean CSV format"
+      user_email:
+        description: "User contact email"
+        required: false
+        default: "user@example.com"
+      approval_url:
+        description: "Direct 1-Click approval URL"
+        required: false
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci || npm install --legacy-peer-deps
+
+      - name: Run OpenCode Triage Analysis
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL: ${{ secrets.OPENROUTER_MODEL || 'openrouter/free' }}
+          TOOL_NAME: ${{ github.event.client_payload.toolName || github.event.issue.title || github.event.inputs.tool_name }}
+          USER_MESSAGE: ${{ github.event.client_payload.userMessage || github.event.issue.body || github.event.inputs.user_message }}
+          USER_EMAIL: ${{ github.event.client_payload.userEmail || github.event.inputs.user_email }}
+          APPROVAL_URL: ${{ github.event.client_payload.approvalUrl || github.event.inputs.approval_url }}
+        run: node scripts/opencode-triage.mjs
+
+      - name: Post Triage Comment on GitHub Issue
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (fs.existsSync('triage-report.md')) {
+              const report = fs.readFileSync('triage-report.md', 'utf8');
+              const comment = `## 🤖 OpenCode ACP Triage Report\n\n${report}\n\n---\n*To approve tool generation, reply with \`/approve\` in this issue or click the 1-click approve link.*`;
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }

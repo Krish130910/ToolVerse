@@ -1,0 +1,107 @@
+name: OpenCode Tool Builder & Autonomous PR Bot
+
+on:
+  repository_dispatch:
+    types: [tool_approved]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      tool_name:
+        description: "Tool Name to implement"
+        required: true
+        default: "JSON to CSV Converter"
+      user_message:
+        description: "Requirements or prompt"
+        required: true
+        default: "Client-side utility to convert JSON arrays to CSV with download and copy support"
+
+jobs:
+  build_tool:
+    if: |
+      github.event_name == 'repository_dispatch' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '/approve'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci || npm install --legacy-peer-deps
+
+      - name: Configure Git Author
+        run: |
+          git config --global user.name "opencode-bot[bot]"
+          git config --global user.email "opencode-bot[bot]@users.noreply.github.com"
+
+      - name: Determine Tool Parameters
+        id: params
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "TOOL_NAME=${{ github.event.client_payload.toolName }}" >> $GITHUB_ENV
+            echo "USER_MESSAGE=${{ github.event.client_payload.userMessage || 'Automated implementation' }}" >> $GITHUB_ENV
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "TOOL_NAME=${{ github.event.inputs.tool_name }}" >> $GITHUB_ENV
+            echo "USER_MESSAGE=${{ github.event.inputs.user_message }}" >> $GITHUB_ENV
+          elif [ "${{ github.event_name }}" = "issue_comment" ]; then
+            echo "TOOL_NAME=${{ github.event.issue.title }}" >> $GITHUB_ENV
+            echo "USER_MESSAGE=${{ github.event.issue.body }}" >> $GITHUB_ENV
+          fi
+
+      - name: Run OpenCode Tool Synthesis Engine
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL: ${{ secrets.OPENROUTER_MODEL || 'openrouter/free' }}
+        run: node scripts/opencode-build-tool.mjs
+
+      - name: Format & Verify Build
+        run: |
+          npx tsc --noEmit
+          npm run build
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+          commit-message: "feat(tools): add ${{ env.TOOL_NAME }} utility via OpenCode Bot"
+          title: "feat: Add ${{ env.TOOL_NAME }} Utility"
+          body: |
+            ## 🚀 Automated Tool Implementation: ${{ env.TOOL_NAME }}
+
+            This Pull Request was autonomously synthesized, registered, and verified by **OpenCode ACP Bot** in response to an approved tool request.
+
+            ### 📦 Changes Included:
+            - **New Component**: \`src/components/tools/impl/*\`
+            - **Central Registry**: Registered in \`src/tools/registry.tsx\`
+            - **Directory Metadata**: Added to \`src/lib/data.ts\`
+            - **Type Verification**: Passed \`npx tsc --noEmit\` with 0 errors
+            - **Production Build**: Verified with \`npm run build\`
+
+            ### 🔍 Review Checklist:
+            - [ ] Test UI layout and interaction in preview
+            - [ ] Confirm input/output transformations
+            - [ ] Merge to deploy to production
+
+            ---
+            *Powered by ToolVerse OpenCode Bot & OpenRouter*
+          branch: "feat/tool-opencode-generated"
+          base: main
+          delete-branch: true
+          labels: |
+            tool-request
+            automated-pr
+            opencode-bot
