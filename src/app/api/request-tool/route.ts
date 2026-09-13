@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import nodemailer from "nodemailer";
 import { validateAndGetEnv } from "@/lib/env";
-import { getApprovalUrl, dispatchGitHubEvent } from "@/lib/bot-dispatch";
+import { getApprovalUrl, resolveAppBaseUrl, dispatchGitHubEvent } from "@/lib/bot-dispatch";
 
 // Basic sliding window rate limiting (5 requests per 10 minutes per IP)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -118,7 +118,7 @@ export async function POST(request: Request) {
 
     // 5. STEP B: Send Email Notification & OpenCode Bot Dispatch
     if (createdRecord) {
-      const approvalUrl = getApprovalUrl(createdRecord.id, createdRecord.toolName);
+      const approvalUrl = getApprovalUrl(createdRecord.id, createdRecord.toolName, resolveAppBaseUrl(request));
 
       // A. Send Admin Email with 1-Click Approve Link
       if (emailUser && emailPass) {
