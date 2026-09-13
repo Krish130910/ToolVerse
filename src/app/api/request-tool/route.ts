@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import nodemailer from "nodemailer";
 import { validateAndGetEnv } from "@/lib/env";
+import { getApprovalUrl, dispatchGitHubEvent } from "@/lib/bot-dispatch";
 
 // Basic sliding window rate limiting (5 requests per 10 minutes per IP)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -115,8 +116,11 @@ export async function POST(request: Request) {
       }
     }
 
-    // 5. STEP B: Send Email Notification via Nodemailer Gmail SMTP ONLY AFTER Database Save Succeeds
+    // 5. STEP B: Send Email Notification & OpenCode Bot Dispatch
     if (createdRecord) {
+      const approvalUrl = getApprovalUrl(createdRecord.id, createdRecord.toolName);
+
+      // A. Send Admin Email with 1-Click Approve Link
       if (emailUser && emailPass) {
         try {
           const transporter = nodemailer.createTransport({
@@ -131,27 +135,31 @@ export async function POST(request: Request) {
 
           const formattedDate = new Date(createdRecord.createdAt).toLocaleString();
 
-          const emailText = `A new tool has been requested.
+          const emailText = `A new tool has been requested on ToolVerse.
 
 Tool:
 ${createdRecord.toolName}
 
-Name:
-${createdRecord.name || "N/A"}
+Requested By:
+${createdRecord.name || "Anonymous"} (${createdRecord.email})
 
-Email:
-${createdRecord.email}
-
-Message:
+Message / Specification:
 ${createdRecord.message}
 
 Submitted At:
-${formattedDate}`;
+${formattedDate}
+
+--------------------------------------------------
+🚀 INSTANT OPENCODE BOT APPROVAL:
+Click the link below to approve this tool. OpenCode Bot will automatically generate the component, validate TypeScript compilation, and open a Pull Request for you to review:
+
+${approvalUrl}
+--------------------------------------------------`;
 
           await transporter.sendMail({
             from: `"ToolVerse" <${emailUser}>`,
             to: adminEmail,
-            subject: "🔔 New Tool Request - ToolVerse",
+            subject: `🔔 New Tool Request: ${createdRecord.toolName} - ToolVerse`,
             text: emailText,
           });
 
@@ -162,6 +170,23 @@ ${formattedDate}`;
       } else {
         console.warn("[Nodemailer Notice]: Gmail SMTP unconfigured. Set EMAIL_USER & EMAIL_PASS in .env.local.");
       }
+
+      // B. Dispatch GitHub Actions Triage Event (Non-blocking)
+      dispatchGitHubEvent("tool_request", {
+        requestId: createdRecord.id,
+        toolName: createdRecord.toolName,
+        userEmail: createdRecord.email,
+        userName: createdRecord.name,
+        userMessage: createdRecord.message,
+        approvalUrl,
+        createdAt: createdRecord.createdAt,
+      }).then((res) => {
+        if (res.success) {
+          console.log(`[GitHub Bot Dispatch]: Dispatched tool_request event for '${createdRecord.toolName}'`);
+        } else {
+          console.log(`[GitHub Bot Notice]: ${res.error}`);
+        }
+      });
     }
 
     // 6. STEP C: Return Success Response
